@@ -1,0 +1,66 @@
+html {
+  scroll-behavior: smooth;
+}
+
+.box {
+  width: 130px;
+  aspect-ratio: 1;
+  clip-path: polygon(93.30% 75.00%, 50.00% 100.00%, 6.70% 75.00%, 6.70% 25.00%, 50.00% 0.00%, 93.30% 25.00%, 93.30% 75.00%, 90.70% 26.50%, 50.00% 3.00%, 9.30% 26.50%, 9.30% 73.50%, 50.00% 97.00%, 90.70% 73.50%, 90.70% 26.50%);
+  display: grid;
+}
+
+.box:before {
+  content: "";
+  background: linear-gradient(180deg, #5B5FF3 0%, #5D60EC 47.02%, #B8BAFF 100%);
+}
+
+
+.box-light {
+  width: 130px;
+  aspect-ratio: 1;
+  clip-path: polygon(93.30% 75.00%, 50.00% 100.00%, 6.70% 75.00%, 6.70% 25.00%, 50.00% 0.00%, 93.30% 25.00%, 93.30% 75.00%, 90.70% 26.50%, 50.00% 3.00%, 9.30% 26.50%, 9.30% 73.50%, 50.00% 97.00%, 90.70% 73.50%, 90.70% 26.50%);
+  display: grid;
+}
+
+.box-light:before {
+  content: "";
+  background: linear-gradient(180deg, #d0d1ff 0%, #f1deff 47.02%, #d9dafa 100%);
+}
+
+.cat-section{
+  position: sticky;
+  top: 15%;
+}
+
+.carousel .control-arrow, .carousel.carousel-slider .control-arrow{
+  background-color: #5D60EC !important;
+}
+
+.p-highlight{
+  background-color: #60a4f9 !important;
+  color: white !important;
+}
+
+@media (min-width: 1024px) {
+  .serviceMenu {
+      display: none;
+  }
+
+  .service:hover .serviceMenu {
+      display: block;
+  }
+
+  .service>li>a {
+      border-bottom: 4px solid transparent;
+  }
+
+  .service:hover.service>li>a {
+      color: #5B5FF3;
+      border-bottom: 4px solid #5B5FF3;
+  }
+
+  .service:hover.service>li>a>.angle {
+      transform: rotate(180deg);
+      transition-duration: 0.3s;
+  }
+}
