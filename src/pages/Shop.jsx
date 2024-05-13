@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import GetAPI from "../utilities/GetAPI";
 import { BASE_URL } from "../utilities/URL";
 import axios from "axios";
@@ -10,13 +10,12 @@ import Loader from "../components/Loader";
 import { IoEyeOutline } from "react-icons/io5";
 import { Paginator } from "primereact/paginator";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import "primereact/resources/primereact.min.css"; //core css
+import "primereact/resources/primereact.min.css";
 import Card from "../components/Card";
-import { TfiViewGrid } from "react-icons/tfi";
-import { TfiLayoutGrid3 } from "react-icons/tfi";
 
-export default function Exterior() {
+export default function Shop() {
   const { pathname } = useLocation();
+  const { slug } = useParams();
   const [active, setActive] = useState(false);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(12);
@@ -27,13 +26,9 @@ export default function Exterior() {
     window.scrollTo(0, 0);
   };
   const [activeCat, setActiveCat] = useState(null);
-  const [activeSubCat, setActiveSubCat] = useState(null);
   const [prodByCatData, setProdByCatData] = useState([]);
   const { data } = GetAPI("category/view");
-  const subCatData = GetAPI("category/sub/view");
   const products = GetAPI("item/view-all");
-  const relatedData = GetAPI("item/related/1");
-  var randomNumber = Math.floor(Math.random() * (1000 - 401)) + 401;
 
   const prodByCat = async (catId) => {
     setActiveCat(catId);
@@ -45,7 +40,6 @@ export default function Exterior() {
     };
     try {
       axios
-        // .get(BASE_URL + `item/category/${catId.toString()}`, config)
         .get(BASE_URL + `item/category/${catId.toString()}`, config)
         .then((dat) => {
           if (dat.data?.status === "1") {
@@ -66,76 +60,44 @@ export default function Exterior() {
         <div>
           <div className="bg-exteriorHeroBg bg-cover bg-center bg-no-repeat w-full h-80 flex justify-center items-center">
             <h2 className="text-2xl md:text-3xl lg:text-6xl text-white font-semibold uppercase">
-              {pathname}
+              {slug}
             </h2>
           </div>
 
-          <div className="py-10 lg:w-[90%] w-[95%] mx-auto grid md:grid-cols-12 gap-x-3 md:gap-x-4">
+          <div className="py-10 lg:w-[90%] w-[95%] mx-auto grid md:grid-cols-12 gap-x-6 md:gap-x-14">
             <div className="md:col-span-2">
               <div className="cat-section hidden md:block">
                 <div className="py-4 lg:py-8 border-gray-400 border-b-[1px] space-y-6">
-                  <h2 className="uppercase font-medium">Filter By Brand</h2>
-                  <div className="space-y-2">
-                    {data?.data?.map((cat, index) => (
-                      <>
-                        <button
-                          onClick={() => prodByCat(cat?.id)}
-                          className={`flex w-full  text-sm  ${
-                            activeCat === cat?.id ? "font-semibold" : ""
-                          }`}
-                          key={index}
-                        >
-                          {cat?.name} &nbsp;{" "}
-                          <div class="bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-2 py-1 rounded-full">
-                            0
-                          </div>
-                        </button>
-                        <div className="ml-4 space-y-2">
-                          {subCatData?.data?.data?.map((subCat, index) => (
-                            <div key={index}>
-                              {subCat?.category?.name === cat?.name && (
-                                <button
-                                  onClick={() => prodByCat(subCat?.id)}
-                                  className={`text-sm block ${
-                                    activeSubCat === subCat?.id
-                                      ? "font-semibold"
-                                      : ""
-                                  }`}
-                                >
-                                  {subCat?.name}
-                                </button>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </>
-                    ))}
-                  </div>
-                </div>
-                <div className="hidden md:block py-4 lg:py-8 border-gray-400 border-b-[1px] space-y-6">
-                  <h2 className="uppercase font-medium">Top Rated Products</h2>
-                  {relatedData?.data?.data?.slice(0, 5).map((data, index) => (
-                    <Link to={`/product-details/${data?.slug}`} key={index}>
-                      <div
-                        key={index}
-                        className="flex gap-x-2 items-center my-4"
-                      >
-                        <img
-                          src={`${BASE_URL}${data?.thumbnail}`}
-                          alt={data?.name}
-                          className="md:w-16 h-16 object-cover rounded-lg"
-                        />
-                        <div>
-                          <h4 className="text-sm text-gray-500">
-                            {data?.name}
-                          </h4>
-                          <p className="text-sm text-blue-600 font-semibold">
-                            $ {data?.price}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
+                  <h2 className="uppercase font-medium">Nearby {slug}</h2>
+                  { slug === "shops" ? (<><div className="space-y-2">
+                    <button
+                      onClick={() => prodByCat("suit")}
+                      className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
+                    >
+                      Fabrics
+                    </button>
+                    <button
+                      onClick={() => prodByCat("suit")}
+                      className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
+                    >
+                      Clothing
+                    </button>
+                  </div></>) : (<> <div className="space-y-2">
+                    <button
+                      onClick={() => prodByCat("suit")}
+                      className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
+                    >
+                      Suit
+                    </button>
+                    <button
+                      onClick={() => prodByCat("suit")}
+                      className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
+                    >
+                      Traditional
+                    </button>
+                  </div></>)}
+                  
+                 
                 </div>
               </div>
             </div>
@@ -143,16 +105,12 @@ export default function Exterior() {
               <div className="flex justify-between items-center">
                 <div>
                   <h2 className="my-3">
-                    Home
+                    Home / &nbsp;
                     <span className="text-medium uppercase font-semibold">
-                      {pathname}
+                      {slug}
                     </span>
                   </h2>
                 </div>
-                {/* <div className="flex gap-x-3 ">
-                  <TfiViewGrid />
-                  <TfiLayoutGrid3 />
-                </div> */}
               </div>
               <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-x-2 md:gap-x-3 gap-y-2 md:gap-y-3">
                 {active === true ? (
@@ -172,17 +130,6 @@ export default function Exterior() {
                               className="h-full w-full object-cover rounded-t-2xl mx-auto "
                             />
                           </div>
-                          <div
-                            class="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3"
-                            key={index}
-                          >
-                            {prod?.itemAttributes?.map((attr, index) => (
-                              <span class="capitalize bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded">
-                                {attr?.value}
-                              </span>
-                            ))}
-                          </div>
-
                           <div className="space-y-2 p-3">
                             <h4 className="text-sm">{prod?.name}</h4>
                             <p className="hidden lg:block  text-gray-400 text-sm">
@@ -192,10 +139,7 @@ export default function Exterior() {
                               <p className="text-blue-600 font font-semibold">
                                 ${prod?.price}
                               </p>
-                              <div className="flex items-center text-black text-opacity-50">
-                                <IoEyeOutline /> &nbsp;
-                                {randomNumber}
-                              </div>
+                              
                             </div>
                             <div className="bg-blue-400 uppercase text-center py-2 text-white rounded-b-md w-full">
                               Download
@@ -205,7 +149,7 @@ export default function Exterior() {
                       ))
                   ) : (
                     <div className="col-span-full">
-                      No Products Available for this Category
+                      No data Available for {slug}
                     </div>
                   )
                 ) : (

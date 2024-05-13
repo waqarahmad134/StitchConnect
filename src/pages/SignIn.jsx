@@ -46,7 +46,7 @@ export default function SignIn() {
   return (
     <div className="">
       <Header />
-      <section className="bg-signInHero bg-no-repeat bg-cover">
+      <section className="bg-signInHero bg-no-repeat bg-cover bg-center">
         <div className="w-10/12 m-auto h-[80vh] flex h-100 items-center">
           <div className="text-center bg-white rounded-xl p-5 min-w-96 space-y-12">
             <h1 className="font-semibold">Login</h1>

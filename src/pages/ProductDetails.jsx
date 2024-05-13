@@ -9,7 +9,7 @@ import {
 import { RiSendPlaneFill } from "react-icons/ri";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import GetAPI from "../utilities/GetAPI";
-import { BASE_URL } from "../utilities/URL";
+import { BASE_URL, DOMIAN_URL } from "../utilities/URL";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { info_toaster, warning_toaster } from "../utilities/Toaster";
@@ -18,10 +18,10 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import { IoEyeOutline } from "react-icons/io5";
 
-export default function ExteriorProductDetails() {
+export default function ProductDetails() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const shareUrl = "https://3dbreakout.com" + pathname;
+  const shareUrl = DOMIAN_URL + pathname;
   const title = encodeURIComponent("Check out this product!");
   if (!localStorage.getItem("cartItems")) {
     localStorage.setItem("cartItems", "[]");
@@ -68,70 +68,6 @@ export default function ExteriorProductDetails() {
             <span className="text-black font-semibold">{data?.data?.name}</span>
           </h2>
           <div className="grid md:grid-cols-2 gap-x-4 mt-4 mb-20">
-            {/* <div>
-              <Swiper
-                style={{
-                  "--swiper-navigation-color": "#fff",
-                  "--swiper-pagination-color": "#fff",
-                }}
-                loop={true}
-                slidesPerView={1}
-                thumbs={thumbsSwiper ? { swiper: thumbsSwiper } : undefined}
-                modules={[FreeMode, Thumbs]}
-                className="mySwiper2 w-screen md:w-auto"
-              >
-                {data?.data?.itemImages?.length > 0 &&
-                  data?.data?.itemImages?.map((item, index) => (
-                    <SwiperSlide className={`${index}`}>
-                      <img
-                        src={`${BASE_URL}${data?.data?.thumbnail}`}
-                        alt={item?.name}
-                        className="w-72 md:w-4/5 h-72 max-h-72 md:h-[350px] object-cover hover:cursor-zoom-in hover:duration-150 cursor-pointer"
-                      />
-                    </SwiperSlide>
-                  ))}
-              </Swiper>
-              <Swiper
-                onSwiper={setThumbsSwiper}
-                loop={true}
-                slidesPerView={3}
-                freeMode={true}
-                watchSlidesProgress={true}
-                modules={[FreeMode, Thumbs]}
-                className="mySwiper my-3 cursor-pointer"
-                breakpoints={{
-                  320: {
-                    slidesPerView: 1,
-                    spaceBetween: 20,
-                  },
-                  768: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                  },
-                  1024: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                  },
-                  1440: {
-                    slidesPerView: 3,
-                    spaceBetween: 20,
-                  },
-                }}
-              >
-                <div>
-                  {data?.data?.itemImages?.map((item, index) => (
-                    <SwiperSlide>
-                      <img
-                       
-                        alt="cable-1"
-                        className="w-80 h-20 object-cover"
-                      />
-                    </SwiperSlide>
-                  ))}
-                </div>
-
-              </Swiper>
-            </div> */}
             <Carousel>
               <div>
                 <img src={`${BASE_URL}${data?.data?.thumbnail}`} />

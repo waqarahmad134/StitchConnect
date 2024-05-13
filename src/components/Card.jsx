@@ -46,38 +46,18 @@ export default function Card(props) {
             />
           </Link>
         </div>
-        <div
-          class="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3"
-          key={props?.index}
-        >
-          {props?.itemAttributes?.map((attr, index) => (
-            <span
-              key={index}
-              class="capitalize bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded"
-            >
-              {attr?.value}
-            </span>
-          ))}
-        </div>
-
         <div className="space-y-2 p-3">
           <h4 className="text-sm">{props?.name}</h4>
           <p className="hidden lg:block  text-gray-400 text-sm">
             {(props?.description).substring(0, 42)}
           </p>
-          <div className="flex items-center justify-between text-sm">
-            <p className="text-blue-600 font font-semibold">${props?.price}</p>
-            <div className="flex items-center text-black text-opacity-50">
-              <IoEyeOutline /> &nbsp;
-              {props?.views || "571"}
-            </div>
-          </div>
-          <button
-            onClick={addToCart}
-            className="bg-blue-400 uppercase text-center py-2 text-white rounded-b-md w-full"
+        
+          <Link
+            to={`/product-details/${props?.slug}`}
+            className="block bg-blue-400 uppercase text-center py-2 text-white rounded-b-md w-full"
           >
-            Download
-          </button>
+            View Details
+          </Link>
         </div>
       </div>
     </>

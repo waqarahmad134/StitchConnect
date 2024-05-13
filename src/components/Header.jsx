@@ -8,13 +8,13 @@ import { useMediaQuery } from "@chakra-ui/react";
 import { RxAvatar } from "react-icons/rx";
 import { info_toaster } from "../utilities/Toaster";
 export default function Header() {
-  const data  = [
-    {name: "Home"},
-    {name:"About"},
-    {name:"Tailors"},
-    {name:"Shops"},
-    {name:"Contact"}
-];
+  const data = [
+    { name: "Home", link: "/" },
+    { name: "About", link: "/about" },
+    { name: "Tailors", link: "/page/tailors" },
+    { name: "Shops", link: "/page/shops" },
+    { name: "Contact", link: "/contact" },
+  ];
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem("cartItems")) || []
   );
@@ -93,47 +93,48 @@ export default function Header() {
             >
               {data?.map((menu, index) => (
                 <>
-                <li
-
-                  className="px-2 lg:text-xl text-black capitalize"
-                  key={index}
-                >
-                  <Link
-                    to={`/category/${(menu?.name).toString().toLowerCase()}`}
-                    className="capitalize border-b-4 border-transparent  hover:border-b-black"
+                  <li
+                    className="px-2 lg:text-xl text-black capitalize"
+                    key={index}
                   >
-                    {menu?.name}
-                  </Link>
-                </li>
+                    <Link
+                      to={`${(menu?.link).toString().toLowerCase()}`}
+                      className="capitalize border-b-4 border-transparent  hover:border-b-black"
+                    >
+                      {menu?.name}
+                    </Link>
+                  </li>
                 </>
-              ))}              
-                <button className="text-2xl text-black hover:text-[#fe8133] relative">
-                  <BsCart3 />
-                  <div className="w-4 h-4 bg-[#fe8133] text-xs rounded-full absolute top-0 -right-2">
-                    {cartItems?.length > 0 ? cartItems.length : "0"}
-                  </div>
-                </button>
+              ))}
+              <button className="text-2xl text-black hover:text-[#fe8133] [&>div]:hover:text-black relative">
+                <BsCart3 />
+                <div className="w-4 h-4 bg-[#fe8133] text-xs rounded-full absolute top-0 -right-2">
+                  <span>{cartItems?.length > 0 ? cartItems.length : "0"}</span>
+                </div>
+              </button>
 
-                {!localStorage.getItem("accessToken") ? (
-                  <div>
-                    <Link
-                      to={"/auth/signup"}
-                      className="text-center w-20 rounded-3xl text-2xl"
-                    >
-                      Register
-                    </Link>
-                  </div>
-                ) : (
-                  <div>
-                    <Link
-                      to={"/auth/signin"}
-                      className="text-center w-20 rounded-3xl text-2xl"
-                    >
-                      Login
-                    </Link>
-                  </div>
-                )}
+              {!localStorage.getItem("accessToken") ? (
+                <div>
+                  <Link
+                    to={"/auth/signup"}
+                    className="text-center w-20 rounded-3xl text-2xl"
+                  >
+                    Register
+                  </Link>
+                </div>
+              ) : (
+                <div>
+                  <Link
+                    to={"/auth/signin"}
+                    className="text-center w-20 rounded-3xl text-2xl"
+                  >
+                    Login
+                  </Link>
+                </div>
+              )}
+              <Link to={'/profile'}>
                 <RxAvatar size={34} />
+              </Link>
             </ul>
 
             <div>

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { IoIosMail } from "react-icons/io";
+import { FaPhoneSquare } from "react-icons/fa";
 import { PostAPI } from "../utilities/PostAPI";
 import { IoPersonCircle } from "react-icons/io5";
 import { RiLockPasswordFill } from "react-icons/ri";
@@ -23,7 +25,7 @@ export default function SignUp() {
     description: "",
     role: "",
   });
-  const [avatarUrl, setAvatarUrl] = useState('/images/avatar.jpg');
+  const [avatarUrl, setAvatarUrl] = useState("/images/avatar.jpg");
 
   const handleAvatarChange = (e) => {
     const url = e.target.value;
@@ -57,8 +59,8 @@ export default function SignUp() {
   return (
     <div className="">
       <Header />
-      <section className="bg-signInHero bg-no-repeat bg-cover">
-        <div className="h-100 w-10/12 m-auto h-[80vh] flex justify-center items-center">
+      <section className="bg-signUpHero bg-no-repeat bg-cover bg-center relative before:content-[''] before:absolute before:w-full before:h-full before:bg-black before:bg-opacity-50 before:top-0 before:left-0 ">
+        <div className="h-100 w-10/12 m-auto h-[80vh] flex justify-center items-center relative z-20">
           <div className="text-center bg-white bg-opacity-60 rounded-xl p-5 min-w-96 space-y-12">
             <h1 className="font-semibold">Registeration Form</h1>
             <div className="grid grid-cols-2 gap-3">
@@ -104,11 +106,11 @@ export default function SignUp() {
                   onChange={onChange}
                   name="email"
                   type="text"
-                  placeholder="email"
+                  placeholder="Email"
                   className="w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
                 />
                 <span className="absolute right-4 top-4 -translate-y-[4px]">
-                  <IoPersonCircle size={32} />
+                  <IoIosMail size={32} />
                 </span>
               </div>
               <div className="relative">
@@ -121,7 +123,7 @@ export default function SignUp() {
                   className="w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
                 />
                 <span className="absolute right-4 top-4 -translate-y-[4px]">
-                  <IoPersonCircle size={32} />
+                  <FaPhoneSquare size={32} />
                 </span>
               </div>
               <div className="relative">
@@ -138,20 +140,16 @@ export default function SignUp() {
                   <RiLockPasswordFill size={32} />
                 </span>
               </div>
-              <div className="flex items-center gap-x-2 bg-black text-white rounded-lg py-2 px-3">
+              <div className="flex justify-center items-center gap-x-2 bg-black text-white rounded-lg py-2 px-3 cursor-pointer">
                 <MdOutlinePersonAddAlt size={32} />
-                <Link
-                  className="text-xl font-switzer font-semibold"
-                  to={"/auth/signup"}
-                >
-                  {" "}
+                <button className="text-xl font-switzer font-semibold">
                   Register
-                </Link>
+                </button>
               </div>
             </div>
             <div>
               <p className="text-xl">
-                Can't Have Account ? <Link to={"/auth/signup"}>Register</Link>{" "}
+                Already Have Account ? <Link to={"/auth/signin"}>Login</Link>{" "}
               </p>
             </div>
           </div>

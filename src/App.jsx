@@ -1,19 +1,20 @@
 import "./App.css";
-import Homepage from "./pages/Homepage";
-import Exterior from "./pages/Exterior";
-import ExteriorProductDetails from "./pages/ExteriorProductDetails";
-import ErrorPage from "./errors/error-page";
-import { ToastContainer } from "react-toastify";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ChakraProvider } from "@chakra-ui/react";
+import Cart from "./pages/Cart";
+import Shop from "./pages/Shop";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import Cart from "./pages/Cart";
-import { PrimeReactProvider } from 'primereact/api';
+import Homepage from "./pages/Homepage";
+import ErrorPage from "./errors/error-page";
+import { ToastContainer } from "react-toastify";
+import "primereact/resources/primereact.min.css";
+import { ChakraProvider } from "@chakra-ui/react";
+import ProductDetails from "./pages/ProductDetails";
+import { PrimeReactProvider } from "primereact/api";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import 'primereact/resources/primereact.min.css'; //core css
-
-
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Profile from "./pages/Profile";
 
 const router = createBrowserRouter([
   {
@@ -32,19 +33,34 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/category/:slug",
-    element: <Exterior />,
+    path: "/page/:slug",
+    element: <Shop />,
     errorElement: <ErrorPage />,
   },
   {
     path: "/product-details/:slug",
-    element: <ExteriorProductDetails />,
+    element: <ProductDetails />,
     errorElement: <ErrorPage />,
   },
- 
+
   {
     path: "/cart",
     element: <Cart />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/about",
+    element: <About />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/contact",
+    element: <Contact />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
     errorElement: <ErrorPage />,
   },
 ]);
@@ -53,11 +69,10 @@ function App() {
     <div>
       <ToastContainer />
       <PrimeReactProvider>
-      <ChakraProvider>
-        <RouterProvider router={router} />
-      </ChakraProvider>
+        <ChakraProvider>
+          <RouterProvider router={router} />
+        </ChakraProvider>
       </PrimeReactProvider>
-
     </div>
   );
 }
