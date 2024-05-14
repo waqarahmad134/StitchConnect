@@ -9,20 +9,19 @@ import { Paginator } from "primereact/paginator";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import "primereact/resources/primereact.min.css";
 
-export default function Shop() {
+export default function Tailor() {
   const { pathname } = useLocation();
   const [loading, setLoading] = useState(true);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(12);
   const [activeCat, setActiveCat] = useState("all");
-  const products = GetAPI("tailor/shop_products");
+  const products = GetAPI("tailor/tailor_products");
   console.log("🚀 ~ Tailor ~ products:", products?.data?.data?.data);
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
     window.scrollTo(0, 0);
   };
-
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1500);
@@ -31,7 +30,7 @@ export default function Shop() {
     <Loader />
   ) : (
     <>
-       <Header />
+      <Header />
       <section>
         <div>
           <div className="bg-exteriorHeroBg bg-cover bg-center bg-no-repeat w-full h-80 flex justify-center items-center">
@@ -45,6 +44,7 @@ export default function Shop() {
               <div className="cat-section hidden md:block">
                 <div className="py-4 lg:py-8 border-gray-400 border-b-[1px] space-y-6">
                   <h2 className="uppercase font-medium">Nearby {pathname}</h2>
+
                   <div className="space-y-2">
                     <button
                       onClick={() => setActiveCat("all")}
@@ -53,16 +53,16 @@ export default function Shop() {
                       All
                     </button>
                     <button
-                      onClick={() => setActiveCat("Fabrics")}
+                      onClick={() => setActiveCat("Suit")}
                       className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
                     >
-                      Fabrics
+                      Suit
                     </button>
                     <button
-                      onClick={() => setActiveCat("Clothing")}
+                      onClick={() => setActiveCat("Tradional")}
                       className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
                     >
-                      Clothing
+                      Tradional
                     </button>
                   </div>
                 </div>
@@ -97,7 +97,7 @@ export default function Shop() {
                         />
                       ))}
                   </>
-                ) : activeCat === "Fabrics" ? (
+                ) : activeCat === "Suit" ? (
                   <>
                     {products?.data?.data?.data
                       .filter(
@@ -117,7 +117,7 @@ export default function Shop() {
                         />
                       ))}
                   </>
-                ) : activeCat === "Clothing" ? (
+                ) : activeCat === "Tradional" ? (
                   <>
                     {products?.data?.data?.data
                       .filter(

@@ -41,6 +41,10 @@ html {
   color: white !important;
 }
 
+.carousel-slider {
+  height: 400px;
+}
+
 @media (min-width: 1024px) {
   .serviceMenu {
       display: none;

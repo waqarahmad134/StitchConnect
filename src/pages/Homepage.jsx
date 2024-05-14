@@ -17,9 +17,10 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 export default function Homepage() {
   const location = useLocation().pathname;
   const navigate = useNavigate();
-  const { data } = GetAPI("category/view");
-  const [activeTab, setActiveTab] = useState("All");
-  const products = GetAPI("item/view-all");
+  const [activeTab, setActiveTab] = useState(1);
+  const products = GetAPI("tailor/all_products");
+  const tabData = products?.data?.data?.data?.filter((prod) => prod.UserId === parseInt(activeTab));
+  console.log("🚀 ~ Homepage ~ waqar:", tabData)
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
@@ -30,25 +31,26 @@ export default function Homepage() {
     if (search === "") {
       info_toaster("Please Search Some Text");
     } else {
-      let res = await PostAPI("item/search", {
-        search: search,
+      let res = await PostAPI("tailor/search_products", {
+        title: search,
       });
       if (res?.data?.status === "1") {
         success_toaster("Search Data");
-        localStorage.setItem("searchData", JSON.stringify(res?.data?.data));
+        localStorage.setItem(
+          "searchData",
+          JSON.stringify(res?.data?.data?.data)
+        );
         navigate("/search");
       } else {
         error_toaster(res?.data?.mesage);
       }
     }
   };
-  return data.length === 0 ? (
-    <Loader />
-  ) : (
+  return (
     <>
       <Header />
       <section>
-        <>
+        <div>
           <Swiper
             spaceBetween={30}
             centeredSlides={true}
@@ -62,182 +64,231 @@ export default function Homepage() {
             }}
             navigation={false}
             modules={[Autoplay, Pagination, Navigation]}
-            className="mySwiper relative h-[80vh]"
+            className="mySwiper relative h-screen lg:h-[80vh] [&>div>div>img]:object-cover [&>div>div>img]:h-full [&>div>div>img]:w-full"
           >
             <SwiperSlide>
-              <img className="object-cover h-full w-full" src="/images/hero1.jpg" alt="" />
+              <img src="/images/hero1.jpg" alt="banner_1" />
             </SwiperSlide>
             <SwiperSlide>
-              <img className="object-cover h-full w-full" src="/images/hero2.jpg" alt="" />
+              <img src="/images/hero2.jpg" alt="banner_2" />
             </SwiperSlide>
             <SwiperSlide>
-              <img className="object-cover h-full w-full" src="/images/hero4.jpg" alt="" />
+              <img src="/images/hero4.jpg" alt="banner_3" />
             </SwiperSlide>
             <div className="absolute top-0 left-0 h-full w-full bg-black bg-opacity-50 z-10"></div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-1/2 z-20">
-                <div className="space-y-6 mx-auto">
-                  <h2 className="text-4xl text-white text-center font-medium">
-                    Find the best Tailors
-                  </h2>
-                  <form onSubmit={searchFunc} className="relative">
-                    <input
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      type="search"
-                      name="search"
-                      id="search"
-                      placeholder="Search the world best Tailors"
-                      className="w-full mx-auto h-14 bg-[#082835] rounded-full pl-6 outline-none border-none text-white"
-                    />
-                    <button
-                      type="submit"
-                      className="flex items-center justify-center gap-2 rounded-full bg-white w-28 h-10 absolute top-2 right-2 hover:text-[#fe8133] duration-200"
-                    >
-                      <IoIosSearch />
-                      <span>Search</span>
-                    </button>
-                  </form>
-                </div>
+            <div className="absolute top-[40%] md:top-1/2 left-1/2 -translate-x-1/2 w-11/12 md:w-1/2 z-20">
+              <div className="space-y-6 mx-auto">
+                <h2 className="text-4xl text-white text-center font-medium">
+                  Find the best Tailors
+                </h2>
+                <form onSubmit={searchFunc} className="relative">
+                  <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    type="search"
+                    name="search"
+                    id="search"
+                    placeholder="Search the world best Tailors"
+                    className="w-full mx-auto h-14 bg-[#082835] rounded-full pl-6 outline-none border-none text-white"
+                  />
+                  <button
+                    type="submit"
+                    className="flex items-center justify-center gap-2 rounded-full bg-white w-28 h-10 absolute top-2 right-2 hover:text-[#fe8133] duration-200"
+                  >
+                    <IoIosSearch />
+                    <span>Search</span>
+                  </button>
+                </form>
               </div>
+            </div>
           </Swiper>
-        </>
+        </div>
 
         <div className="bg-[#f5f4f2]">
           <div className="w-[75%] m-auto pt-5 pb-2 flex justify-center flex-wrap items-center gap-x-10 gap-y-5 border-b border-gray-400">
             <button
-              className={` ${
-                activeTab === "All" ? "text-black" : "text-gray-400"
+              className={`text-xl font-semibold ${
+                activeTab === 1
+                  ? "text-black border-b-4 border-black"
+                  : "text-yellow-900"
               }`}
-              onClick={() => handleTabClick("All")}
+              onClick={() => handleTabClick(1)}
             >
               All
             </button>
-            {data?.data?.map((cat, index) => (
-              <button
-                key={index}
-                className={` ${
-                  activeTab === `${cat?.name}` ? "text-black" : "text-gray-400"
-                }`}
-                onClick={() => handleTabClick(`${cat?.name}`)}
-              >
-                {cat?.name}
-              </button>
-            ))}
+            <button
+              className={`text-xl font-semibold ${
+                activeTab === 4
+                  ? "text-black border-b-4 border-black"
+                  : "text-yellow-900"
+              }`}
+              onClick={() => handleTabClick(4)}
+            >
+              Shop
+            </button>
+            <button
+              className={`text-xl font-semibold ${
+                activeTab === 3
+                  ? "text-black border-b-4 border-black"
+                  : "text-yellow-900"
+              }`}
+              onClick={() => handleTabClick(3)}
+            >
+              Tailor
+            </button>
           </div>
 
           <div className="pt-10 pb-20 w-[85%] m-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 cursor-pointer">
-            {activeTab === "All" && (
+            {activeTab === 1 ? (
               <>
-                {products?.data?.data?.map((prod, index) => (
+                {products?.data?.data?.data?.map((prod, index) => (
                   <Link
-                    className="relative [&>div]:hover:block [&>div:last-child]:hover:bottom-2 [&>div:last-child]:hover:animate-bounce"
-                    to={`/product-details/${prod?.slug}`}
+                    className="relative shadow-xl rounded-2xl hover:scale-105 duration-500"
+                    to={`/product-details/${prod?.id}`}
                     key={index}
                   >
-                    <ul class="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3">
-                      {prod?.itemAttributes?.map((attr, index) => (
-                        <li
+                    <div className="bg-white rounded-md border border-transparent cursor-pointer">
+                      <img
+                        src={`${BASE_URL}${prod?.image}`}
+                        alt={prod?.title}
+                        className="max-h-72 w-full object-cover object-top rounded-t-2xl mx-auto"
+                      />
+                    </div>
+                    <div
+                      class="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3"
+                      key={index}
+                    >
+                      {prod?.Colors?.map((data, index) => (
+                        <span
                           key={index}
-                          class="bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded"
+                          class="capitalize bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded"
                         >
-                          {attr?.value}
-                        </li>
+                          {data?.color}
+                        </span>
                       ))}
-                    </ul>
-
-                    <img
-                      src={`${BASE_URL}${prod?.thumbnail}`}
-                      alt={prod?.name}
-                      className="h-full w-full rounded-2xl object-cover hover:scale-105 duration-500"
-                    />
-                    <div className="bg-blue-400 uppercase text-center py-2 text-white rounded-b-md absolute w-full -bottom-20 hidden">
-                      {prod?.name}
+                    </div>
+                    <div className="space-y-2 p-3">
+                      <h4 className="text-xl font-semibold">{prod?.title}</h4>
+                      <p className="hidden lg:block  text-gray-400 text-sm">
+                        {(prod?.description).toString().substring(0, 42)}
+                      </p>
+                      <div className="flex items-center justify-between text-sm">
+                        <p className="text-blue-600 font font-semibold">
+                          ${prod?.price}
+                        </p>
+                        <div className="flex items-center text-black font-mono font-semibold">
+                          {prod?.type}
+                        </div>
+                      </div>
+                      <div className="bg-blue-400 uppercase text-center py-2 text-white rounded-b-md w-full">
+                        Buy Now
+                      </div>
                     </div>
                   </Link>
                 ))}
               </>
-            )}
-            {activeTab === "3DS Max" && (
+            ) : activeTab === 4 ? (
               <>
-                {products?.data?.data
-                  ?.filter((prod) => prod.category.name === activeTab)
-                  .map((prod, index) => (
+                {tabData?.map((prod, index) => (
                     <Link
                       className="relative [&>div]:hover:block [&>div:last-child]:hover:bottom-2 [&>div:last-child]:hover:animate-bounce"
-                      to={`/product-details/${prod?.slug}`}
+                      to={`/product-details/${prod?.id}`}
                       key={index}
                     >
-                      <ul class="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3">
-                        {prod?.itemAttributes?.map((attr, index) => (
-                          <li
+                      <div className="bg-white rounded-md border border-transparent cursor-pointer">
+                        <img
+                          src={`${BASE_URL}${prod?.image}`}
+                          alt={prod?.title}
+                          className="max-h-72 w-full object-cover object-top rounded-t-2xl mx-auto"
+                        />
+                      </div>
+                      <div
+                        className="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3"
+                        key={index}
+                      >
+                        {prod?.Colors?.map((data, index) => (
+                          <span
                             key={index}
-                            class="bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded"
+                            className="capitalize bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded"
                           >
-                            {attr?.value}
-                          </li>
+                            {data?.color}
+                          </span>
                         ))}
-                      </ul>
-
-                      <img
-                        src={`${BASE_URL}${prod?.thumbnail}`}
-                        alt={prod?.name}
-                        className="h-full w-full rounded-2xl object-cover hover:scale-105 duration-500"
-                      />
-                      <div className="bg-blue-400 uppercase text-center py-2 text-white rounded-b-md absolute w-full -bottom-20 hidden">
-                        {prod?.name}
+                      </div>
+                      <div className="space-y-2 p-3">
+                        <h4 className="text-sm">{prod?.title}</h4>{" "}
+                        {/* Adjusted here */}
+                        <p className="hidden lg:block text-gray-400 text-sm">
+                          {(prod?.description).toString().substring(0, 42)}
+                        </p>
+                        <div className="flex items-center justify-between text-sm">
+                          <p className="text-blue-600 font font-semibold">
+                            ${prod?.price}
+                          </p>
+                          <div className="flex items-center text-black font-mono font-semibold">
+                            {prod?.type}
+                          </div>
+                        </div>
+                        <div className="bg-blue-400 uppercase text-center py-2 text-white rounded-b-md w-full">
+                          Buy Now
+                        </div>
                       </div>
                     </Link>
                   ))}
-                {(!products?.data?.data ||
-                  products?.data?.data?.filter(
-                    (prod) => prod.category.name === activeTab
-                  ).length === 0) && (
-                  <div className="text-center mt-4 text-black">
-                    No Data.
-                  </div>
-                )}
               </>
-            )}
-            {activeTab === "Sketchup" && (
+            ) : activeTab === 3 ? (
               <>
-                {products?.data?.data
-                  ?.filter((prod) => prod.category.name === activeTab)
-                  .map((prod, index) => (
+                {tabData?.map((prod, index) => (
                     <Link
                       className="relative [&>div]:hover:block [&>div:last-child]:hover:bottom-2 [&>div:last-child]:hover:animate-bounce"
-                      to={`/product-details/${prod?.slug}`}
+                      to={`/product-details/${prod?.id}`}
                       key={index}
                     >
-                      <ul class="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3">
-                        {prod?.itemAttributes?.map((attr, index) => (
-                          <li
+                      <div className="bg-white rounded-md border border-transparent cursor-pointer">
+                        <img
+                          src={`${BASE_URL}${prod?.image}`}
+                          alt={prod?.title}
+                          className="max-h-72 w-full object-cover object-top rounded-t-2xl mx-auto"
+                        />
+                      </div>
+                      <div
+                        className="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3"
+                        key={index}
+                      >
+                        {prod?.Colors?.map((data, index) => (
+                          <span
                             key={index}
-                            class="bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded"
+                            className="capitalize bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded"
                           >
-                            {attr?.value}
-                          </li>
+                            {data?.color}
+                          </span>
                         ))}
-                      </ul>
-
-                      <img
-                        src={`${BASE_URL}${prod?.thumbnail}`}
-                        alt={prod?.name}
-                        className="h-full w-full rounded-2xl object-cover hover:scale-105 duration-500"
-                      />
-                      <div className="bg-blue-400 uppercase text-center py-2 text-white rounded-b-md absolute w-full -bottom-20 hidden">
-                        {prod?.name}
+                      </div>
+                      <div className="space-y-2 p-3">
+                        <h4 className="text-sm">{prod?.title}</h4>{" "}
+                        {/* Adjusted here */}
+                        <p className="hidden lg:block text-gray-400 text-sm">
+                          {(prod?.description).toString().substring(0, 42)}
+                        </p>
+                        <div className="flex items-center justify-between text-sm">
+                          <p className="text-blue-600 font font-semibold">
+                            ${prod?.price}
+                          </p>
+                          <div className="flex items-center text-black font-mono font-semibold">
+                            {prod?.type}
+                          </div>
+                        </div>
+                        <div className="bg-blue-400 uppercase text-center py-2 text-white rounded-b-md w-full">
+                          Buy Now
+                        </div>
                       </div>
                     </Link>
                   ))}
-                {(!products?.data?.data ||
-                  products?.data?.data?.filter(
-                    (prod) => prod.category.name === activeTab
-                  ).length === 0) && (
-                  <div className="text-center mt-4 text-black">
-                    No Data.
-                  </div>
-                )}
               </>
+            ) : (
+              <div className="text-center mt-4 text-black">
+                No Data. {activeTab}
+              </div>
             )}
           </div>
           <div className="bg-[#082835] py-5">

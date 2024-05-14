@@ -15,6 +15,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Profile from "./pages/Profile";
+import Search from "./pages/Search";
+import Tailor from "./pages/Tailor";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +37,11 @@ const router = createBrowserRouter([
   {
     path: "/page/:slug",
     element: <Shop />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/tailor",
+    element: <Tailor />,
     errorElement: <ErrorPage />,
   },
   {
@@ -61,6 +68,11 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <Profile />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/search",
+    element: <Search />,
     errorElement: <ErrorPage />,
   },
 ]);

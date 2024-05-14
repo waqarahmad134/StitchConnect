@@ -11,7 +11,7 @@ export default function Header() {
   const data = [
     { name: "Home", link: "/" },
     { name: "About", link: "/about" },
-    { name: "Tailors", link: "/page/tailors" },
+    { name: "Tailors", link: "/tailor" },
     { name: "Shops", link: "/page/shops" },
     { name: "Contact", link: "/contact" },
   ];
@@ -139,7 +139,7 @@ export default function Header() {
 
             <div>
               <button
-                className="text-white text-4xl lg:hidden block"
+                className="text-black text-4xl lg:hidden block"
                 onClick={handleOpen}
               >
                 <HiMenu />
