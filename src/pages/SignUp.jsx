@@ -60,7 +60,7 @@ export default function SignUp() {
     <div className="">
       <Header />
       <section className="bg-signUpHero bg-no-repeat bg-cover bg-center relative before:content-[''] before:absolute before:w-full before:h-full before:bg-black before:bg-opacity-50 before:top-0 before:left-0 ">
-        <div className="h-100 w-10/12 m-auto flex justify-center items-center relative z-20 py-10">
+        <div className="h-100 w-10/12 m-auto h-[80vh] flex justify-center items-center relative z-20">
           <div className="text-center bg-white bg-opacity-60 rounded-xl p-5 min-w-96 space-y-12">
             <h1 className="font-semibold">Registeration Form</h1>
             <div className="grid grid-cols-2 gap-3">

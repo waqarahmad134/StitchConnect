@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Card from "../components/Card";
 import GetAPI from "../utilities/GetAPI";
 import Header from "../components/Header";
@@ -8,21 +8,21 @@ import Loader from "../components/Loader";
 import { Paginator } from "primereact/paginator";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import "primereact/resources/primereact.min.css";
+import { BASE_URL } from "../utilities/URL";
 
 export default function Shop() {
-  const { slug } = useParams();
+  const { pathname } = useLocation();
   const [loading, setLoading] = useState(true);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(12);
   const [activeCat, setActiveCat] = useState("all");
-  const products = GetAPI("tailor/shop_products");
-  console.log("🚀 ~ Tailor ~ products:", products?.data?.data?.data);
+  const shops = GetAPI("tailor/get_all_shops");
+  console.log("🚀 ~ Tailor ~ products:", shops?.data?.data?.data);
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
     window.scrollTo(0, 0);
   };
-
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1500);
@@ -31,12 +31,12 @@ export default function Shop() {
     <Loader />
   ) : (
     <>
-       <Header />
+      <Header />
       <section>
         <div>
           <div className="bg-exteriorHeroBg bg-cover bg-center bg-no-repeat w-full h-80 flex justify-center items-center">
             <h2 className="text-2xl md:text-3xl lg:text-6xl text-white font-semibold uppercase">
-              {slug}
+              {pathname}
             </h2>
           </div>
 
@@ -44,7 +44,7 @@ export default function Shop() {
             <div className="md:col-span-2">
               <div className="cat-section hidden md:block">
                 <div className="py-4 lg:py-8 border-gray-400 border-b-[1px] space-y-6">
-                  <h2 className="uppercase font-medium">Nearby {slug}</h2>
+                  <h2 className="uppercase font-medium">Nearby {pathname}</h2>
                   <div className="space-y-2">
                     <button
                       onClick={() => setActiveCat("all")}
@@ -52,18 +52,14 @@ export default function Shop() {
                     >
                       All
                     </button>
-                    <button
-                      onClick={() => setActiveCat("Fabrics")}
-                      className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
-                    >
-                      Fabrics
-                    </button>
-                    <button
-                      onClick={() => setActiveCat("Clothing")}
-                      className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
-                    >
-                      Clothing
-                    </button>
+                    {shops?.data?.data?.categories.map((data, index) => (
+                      <button
+                        onClick={() => setActiveCat("Fabrics")}
+                        className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
+                      >
+                        {data.title}
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -74,7 +70,7 @@ export default function Shop() {
                   <h2 className="my-3">
                     Home &nbsp;
                     <span className="text-medium uppercase font-semibold">
-                      {slug}
+                      {pathname}
                     </span>
                   </h2>
                 </div>
@@ -82,71 +78,48 @@ export default function Shop() {
               <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-x-2 md:gap-x-3 gap-y-2 md:gap-y-3">
                 {activeCat === "all" ? (
                   <>
-                    {products?.data?.data?.data
+                    {shops?.data?.data?.data
                       ?.slice(first, first + rows)
                       .map((prod, index) => (
-                        <Card
-                          index={index}
-                          id={prod?.id}
-                          title={prod?.title}
-                          image={prod?.image}
-                          Images={prod?.Images}
-                          description={prod?.description}
-                          price={prod?.price}
-                          Colors={prod?.Colors}
-                        />
-                      ))}
-                  </>
-                ) : activeCat === "Fabrics" ? (
-                  <>
-                    {products?.data?.data?.data
-                      .filter(
-                        (prod) => prod?.ProductCategory?.title === activeCat
-                      )
-                      ?.slice(first, first + rows)
-                      .map((prod, index) => (
-                        <Card
-                          index={index}
-                          id={prod?.id}
-                          title={prod?.title}
-                          image={prod?.image}
-                          Images={prod?.Images}
-                          description={prod?.description}
-                          price={prod?.price}
-                          Colors={prod?.Colors}
-                        />
-                      ))}
-                  </>
-                ) : activeCat === "Clothing" ? (
-                  <>
-                    {products?.data?.data?.data
-                      .filter(
-                        (prod) => prod?.ProductCategory?.title === activeCat
-                      )
-                      ?.slice(first, first + rows)
-                      .map((prod, index) => (
-                        <Card
-                          index={index}
-                          id={prod?.id}
-                          title={prod?.title}
-                          image={prod?.image}
-                          Images={prod?.Images}
-                          description={prod?.description}
-                          price={prod?.price}
-                          Colors={prod?.Colors}
-                        />
+                        <div
+                          className="relative shadow-xl rounded-2xl hover:scale-105 duration-500"
+                          key={index}
+                        >
+                          <div className="border border-transparent cursor-pointer">
+                            <Link to={`/product-details/${prod?.id}`}>
+                              <img
+                                src={`${BASE_URL}${prod?.image}`}
+                                alt={prod?.title}
+                                className="max-h-96 object-top w-full object-cover rounded-t-2xl mx-auto"
+                              />
+                            </Link>
+                          </div>
+                          <div className="space-y-2 p-3">
+                            <h4 className="text-sm">{prod?.title}</h4>
+                            <p className="hidden lg:block  text-gray-400 text-sm">
+                              {(prod?.description).substring(0, 42)}
+                            </p>
+
+                            <Link
+                              to={`/shop-details/${prod?.id}`}
+                              className="block bg-blue-400 uppercase text-center py-2 text-white rounded-b-md w-full"
+                            >
+                              View Details
+                            </Link>
+                          </div>
+                        </div>
                       ))}
                   </>
                 ) : (
                   <>No data Available</>
                 )}
               </div>
-              {products?.data?.data?.length > 10 && (
+              {shops?.data?.data?.length > 10 && (
                 <div className="p-3 my-5 rounded-lg">
                   <Paginator
                     first={first}
                     rows={rows}
-                    totalRecords={products?.data?.data?.length}
+                    totalRecords={shops?.data?.data?.length}
                     rowsPerPageOptions={[10, 20, 30]}
                     onPageChange={onPageChange}
                   />

@@ -17,6 +17,7 @@ import Contact from "./pages/Contact";
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
 import Tailor from "./pages/Tailor";
+import ShopDetails from "./pages/ShopDetails";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,11 @@ const router = createBrowserRouter([
   {
     path: "/tailor",
     element: <Tailor />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/shop-details/:slug",
+    element: <ShopDetails />,
     errorElement: <ErrorPage />,
   },
   {
