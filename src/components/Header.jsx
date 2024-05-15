@@ -1,12 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Logo from "../assets/images/logo.png";
-import { BsCart3, BsCashCoin } from "react-icons/bs";
+import { BsCart3 } from "react-icons/bs";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { HiMenu } from "react-icons/hi";
-import GetAPI from "../utilities/GetAPI";
-import { useMediaQuery } from "@chakra-ui/react";
+import { useDisclosure, useMediaQuery } from "@chakra-ui/react";
 import { RxAvatar } from "react-icons/rx";
 import { info_toaster } from "../utilities/Toaster";
+import { PiTShirtDuotone } from "react-icons/pi";
+
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalFooter,
+  ModalBody,
+} from '@chakra-ui/react'
+
+import {
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+} from '@chakra-ui/react'
+
 export default function Header() {
   const data = [
     { name: "Home", link: "/" },
@@ -18,11 +35,16 @@ export default function Header() {
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem("cartItems")) || []
   );
+  console.log(cartItems)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const navigate = useNavigate();
   const location = useLocation().pathname;
   const [open, setOpen] = useState(false);
   const [addShadow, setAddShadow] = useState(false);
   const [dropDown, setDropDown] = useState(false);
+  const [openModel, setOpenModel] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
   const [screenWidth] = useMediaQuery("(min-width: 1024px)");
   const handleDelete = (index) => {
     const updatedCartItems = [...cartItems];
@@ -72,10 +94,64 @@ export default function Header() {
   };
   return (
     <>
+      <Modal isOpen={openModel}>
+        <ModalOverlay />
+        <ModalContent>
+          <div className="flex items-center justify-between w-full px-5 py-2">
+            <h2 className="text-2xl font-semibold">Add Size</h2>
+            <button onClick={() => setOpenModel(false)}>  X </button>
+          </div>
+          <ModalBody>
+
+          </ModalBody>
+          <ModalFooter>
+            <button className="text-white bg-blue-400 rounded-md py-2 px-3" onClick={() => setOpenModel(false)}>
+              Close
+            </button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <div className="flex items-center justify-between px-5 py-2">
+            <h2 className="text-2xl font-semibold">Cart</h2>
+            <button onClick={() => setOpenDrawer(false)}>  X </button>
+          </div>
+          <DrawerBody>
+            {cartItems && cartItems.length > 0 ? (
+              cartItems.map((cart, index) => (
+                <div key={index} className="flex items-center justify-between gap-x-2">
+                  <div className="flex items-center gap-x-3 my-2">
+                    <div className="border-2 border-gray-100 rounded-xl p-2">
+                      <img
+                        className="sm:w-20 sm:h-20 w-6 h-6 object-contain rounded-md"
+                        src={`${BASE_URL}${cart?.img}`}
+                        alt={cart?.name}
+                      />
+                    </div>
+                    <h5>
+                      <b>{cart?.name}</b>
+                    </h5>
+                  </div>
+
+                  <div className="">
+                    <h5>{cart?.amount} $</h5>
+                  </div>
+                  <div>
+                    <button onClick={() => handleDelete(cart?.id)}> X</button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div>No data in cart</div>
+            )}
+
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
       <header
-        className={`relative w-full z-50 py-1 md:py-3  ${
-          addShadow ? "shadow-lg" : ""
-        }`}
+        className={`relative w-full z-50 py-1 md:py-3  ${addShadow ? "shadow-lg" : ""}`}
       >
         <nav className="lg:w-[93%] xl:w-5/6 mx-auto relative flex justify-between items-center px-4 lg:px-0 py-2">
           <Link to="/">
@@ -85,11 +161,10 @@ export default function Header() {
           <div>
             <ul
               className={`lg:flex gap-4 xl:gap-5 justify-between items-center z-[-1] md:z-50 absolute lg:static
-              transition-all ease-in left-0 lg:opacity-100 opacity-0 w-full ${
-                open
+              transition-all ease-in left-0 lg:opacity-100 opacity-0 w-full ${open
                   ? "top-[84px] opacity-100 bg-slate-300 z-[999] border-t h-[calc(100vh-84px)] overflow-auto py-4"
                   : "top-[-400px]"
-              }`}
+                }`}
             >
               {data?.map((menu, index) => (
                 <>
@@ -106,13 +181,14 @@ export default function Header() {
                   </li>
                 </>
               ))}
-              <button className="text-2xl text-black hover:text-[#fe8133] [&>div]:hover:text-black relative">
-                <BsCart3 />
+              <button onClick={onOpen} className="text-2xl text-black hover:text-[#fe8133] [&>div]:hover:text-black relative">
+                <BsCart3 size={24} />
+
                 <div className="w-4 h-4 bg-[#fe8133] text-xs rounded-full absolute top-0 -right-2">
                   <span>{cartItems?.length > 0 ? cartItems.length : "0"}</span>
                 </div>
               </button>
-
+              <button onClick={() => setOpenModel(true)}><PiTShirtDuotone size={24} /></button>
               {!localStorage.getItem("accessToken") ? (
                 <div>
                   <Link

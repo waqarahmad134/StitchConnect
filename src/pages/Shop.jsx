@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Card from "../components/Card";
 import GetAPI from "../utilities/GetAPI";
 import Header from "../components/Header";
@@ -10,7 +10,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import "primereact/resources/primereact.min.css";
 
 export default function Shop() {
-  const { pathname } = useLocation();
+  const { slug } = useParams();
   const [loading, setLoading] = useState(true);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(12);
@@ -36,7 +36,7 @@ export default function Shop() {
         <div>
           <div className="bg-exteriorHeroBg bg-cover bg-center bg-no-repeat w-full h-80 flex justify-center items-center">
             <h2 className="text-2xl md:text-3xl lg:text-6xl text-white font-semibold uppercase">
-              {pathname}
+              {slug}
             </h2>
           </div>
 
@@ -44,7 +44,7 @@ export default function Shop() {
             <div className="md:col-span-2">
               <div className="cat-section hidden md:block">
                 <div className="py-4 lg:py-8 border-gray-400 border-b-[1px] space-y-6">
-                  <h2 className="uppercase font-medium">Nearby {pathname}</h2>
+                  <h2 className="uppercase font-medium">Nearby {slug}</h2>
                   <div className="space-y-2">
                     <button
                       onClick={() => setActiveCat("all")}
@@ -74,7 +74,7 @@ export default function Shop() {
                   <h2 className="my-3">
                     Home &nbsp;
                     <span className="text-medium uppercase font-semibold">
-                      {pathname}
+                      {slug}
                     </span>
                   </h2>
                 </div>
