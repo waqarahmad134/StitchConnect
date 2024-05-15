@@ -3,7 +3,7 @@ import Logo from "../assets/images/logo.png";
 import { BsCart3 } from "react-icons/bs";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { HiMenu } from "react-icons/hi";
-import { useDisclosure, useMediaQuery } from "@chakra-ui/react";
+import { DrawerCloseButton, useDisclosure, useMediaQuery } from "@chakra-ui/react";
 import { RxAvatar } from "react-icons/rx";
 import { info_toaster } from "../utilities/Toaster";
 import { PiTShirtDuotone } from "react-icons/pi";
@@ -35,17 +35,32 @@ export default function Header() {
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem("cartItems")) || []
   );
-  console.log(cartItems)
   const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const navigate = useNavigate();
   const location = useLocation().pathname;
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [addShadow, setAddShadow] = useState(false);
   const [dropDown, setDropDown] = useState(false);
   const [openModel, setOpenModel] = useState(false);
-  const [openDrawer, setOpenDrawer] = useState(false);
   const [screenWidth] = useMediaQuery("(min-width: 1024px)");
+  const prevSize = JSON.parse(localStorage.getItem("Size"));
+  const [size, setSize] = useState({
+    chest: prevSize !== "" ? prevSize?.chest : "",
+    waist: prevSize !== "" ? prevSize?.waist : "",
+    hips: prevSize !== "" ? prevSize?.hips : "",
+    sleeveLenght: prevSize !== "" ? prevSize?.sleeveLenght : "",
+    shoulderWidth: prevSize !== "" ? prevSize?.shoulderWidth : "",
+    inseam: prevSize !== "" ? prevSize?.inseam : "",
+    outseam: prevSize !== "" ? prevSize?.outseam : "",
+    neck: prevSize !== "" ? prevSize?.neck : "",
+    jacketLenght: prevSize !== "" ? prevSize?.jacketLenght : "",
+  });
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setSize({ ...size, [name]: value });
+    localStorage.setItem("Size", JSON.stringify({ ...size, [name]: value }));
+  };
+
   const handleDelete = (index) => {
     const updatedCartItems = [...cartItems];
     updatedCartItems.splice(index, 1);
@@ -102,21 +117,100 @@ export default function Header() {
             <button onClick={() => setOpenModel(false)}>  X </button>
           </div>
           <ModalBody>
-
+            <div className="grid grid-cols-2 gap-2">
+              <input
+                value={size.chest}
+                onChange={onChange}
+                name="chest"
+                type="text"
+                placeholder="Chest"
+                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-red-400 dark:focus:border-primary"
+              />
+              <input
+                value={size.waist}
+                onChange={onChange}
+                name="waist"
+                type="text"
+                placeholder="Waist"
+                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-red-400 dark:focus:border-primary"
+              />
+              <input
+                value={size.hips}
+                onChange={onChange}
+                name="hips"
+                type="text"
+                placeholder="Hips"
+                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-red-400 dark:focus:border-primary"
+              />
+              <input
+                value={size.sleeveLenght}
+                onChange={onChange}
+                name="sleeveLenght"
+                type="text"
+                placeholder="Sleeve Lenght"
+                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-red-400 dark:focus:border-primary"
+              />
+              <input
+                value={size.shoulderWidth}
+                onChange={onChange}
+                name="shoulderWidth"
+                type="text"
+                placeholder="Shoulder Width"
+                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-red-400 dark:focus:border-primary"
+              />
+              <input
+                value={size.inseam}
+                onChange={onChange}
+                name="inseam"
+                type="text"
+                placeholder="Inseam"
+                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-red-400 dark:focus:border-primary"
+              />
+              <input
+                value={size.outseam}
+                onChange={onChange}
+                name="outseam"
+                type="text"
+                placeholder="Outseam"
+                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-red-400 dark:focus:border-primary"
+              />
+              <input
+                value={size.neck}
+                onChange={onChange}
+                name="neck"
+                type="text"
+                placeholder="Neck"
+                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-red-400 dark:focus:border-primary"
+              />
+              <input
+                value={size.jacketLenght}
+                onChange={onChange}
+                name="jacketLenght"
+                type="text"
+                placeholder="Jacket Lenght"
+                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-red-400 dark:focus:border-primary"
+              />
+            </div>
           </ModalBody>
-          <ModalFooter>
-            <button className="text-white bg-blue-400 rounded-md py-2 px-3" onClick={() => setOpenModel(false)}>
+          <ModalFooter className="flex gap-x-2">
+            <button className="text-white bg-gray-400 rounded-md py-2 px-3" onClick={() => setOpenModel(false)}>
+              Submit
+            </button>
+            <button className="text-white bg-blue-400 rounded-md py-2 px-3" onClick={() => {
+              setOpenModel(false);
+              localStorage.removeItem("Size");
+            }}>
               Close
             </button>
           </ModalFooter>
         </ModalContent>
-      </Modal>
+      </Modal >
       <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>
           <div className="flex items-center justify-between px-5 py-2">
             <h2 className="text-2xl font-semibold">Cart</h2>
-            <button onClick={() => setOpenDrawer(false)}>  X </button>
+            <DrawerCloseButton />
           </div>
           <DrawerBody>
             {cartItems && cartItems.length > 0 ? (
@@ -148,6 +242,10 @@ export default function Header() {
             )}
 
           </DrawerBody>
+          <div className="px-5 py-2">
+
+            <button onClick={() => navigate("/cart")} class="bg-black text-white rounded-3xl px-5 py-2 my-5 w-full">Go To Checkout</button >
+          </div>
         </DrawerContent>
       </Drawer>
       <header
