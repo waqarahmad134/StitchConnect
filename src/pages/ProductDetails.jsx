@@ -19,21 +19,21 @@ export default function ProductDetails() {
   }
   const { slug } = useParams();
   const { data } = GetAPI(`tailor/product_details/${slug}`);
+  console.log(data?.data?.data)
   const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
   const addToCart = () => {
     const findIndex = cartItems.findIndex(
-      (ele) => ele.itemId === data?.data?.id
+      (ele) => ele.itemId === data?.data?.data?.id
     );
     if (findIndex !== -1) {
       warning_toaster("Product already in cart");
     } else {
       info_toaster("Product Added In Cart");
       let newCart = {
-        itemId: data?.data?.id,
-        img: data?.data?.thumbnail,
-        name: data?.data?.name,
-        amount: data?.data?.price,
-        discount: data?.data?.discount,
+        id: data?.data?.data?.id,
+        image: data?.data?.data?.image,
+        title: data?.data?.data?.title,
+        price: data?.data?.data?.price,
       };
       cartItems.push(newCart);
       localStorage.setItem("cartItems", JSON.stringify(cartItems));

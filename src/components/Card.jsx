@@ -6,7 +6,7 @@ export default function Card(props) {
   return (
     <>
       <div
-        className="relative shadow-xl rounded-2xl hover:scale-105 duration-500"
+        className="relative shadow-xl hover:scale-105 duration-500"
         key={props?.index}
       >
         <div className="border border-transparent cursor-pointer">
@@ -14,19 +14,19 @@ export default function Card(props) {
             <img
               src={`${BASE_URL}${props?.image}`}
               alt={props?.title}
-              className="max-h-96 object-top w-full object-cover rounded-t-2xl mx-auto"
+              className="min-h-32 max-h-96 object-top w-full object-cover"
             />
           </Link>
         </div>
         <div className="space-y-2 p-3">
-          <h4 className="text-sm">{props?.title}</h4>
+          <h4 className="text-xl font-semibold">{props?.title}</h4>
           <p className="hidden lg:block  text-gray-400 text-sm">
-            {(props?.description).substring(0, 42)}
+            {(props?.description)}
           </p>
         
           <Link
             to={`/product-details/${props?.id}`}
-            className="block bg-blue-400 uppercase text-center py-2 text-white rounded-b-md w-full"
+            className="block bg-gray-700 uppercase text-center py-2 text-white w-full"
           >
             View Details
           </Link>

@@ -17,7 +17,7 @@ export default function Shop() {
   const [rows, setRows] = useState(12);
   const [activeCat, setActiveCat] = useState("all");
   const shops = GetAPI("tailor/get_all_shops");
-  console.log("🚀 ~ Tailor ~ products:", shops?.data?.data?.data);
+  console.log("🚀 ~ shops ~ shops:", shops?.data);
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
