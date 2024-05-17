@@ -14,7 +14,7 @@ export default function Profile() {
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(12);
   const [loading, setLoading] = useState(true);
-  const { data } = GetAPI(`tailor/get_profile/4`);
+  const { data } = GetAPI(`tailor/get_profile/${parseInt(localStorage.getItem('senderId'))}`);
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
@@ -45,7 +45,7 @@ export default function Profile() {
                     <h1 className="italic text-2xl font-semibold">
                       {data?.data?.data?.name}
                     </h1>
-                    <h3>Shop / Traditional</h3>
+                    {/* <h3>Shop / Traditional</h3> */}
                     <h4>{data?.data?.data?.description}</h4>
                     <div>
                       <button className="flex items-center gap-x-2 bg-black text-white px-10 py-2">

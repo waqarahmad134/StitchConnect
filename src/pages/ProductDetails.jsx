@@ -116,7 +116,7 @@ export default function ProductDetails() {
           <div className="my-5">
             <h4 className="text-2xl font-semibold my-4">Related Products</h4>
             <div className="grid sm:grid-cols-3 gap-x-5 gap-y-5">
-              {data?.data?.related?.map((prod, index) => (
+              {data?.data?.related?.filter((prod) => prod.id !== slug).map((prod, index) => (
                 <Link
                   className="relative shadow-xl rounded-2xl hover:scale-105 duration-500"
                   to={`/product-details/${prod?.id}`}
