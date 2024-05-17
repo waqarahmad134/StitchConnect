@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import Card from "../components/Card";
 import GetAPI from "../utilities/GetAPI";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -17,7 +16,6 @@ export default function Shop() {
   const [rows, setRows] = useState(12);
   const [activeCat, setActiveCat] = useState("all");
   const shops = GetAPI("tailor/get_all_shops");
-  console.log("🚀 ~ shops ~ shops:", shops?.data);
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);

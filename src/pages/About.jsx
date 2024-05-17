@@ -9,7 +9,7 @@ export default function About() {
       <div className="w-3/4 mx-auto py-20">
         <div>
           <h1>
-            About<b> &nbsp; Stitch Connect</b>
+            About<b> Stitch Connect</b>
           </h1>
           <p>
             Welcome to <b>Stitch Connect</b> where we share information related

@@ -46,8 +46,8 @@ export default function SignIn() {
     <div className="">
       <Header />
       <section className="bg-signInHero bg-no-repeat bg-cover bg-center">
-        <div className="w-10/12 m-auto h-[80vh] flex h-100 items-center">
-          <div className="text-center bg-white rounded-xl p-5 min-w-96 space-y-12">
+        <div className="w-10/12 m-auto py-20">
+          <div className="text-center bg-white rounded-xl p-5 w-auto md:w-96 space-y-12">
             <h1 className="font-semibold">Login</h1>
             <form onSubmit={loginFunc} className="space-y-5 w-3/4 m-auto">
               <div className="relative">

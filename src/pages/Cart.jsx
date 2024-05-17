@@ -1,23 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import { ImOffice } from "react-icons/im";
+import React, { useState } from "react";
 import { FaDoorOpen } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import { GrMapLocation } from "react-icons/gr";
-import { MdEditCalendar } from "react-icons/md";
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
-} from "@chakra-ui/react";
-import { MdApartment, MdOutlinePayment } from "react-icons/md";
-import { IoArrowBackOutline, IoClose, IoHome } from "react-icons/io5";
-import {
-  error_toaster,
-  info_toaster,
-  success_toaster,
-} from "../utilities/Toaster";
+import { error_toaster, success_toaster } from "../utilities/Toaster";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { PostAPI } from "../utilities/PostAPI";
@@ -28,78 +12,56 @@ export default function Cart() {
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
-
-  const paymentFunc = async (e) => {
-    e.preventDefault();
-    
-      setLoading(true);
-      let res = await PostAPI("stripe/attach-card", {
-        cardName: "",
-        cardExpYear: "",
-        cardExpMonth: "",
-        cardNumber: "",
-        cardCVC: "",
-      });
-
-      if (res?.data?.data?.stripePaymentId.length > 0) {
-        success_toaster(res?.data?.message);
-        localStorage.setItem("payment", res?.data?.data?.stripePaymentId);
-        
-        setLoading(false);
-      } else {
-        error_toaster(res?.data?.error);
-        setLoading(false);
-      }
-    
-  };
-
   const [cartData, setCartData] = useState(
     JSON.parse(localStorage.getItem("cartItems")) || []
   );
+
   const handleDelete = (id) => {
-    const updatedCartItems = cartData.filter(item => item.id !== id);
-    alert(updatedCartItems)
+    const updatedCartItems = cartData.filter((item) => item?.productId !== id);
+    // console.log(updatedCartItems)
     setCartData(updatedCartItems);
     localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-    navigate(location);
-};
+    navigate(location.pathname);
+  };
+
   const calculateTotalAmount = () => {
     let total = 0;
     const data = JSON.parse(localStorage.getItem("cartItems"));
     data?.forEach((item) => {
-      total += parseFloat(item.amount);
+      total += parseFloat(item.price);
     });
     return total.toFixed(2);
   };
 
   const createOrder = async (e) => {
     e.preventDefault();
-    if (paymentDetails.cardName === "") {
-      info_toaster("Please Enter Payment Details");
-    } else {
-      setLoading(true);
-      let res = await PostAPI("item/purchase", {
-        paymentMethod: "stripe",
-        stripeCardId: localStorage.getItem("payment"),
-        total: cartData[0]?.amount,
-        items: cartData,
-      });
-      if (res?.data?.status === "1") {
-        setLoading(false);
-        success_toaster("Product Buy Sucessfully");
-        localStorage.removeItem("cartItems");
-        const NewLink = res?.data?.data?.downloadLinks[0]?.downloadLink;
-        const downloadLink = NewLink
-        if (downloadLink) {
-          const anchorElement = document.createElement("a");
-          anchorElement.href = downloadLink;
-          anchorElement.download = "filename"; 
-          anchorElement.setAttribute("target", "_blank");
-          document.body.appendChild(anchorElement);
-          anchorElement.click();
-          document.body.removeChild(anchorElement);
-        }
-        navigate("/");
+    setLoading(true);
+    let res = await PostAPI("tailor/place_order", {
+      price: calculateTotalAmount(),
+      userId: parseInt(localStorage.getItem("senderId")),
+      products: [
+        {
+          productId: "2",
+          title: "Product1",
+          price: 300,
+          qty: 1,
+        },
+      ],
+    });
+    if (res?.data?.status === "1") {
+      setLoading(false);
+      success_toaster("Order Placed Sucessfully");
+      localStorage.removeItem("cartItems");
+      const downloadLink = res?.data?.data?.sessionUrl;
+      navigate(location);
+      if (downloadLink) {
+        const anchorElement = document.createElement("a");
+        anchorElement.href = downloadLink;
+        anchorElement.download = "filename";
+        anchorElement.setAttribute("target", "_blank");
+        document.body.appendChild(anchorElement);
+        anchorElement.click();
+        document.body.removeChild(anchorElement);
       } else {
         setLoading(false);
         error_toaster(res?.data?.mesage);
@@ -122,9 +84,9 @@ export default function Cart() {
             {cartData?.map((cart, index) => (
               <div className="flex items-center justify-between gap-x-2">
                 <div className="flex items-center gap-x-3 my-2">
-                  <div className="border-2 border-gray-100 rounded-xl p-2">
+                  <div className="w-20 h-20 border-2 border-gray-100 rounded-xl p-2">
                     <img
-                      className="sm:w-20 sm:h-20 w-6 h-6 object-contain rounded-md"
+                      className="h-full w-full object-cover rounded-md"
                       src={`${BASE_URL}${cart?.image}`}
                       alt={cart?.title}
                     />
@@ -138,15 +100,16 @@ export default function Cart() {
                   <h5>{cart?.price} $</h5>
                 </div>
                 <div>
-                    <button onClick={() => handleDelete(cart?.id)}> X</button>
-                  </div>
+                  <button onClick={() => handleDelete(cart?.productId)}>
+                    {" "}
+                    X
+                  </button>
+                </div>
               </div>
             ))}
           </div>
-         
-          
         </div>
-        <div className="">
+        <div>
           <div className="bg-white rounded-lg shadow-lg p-5">
             <div className="flex items-center text-2xl gap-x-2">
               <h3 className="font-semibold ">Prices in EUR, incl. taxes</h3>

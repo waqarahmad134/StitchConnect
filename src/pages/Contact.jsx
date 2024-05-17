@@ -1,18 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import GetAPI from "../utilities/GetAPI";
 import { PostAPI } from "../utilities/PostAPI";
 import { BASE_URL } from "../utilities/URL";
+import Loader from "../components/Loader";
 
 export default function Contact() {
   const { data } = GetAPI("tailor/get_users");
   const [message, setMessage] = useState(null);
+  const [search, setSearch] = useState("");
   const [incoming, setIncoming] = useState([]);
   const [status, setStatus] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const chatContainerRef = useRef(null);
 
-  useEffect(() => {
+  const fetchChatData = () => {
     axios
       .get(
         BASE_URL +
@@ -23,7 +27,23 @@ export default function Contact() {
       .then((dat) => {
         setIncoming(dat?.data?.data?.data);
       });
+
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    fetchChatData();
   }, [status]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchChatData();
+    }, 5000);
+    return () => clearInterval(intervalId);
+  }, []);
+
 
   const handleClick = async (id) => {
     const recieverId = id;
@@ -58,7 +78,13 @@ export default function Contact() {
       }
     }
   };
-  return (
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 500);
+  }, []);
+  return loading ? (
+    <Loader />
+  ) : (
     <>
       <Header />
       <div className="lg:w-[93%] xl:w-5/6 mx-auto">
@@ -67,43 +93,60 @@ export default function Contact() {
             <div className="font-semibold text-2xl">Chat</div>
 
             <div className="h-12 w-12 p-2 bg-yellow-500 rounded-full text-white font-semibold flex items-center justify-center">
-              RA
+              {localStorage.getItem('name')}
             </div>
           </div>
           <div className="flex flex-row justify-between bg-white border h-[450px]">
-            <div className="flex flex-col w-2/5 border-r-2 overflow-y-auto ">
+            <div className="flex flex-col w-2/5 border-r-2 overflow-y-auto">
               <div className="border-b-2 py-4 px-5">
                 <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  name="search"
                   type="text"
-                  placeholder="search chatting"
+                  placeholder="Search Chatting"
                   className="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full"
                 />
               </div>
-              {data?.data?.data?.map((data, index) => (
-                <button
-                  onClick={() => handleClick(data?.id)}
-                  key={index}
-                  className="flex justify-start items-center border-b-2 py-4 px-5"
-                >
-                  <div className="w-1/4">
-                    <img
-                      src="../images/avatar.jpg"
-                      className="object-cover h-12 w-12 rounded-full border"
-                      alt={data.name}
-                    />
-                  </div>
-                  <div className="w-full text-start">
-                    <div className="text-lg font-semibold">
-                      {data?.name} {data?.id}
+              {data?.data?.data
+                ?.filter(
+                  (prod) =>
+                    prod.id !== parseInt(localStorage.getItem("senderId")) &&
+                    (prod.name.toLowerCase().includes(search.toLowerCase()) ||
+                      prod.email.toLowerCase().includes(search.toLowerCase()))
+                )
+                .map((data, index) => (
+                  <button
+                    onClick={() => handleClick(data?.id)}
+                    key={index}
+                    className={`flex flex-col md:flex-row  justify-start items-center border-b-2 py-4 px-5 ${
+                      data.id === parseInt(localStorage.getItem("recieverId"))
+                        ? "bg-gray-400"
+                        : "bg-transparent"
+                    }`}
+                  >
+                    <div className="md:w-1/4">
+                      <img
+                        src="../images/avatar.jpg"
+                        className="object-cover h-12 w-12 rounded-full border"
+                        alt={data.name}
+                      />
                     </div>
-                    <span className="text-gray-500">{data?.email}</span>
-                  </div>
-                </button>
-              ))}
+                    <div className="w-full text-start">
+                      <div className="text-lg font-semibold">{data?.name}</div>
+                      <span className="hidden md:block text-gray-500">
+                        {data?.email}
+                      </span>
+                    </div>
+                  </button>
+                ))}
             </div>
 
             <div className="w-full px-5 flex flex-col justify-between">
-              <div className="flex flex-col mt-5 px-5 overflow-auto">
+              <div
+                ref={chatContainerRef}
+                className="flex flex-col overflow-auto mt-5 md:px-5"
+              >
                 {incoming.map((data, index) =>
                   data.senderId ===
                   parseInt(localStorage.getItem("senderId")) ? (
@@ -114,7 +157,7 @@ export default function Contact() {
                       <img
                         src="../images/avatar.jpg"
                         className="object-cover h-8 w-8 rounded-full border border-black"
-                        alt=""
+                        alt="avatar"
                       />
                     </div>
                   ) : (
@@ -136,12 +179,12 @@ export default function Contact() {
                 <input
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  type="message"
+                  type="text"
                   name="message"
                   placeholder="Type your message here..."
                   className="w-full mx-auto h-14 bg-[#082835] rounded-full pl-6 outline-none border-none text-white"
                 />
-                <button className="absolute right-3 top-8 px-3 py-2 bg-blue-400 text-white rounded-md">
+                <button className="absolute right-3 top-8 px-3 py-2 bg-blue-400 text-white rounded-full">
                   Submit
                 </button>
               </form>

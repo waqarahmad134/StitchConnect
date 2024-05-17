@@ -30,9 +30,10 @@ export default function ProductDetails() {
     } else {
       info_toaster("Product Added In Cart");
       let newCart = {
-        id: data?.data?.data?.id,
+        productId: data?.data?.data?.id,
         image: data?.data?.data?.image,
         title: data?.data?.data?.title,
+        qty: 1,
         price: data?.data?.data?.price,
       };
       cartItems.push(newCart);
