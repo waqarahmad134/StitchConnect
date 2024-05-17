@@ -4,7 +4,6 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { IoPersonCircle } from "react-icons/io5";
 import { RiLockPasswordFill } from "react-icons/ri";
-import { MdOutlinePersonAddAlt } from "react-icons/md";
 
 import {
   error_toaster,
@@ -28,15 +27,15 @@ export default function SignIn() {
     } else if (signUp.password === "") {
       info_toaster("Please enter Password");
     } else {
-      let res = await PostAPI("auth/user-login/user", {
+      let res = await PostAPI("user/login", {
         email: signUp.email,
         password: signUp.password,
       });
       console.log(res?.data?.data);
       if (res?.data?.status === "1") {
         success_toaster("Login Sucessfull");
-        localStorage.setItem("vendorId", res?.data?.data?.vendorId);
-        localStorage.setItem("accessToken", res?.data?.data?.accessToken);
+        localStorage.setItem("senderId", res?.data?.data?.id);
+        localStorage.setItem("name", res?.data?.data?.name);
         navigate("/");
       } else {
         error_toaster(res?.data?.mesage);
@@ -50,15 +49,14 @@ export default function SignIn() {
         <div className="w-10/12 m-auto h-[80vh] flex h-100 items-center">
           <div className="text-center bg-white rounded-xl p-5 min-w-96 space-y-12">
             <h1 className="font-semibold">Login</h1>
-            <div className="space-y-5 w-3/4 m-auto">
+            <form onSubmit={loginFunc} className="space-y-5 w-3/4 m-auto">
               <div className="relative">
                 <input
-                  value={signUp.firstName}
+                  value={signUp.email}
                   onChange={onChange}
-                  name="firstName"
-                  id="firstName"
+                  name="email"
                   type="text"
-                  placeholder="Userame"
+                  placeholder="Email"
                   className="w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none"
                 />
                 <span className="absolute right-4 top-4 -translate-y-[4px]">
@@ -79,11 +77,10 @@ export default function SignIn() {
                   <RiLockPasswordFill size={32} />
                 </span>
               </div>
-              <div className="flex items-center gap-x-2 bg-black text-white rounded-lg py-2 px-3">
-                <MdOutlinePersonAddAlt size={32} />
-                <Link className="text-xl font-switzer font-semibold" to={"/auth/signup"}> Register</Link>
+              <div>
+                <button type="submit" className="w-full text-xl bg-black text-white rounded-lg py-2 px-3 font-switzer font-semibold"> Login</button>
               </div>
-            </div>
+            </form>
             <div>
                 <p className="text-xl">Can't Have Account ? <Link to={'/auth/signup'}>Register</Link> </p>
               </div>

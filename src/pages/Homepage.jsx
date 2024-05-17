@@ -19,8 +19,9 @@ export default function Homepage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(1);
   const products = GetAPI("tailor/all_products");
+  const getFeaturedData = GetAPI("tailor/featured_products");
+  console.log("🚀 ~ Homepage ~ getFeaturedData:", getFeaturedData)
   const tabData = products?.data?.data?.data?.filter((prod) => prod.UserId === parseInt(activeTab));
-  console.log("🚀 ~ Homepage ~ waqar:", tabData)
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };

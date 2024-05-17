@@ -1,9 +1,63 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import GetAPI from "../utilities/GetAPI";
+import { PostAPI } from "../utilities/PostAPI";
+import { BASE_URL } from "../utilities/URL";
 
 export default function Contact() {
-  const waqar = [1, 2, 3, 4, 5, 6, 7];
+  const { data } = GetAPI("tailor/get_users");
+  const [message, setMessage] = useState(null);
+  const [incoming, setIncoming] = useState([]);
+  const [status, setStatus] = useState(0);
+
+  useEffect(() => {
+    axios
+      .get(
+        BASE_URL +
+          `tailor/get_chat_get/${parseInt(
+            localStorage.getItem("senderId")
+          )}/${parseInt(localStorage.getItem("recieverId"))}/`
+      )
+      .then((dat) => {
+        setIncoming(dat?.data?.data?.data);
+      });
+  }, [status]);
+
+  const handleClick = async (id) => {
+    const recieverId = id;
+    localStorage.setItem("recieverId", recieverId);
+    let res = await PostAPI("tailor/get_chat", {
+      senderId: parseInt(localStorage.getItem("senderId")),
+      recieverId: id,
+    });
+    if (res?.data?.status === "1") {
+      setIncoming(res?.data?.data?.data);
+    } else {
+      error_toaster(res?.data?.mesage);
+    }
+  };
+
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    setStatus(1);
+    if (message === "") {
+      info_toaster("Please enter Message");
+    } else {
+      let res = await PostAPI("tailor/send_message", {
+        message: message,
+        senderId: parseInt(localStorage.getItem("senderId")),
+        recieverId: parseInt(localStorage.getItem("recieverId")),
+      });
+      if (res?.data?.status === "1") {
+        setStatus(0);
+        setMessage("");
+      } else {
+        error_toaster(res?.data?.mesage);
+      }
+    }
+  };
   return (
     <>
       <Header />
@@ -25,58 +79,72 @@ export default function Contact() {
                   className="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full"
                 />
               </div>
-              {waqar.map((data, index) => (
-                <div className=" flex flex-row py-4 px-5 justify-center items-center border-b-2">
+              {data?.data?.data?.map((data, index) => (
+                <button
+                  onClick={() => handleClick(data?.id)}
+                  key={index}
+                  className="flex justify-start items-center border-b-2 py-4 px-5"
+                >
                   <div className="w-1/4">
                     <img
                       src="../images/avatar.jpg"
-                      className="object-cover h-12 w-12 rounded-full"
-                      alt=""
+                      className="object-cover h-12 w-12 rounded-full border"
+                      alt={data.name}
                     />
                   </div>
-                  <div className="w-full">
-                    <div className="text-lg font-semibold">Tailor {data}</div>
-                    <span className="text-gray-500">Pick me at 9:00 Am</span>
+                  <div className="w-full text-start">
+                    <div className="text-lg font-semibold">
+                      {data?.name} {data?.id}
+                    </div>
+                    <span className="text-gray-500">{data?.email}</span>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
 
             <div className="w-full px-5 flex flex-col justify-between">
               <div className="flex flex-col mt-5 px-5 overflow-auto">
-                <div className="flex justify-end mb-4">
-                  <div className="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
-                    Welcome to group everyone !
-                  </div>
-                  <img
-                    src="../images/avatar.jpg"
-                    className="object-cover h-8 w-8 rounded-full border border-black"
-                    alt=""
-                  />
-                </div>
-                <div className="flex justify-start mb-4">
-                  <img
-                    src="../images/avatar.jpg"
-                    className="object-cover h-8 w-8 rounded-full"
-                    alt=""
-                  />
-                  <div className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Quaerat at praesentium, aut ullam delectus odio error sit
-                    rem. Architecto nulla doloribus laborum illo rem enim dolor
-                    odio saepe, consequatur quas?
-                  </div>
-                </div>
+                {incoming.map((data, index) =>
+                  data.senderId ===
+                  parseInt(localStorage.getItem("senderId")) ? (
+                    <div key={index} className="flex justify-end mb-4">
+                      <div className="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
+                        {data.message}
+                      </div>
+                      <img
+                        src="../images/avatar.jpg"
+                        className="object-cover h-8 w-8 rounded-full border border-black"
+                        alt=""
+                      />
+                    </div>
+                  ) : (
+                    <div key={index} className="flex justify-start mb-4">
+                      <img
+                        src="../images/avatar.jpg"
+                        className="object-cover h-8 w-8 rounded-full"
+                        alt=""
+                      />
+                      <div className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
+                        {data.message}
+                      </div>
+                    </div>
+                  )
+                )}
               </div>
-              <div className="py-5 relative">
+
+              <form onSubmit={sendMessage} className="py-5 relative">
                 <input
-                  className="w-full bg-gray-300 py-5 px-3 rounded-xl"
-                  type="text"
-                  placeholder="type your message here..."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  type="message"
+                  name="message"
+                  placeholder="Type your message here..."
+                  className="w-full mx-auto h-14 bg-[#082835] rounded-full pl-6 outline-none border-none text-white"
                 />
-                <button className="absolute right-3 top-8 px-3 py-2 bg-blue-400 text-white rounded-md">Submit</button>
-             
-              </div>
+                <button className="absolute right-3 top-8 px-3 py-2 bg-blue-400 text-white rounded-md">
+                  Submit
+                </button>
+              </form>
             </div>
           </div>
         </div>
