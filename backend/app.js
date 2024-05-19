@@ -23,6 +23,9 @@ app.use("/user", userRoute);
 app.use("/tailor", tailorRoute);
 app.use("/shop", shopRoute);
 app.use("/admin", AdminRoute);
+app.get("/", (req, res, next) => {
+  res.json(["Tony","Lisa","Michael","Ginger","Food"]);
+ });
 
 // Error middleware : To show any error if promise fails
 app.use(error);
