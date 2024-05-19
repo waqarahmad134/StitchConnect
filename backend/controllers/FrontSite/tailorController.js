@@ -97,7 +97,6 @@ async function registration(req, res) {
       });
   }
 }
-
 async function login(req, res) {
   const { email, password } = req.body;
   const user = await User.findOne({
@@ -139,7 +138,6 @@ async function login(req, res) {
     return res.json(response);
   }
 }
-
 async function all_products(req, res) {
   let data = await Product.findAll({
     include: [
@@ -149,6 +147,11 @@ async function all_products(req, res) {
     ],
   });
   let response = ApiResponse("1", "All Products", { data: data });
+  return res.json(response);
+}
+async function featured_products(req,res){
+  let data = await Product.findAll({where:{isFeatured:true}});
+  let response = ApiResponse("1","Data",{data});
   return res.json(response);
 }
 async function tailor_products(req, res) {
@@ -183,7 +186,6 @@ async function shop_products(req, res) {
   let response = ApiResponse("1", "All Products", { data: data, categories });
   return res.json(response);
 }
-
 async function product_details(req, res) {
   let productId = req.params.productId;
 
@@ -235,14 +237,12 @@ async function search_products(req, res) {
     return res.status(500).json(response);
   }
 }
-
 async function get_all_shops(req, res) {
   let data = await User.findAll({ where: { userType: "shop", status: true } });
   let categories = await ShopCategory.findAll({ where: { status: true } });
   let response = ApiResponse("1", "All Shops", { data, categories });
   return res.json(response);
 }
-
 async function shop_details(req, res) {
   const shopId = req.params.shopId;
   // return res.json(shopId)
@@ -254,7 +254,6 @@ async function shop_details(req, res) {
   });
   return res.json(response);
 }
-
 async function get_profile(req, res) {
   const userId = req.params.userId;
   let data = await User.findOne({
@@ -264,7 +263,6 @@ async function get_profile(req, res) {
   let response = ApiResponse("1", "Profile", { data });
   return res.json(response);
 }
-
 async function place_order(req, res) {
   const { price, userId, products } = req.body;
 
@@ -317,7 +315,6 @@ async function place_order(req, res) {
     return res.json(response);
   }
 }
-
 async function after_payment(req, res) {
   let order = await Order.findOne({ where: { id: req.params.orderId } });
   if (order) {
@@ -334,7 +331,6 @@ async function after_payment(req, res) {
       });
   }
 }
-
 async function send_message(req, res) {
   const { message, senderId, recieverId } = req.body;
   let chat = new Chat();
@@ -353,15 +349,12 @@ async function send_message(req, res) {
       return res.json(response);
     });
 }
-
 async function get_users(req,res){
   let data = await User.findAll({attributes:['id','email','name']});
   let response = ApiResponse("1","All Users",{data});
   return res.json(response);
 }
-
 async function get_chat(req,res){
-
   const { senderId, recieverId } = req.body;
   const data = await Chat.findAll({
     where: {
@@ -375,7 +368,6 @@ async function get_chat(req,res){
   return res.json(response)
 }
 async function get_chat_get(req,res){
-
   const { senderId, recieverId } = req.params;
   const data = await Chat.findAll({
     where: {
@@ -393,6 +385,7 @@ module.exports = {
   registration,
   login,
   all_products,
+  featured_products,
   tailor_products,
   shop_products,
   product_details,
