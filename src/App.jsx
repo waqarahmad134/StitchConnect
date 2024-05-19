@@ -19,6 +19,7 @@ import Search from "./pages/Search";
 import Tailor from "./pages/Tailor";
 import ShopDetails from "./pages/ShopDetails";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 const router = createBrowserRouter([
   {
@@ -87,6 +88,7 @@ function App() {
   return (
     <div>
       <Analytics />
+      <SpeedInsights/>
       <ToastContainer />
       <PrimeReactProvider>
         <ChakraProvider>
