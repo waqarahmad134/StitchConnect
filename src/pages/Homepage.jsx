@@ -1,12 +1,18 @@
 import React, { useState } from "react";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import GetAPI from "../utilities/GetAPI";
 import { PostAPI } from "../utilities/PostAPI";
 import { IoIosSearch } from "react-icons/io";
+import { MdOutlineShoppingCart } from "react-icons/md";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { BASE_URL } from "../utilities/URL";
-import { error_toaster, success_toaster } from "../utilities/Toaster";
+import {
+  error_toaster,
+  info_toaster,
+  success_toaster,
+  warning_toaster,
+} from "../utilities/Toaster";
 import Loader from "../components/Loader";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -15,16 +21,20 @@ import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 
 export default function Homepage() {
-  const location = useLocation().pathname;
+  const location = useLocation();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = useState("all");
   const products = GetAPI("tailor/all_products");
   const getFeaturedData = GetAPI("tailor/featured_products");
-  console.log("🚀 ~ Homepage ~ getFeaturedData:", getFeaturedData)
-  const tabData = products?.data?.data?.data?.filter((prod) => prod.UserId === parseInt(activeTab));
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
+  const tabData = products?.data?.data?.data?.filter(
+    (prod) => prod.ProductCategory?.title === activeTab
+  );
+  console.log(tabData);
+
+  if (!localStorage.getItem("cartItems")) {
+    localStorage.setItem("cartItems", "[]");
+  }
+  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
 
   const [search, setSearch] = useState();
   const searchFunc = async (e) => {
@@ -45,6 +55,25 @@ export default function Homepage() {
       } else {
         error_toaster(res?.data?.mesage);
       }
+    }
+  };
+
+  const addToCart = (data) => {
+    const findIndex = cartItems.findIndex((ele) => ele.productId === data?.id);
+    if (findIndex !== -1) {
+      warning_toaster("Product already in cart");
+    } else {
+      info_toaster("Product Added In Cart");
+      let newCart = {
+        productId: data?.id,
+        image: data?.image,
+        title: data?.title,
+        qty: 1,
+        price: data?.price,
+      };
+      cartItems.push(newCart);
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      navigate(`/`);
     }
   };
   return (
@@ -113,56 +142,48 @@ export default function Homepage() {
                   ? "text-black border-b-4 border-black"
                   : "text-yellow-900"
               }`}
-              onClick={() => handleTabClick(1)}
+              onClick={() => setActiveTab("all")}
             >
               All
             </button>
-            <button
-              className={`text-xl font-semibold ${
-                activeTab === 4
-                  ? "text-black border-b-4 border-black"
-                  : "text-yellow-900"
-              }`}
-              onClick={() => handleTabClick(4)}
-            >
-              Shop
-            </button>
-            <button
-              className={`text-xl font-semibold ${
-                activeTab === 3
-                  ? "text-black border-b-4 border-black"
-                  : "text-yellow-900"
-              }`}
-              onClick={() => handleTabClick(3)}
-            >
-              Tailor
-            </button>
+            {products?.data?.data?.categories?.map((cat, index) => (
+              <button
+                className={`text-xl font-semibold ${
+                  activeTab === 4
+                    ? "text-black border-b-4 border-black"
+                    : "text-yellow-900"
+                }`}
+                onClick={() => setActiveTab(cat?.title)}
+              >
+                {cat?.title}
+              </button>
+            ))}
           </div>
 
           <div className="pt-10 pb-20 w-[85%] m-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 cursor-pointer">
-            {activeTab === 1 ? (
+            {activeTab === "all" ? (
               <>
                 {products?.data?.data?.data?.map((prod, index) => (
                   <Link
-                    className="relative shadow-xl rounded-2xl hover:scale-105 duration-500"
-                    to={`/product-details/${prod?.id}`}
+                    className="relative shadow-xl hover:scale-105 duration-500"
+                    to={`/shop-details/${prod?.id}`}
                     key={index}
                   >
-                    <div className="bg-white rounded-md border border-transparent cursor-pointer">
+                    <div className="h-44 bg-white border border-transparent cursor-pointer">
                       <img
                         src={`${BASE_URL}${prod?.image}`}
                         alt={prod?.title}
-                        className="max-h-72 w-full object-cover object-top rounded-t-2xl mx-auto"
+                        className="h-full w-full object-cover object-top mx-auto"
                       />
                     </div>
                     <div
-                      class="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3"
+                      className="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3"
                       key={index}
                     >
                       {prod?.Colors?.map((data, index) => (
                         <span
                           key={index}
-                          class="capitalize bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded"
+                          className="capitalize bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded"
                         >
                           {data?.color}
                         </span>
@@ -181,116 +202,133 @@ export default function Homepage() {
                           {prod?.type}
                         </div>
                       </div>
-                      <div className="bg-blue-400 uppercase text-center py-2 text-white rounded-b-md w-full">
+                      <div className="bg-blue-400 uppercase text-center py-2 text-white w-full">
                         Buy Now
                       </div>
                     </div>
                   </Link>
                 ))}
               </>
-            ) : activeTab === 4 ? (
-              <>
-                {tabData?.map((prod, index) => (
-                    <Link
-                      className="relative [&>div]:hover:block [&>div:last-child]:hover:bottom-2 [&>div:last-child]:hover:animate-bounce"
-                      to={`/product-details/${prod?.id}`}
-                      key={index}
-                    >
-                      <div className="bg-white rounded-md border border-transparent cursor-pointer">
-                        <img
-                          src={`${BASE_URL}${prod?.image}`}
-                          alt={prod?.title}
-                          className="max-h-72 w-full object-cover object-top rounded-t-2xl mx-auto"
-                        />
-                      </div>
-                      <div
-                        className="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3"
-                        key={index}
-                      >
-                        {prod?.Colors?.map((data, index) => (
-                          <span
-                            key={index}
-                            className="capitalize bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded"
-                          >
-                            {data?.color}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="space-y-2 p-3">
-                        <h4 className="text-sm">{prod?.title}</h4>{" "}
-                        {/* Adjusted here */}
-                        <p className="hidden lg:block text-gray-400 text-sm">
-                          {(prod?.description).toString().substring(0, 42)}
-                        </p>
-                        <div className="flex items-center justify-between text-sm">
-                          <p className="text-blue-600 font font-semibold">
-                            ${prod?.price}
-                          </p>
-                          <div className="flex items-center text-black font-mono font-semibold">
-                            {prod?.type}
-                          </div>
-                        </div>
-                        <div className="bg-blue-400 uppercase text-center py-2 text-white rounded-b-md w-full">
-                          Buy Now
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-              </>
-            ) : activeTab === 3 ? (
-              <>
-                {tabData?.map((prod, index) => (
-                    <Link
-                      className="relative [&>div]:hover:block [&>div:last-child]:hover:bottom-2 [&>div:last-child]:hover:animate-bounce"
-                      to={`/product-details/${prod?.id}`}
-                      key={index}
-                    >
-                      <div className="bg-white rounded-md border border-transparent cursor-pointer">
-                        <img
-                          src={`${BASE_URL}${prod?.image}`}
-                          alt={prod?.title}
-                          className="max-h-72 w-full object-cover object-top rounded-t-2xl mx-auto"
-                        />
-                      </div>
-                      <div
-                        className="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3"
-                        key={index}
-                      >
-                        {prod?.Colors?.map((data, index) => (
-                          <span
-                            key={index}
-                            className="capitalize bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded"
-                          >
-                            {data?.color}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="space-y-2 p-3">
-                        <h4 className="text-sm">{prod?.title}</h4>{" "}
-                        {/* Adjusted here */}
-                        <p className="hidden lg:block text-gray-400 text-sm">
-                          {(prod?.description).toString().substring(0, 42)}
-                        </p>
-                        <div className="flex items-center justify-between text-sm">
-                          <p className="text-blue-600 font font-semibold">
-                            ${prod?.price}
-                          </p>
-                          <div className="flex items-center text-black font-mono font-semibold">
-                            {prod?.type}
-                          </div>
-                        </div>
-                        <div className="bg-blue-400 uppercase text-center py-2 text-white rounded-b-md w-full">
-                          Buy Now
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-              </>
             ) : (
-              <div className="text-center mt-4 text-black">
-                No Data. {activeTab}
-              </div>
+              <>
+                {tabData && tabData.length > 0 ? (
+                  tabData.map((prod, index) => (
+                    <Link
+                      className="relative shadow-xl hover:scale-105 duration-500"
+                      to={`/shop-details/${prod?.id}`}
+                      key={index}
+                    >
+                      <div className="h-44 bg-white border border-transparent cursor-pointer">
+                        <img
+                          src={`${BASE_URL}${prod?.image}`}
+                          alt={prod?.title}
+                          className="h-full w-full object-cover object-top mx-auto"
+                        />
+                      </div>
+                      <div
+                        className="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3"
+                        key={index}
+                      >
+                        {prod?.Colors?.map((data, index) => (
+                          <span
+                            key={index}
+                            className="capitalize bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded"
+                          >
+                            {data?.color}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="space-y-2 p-3">
+                        <h4 className="text-xl font-semibold">{prod?.title}</h4>
+                        <p className="hidden lg:block  text-gray-400 text-sm">
+                          {(prod?.description).toString().substring(0, 42)}
+                        </p>
+                        <div className="flex items-center justify-between text-sm">
+                          <p className="text-blue-600 font font-semibold">
+                            ${prod?.price}
+                          </p>
+                          <div className="flex items-center text-black font-mono font-semibold">
+                            {prod?.type}
+                          </div>
+                        </div>
+                        <div className="bg-blue-400 uppercase text-center py-2 text-white w-full">
+                          Buy Now
+                        </div>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <div>No data available in {activeTab}</div>
+                )}
+              </>
             )}
+          </div>
+          <div className="bg-gray-200 py-5">
+            <div className="text-4xl font-medium w-[85%] m-auto">
+              <h2 className="text-black text-4xl font-medium">
+                Featured Product's
+              </h2>
+              <div>
+                <Swiper
+                  slidesPerView={3}
+                  spaceBetween={10}
+                  autoplay={{
+                    delay: 1000,
+                    disableOnInteraction: false,
+                  }}
+                  loop={true}
+                  pagination={{
+                    clickable: true,
+                  }}
+                  modules={[Autoplay, Pagination, Navigation]}
+                  className="mySwiper py-10"
+                >
+                  {getFeaturedData?.data?.data?.data.map((prod, index) => (
+                    <SwiperSlide>
+                      <div
+                        key={index}
+                        className="relative flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md"
+                      >
+                        <a
+                          className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl"
+                          href="#"
+                        >
+                          <img
+                            className="object-cover"
+                            src={`${BASE_URL}${prod?.image}`}
+                            alt={prod?.title}
+                          />
+                        </a>
+                        <div className="mt-4 px-5 pb-5">
+                          <a href="#">
+                            <h5 className="text-xl tracking-tight text-slate-900">
+                              {prod?.title}
+                            </h5>
+                          </a>
+                          <div className="mt-2 mb-5 flex items-center justify-between">
+                            <p>
+                              <span className="text-3xl font-bold text-slate-900">
+                                {prod?.price}
+                              </span>
+                              <span className="text-sm text-slate-900 line-through">
+                                $699
+                              </span>
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => addToCart(prod)}
+                            className="flex items-center justify-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                          >
+                            <MdOutlineShoppingCart />
+                            Buy Now
+                          </button>
+                        </div>
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+            </div>
           </div>
           <div className="bg-[#082835] py-5">
             <h2 className="text-white text-4xl font-medium w-[85%] m-auto">

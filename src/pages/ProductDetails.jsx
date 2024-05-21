@@ -14,16 +14,15 @@ export default function ProductDetails() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { slug } = useParams();
+  const { data } = GetAPI(`tailor/product_details/${slug}`);
   if (!localStorage.getItem("cartItems")) {
     localStorage.setItem("cartItems", "[]");
   }
-  const { slug } = useParams();
-  const { data } = GetAPI(`tailor/product_details/${slug}`);
-  console.log(data?.data?.data)
   const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
   const addToCart = () => {
     const findIndex = cartItems.findIndex(
-      (ele) => ele.itemId === data?.data?.data?.id
+      (ele) => ele.productId === data?.data?.data?.id
     );
     if (findIndex !== -1) {
       warning_toaster("Product already in cart");
@@ -130,13 +129,13 @@ export default function ProductDetails() {
                     />
                   </div>
                   <div
-                    class="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3"
+                    className="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3"
                     key={index}
                   >
                     {prod?.Colors?.map((data, index) => (
                       <span
                         key={index}
-                        class="capitalize bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded"
+                        className="capitalize bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded"
                       >
                         {data?.color}
                       </span>

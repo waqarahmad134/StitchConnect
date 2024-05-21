@@ -139,6 +139,10 @@ async function login(req, res) {
   }
 }
 async function all_products(req, res) {
+  let categories = await ProductCategory.findAll({
+    where: { userType: process.env.SHOP },
+    attributes: ["id", "title"],
+  });
   let data = await Product.findAll({
     include: [
       { model: Color, attributes: ["color"] },
@@ -146,7 +150,7 @@ async function all_products(req, res) {
       { model: ProductCategory, attributes: ["id", "title"] },
     ],
   });
-  let response = ApiResponse("1", "All Products", { data: data });
+  let response = ApiResponse("1", "All Products", { data: data , categories });
   return res.json(response);
 }
 async function featured_products(req,res){
@@ -213,7 +217,6 @@ async function product_details(req, res) {
 }
 async function search_products(req, res) {
   const { title } = req.body;
-
   try {
     let data = await Product.findAll({
       where: {

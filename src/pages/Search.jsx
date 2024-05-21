@@ -44,11 +44,11 @@ export default function Search() {
                           />
                         </div>
                         <div
-                          class="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3"
+                          className="absolute top-3 left-4 z-10 flex flex-wrap items-center gap-3"
                           key={index}
                         >
                           {prod?.Colors?.map((data, index) => (
-                            <span key={index} class="capitalize bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded">
+                            <span key={index} className="capitalize bg-yellow-100 text-yellow-800 text-[10px] md:text-xs font-medium px-1 md:px-2.5 py-0.5 rounded">
                               {data?.color}
                             </span>
                           ))}

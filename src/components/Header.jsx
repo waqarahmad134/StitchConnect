@@ -254,7 +254,7 @@ export default function Header() {
           <div className="px-5 py-2">
             <button
               onClick={() => navigate("/cart")}
-              class="bg-black text-white rounded-3xl px-5 py-2 my-5 w-full"
+              className="bg-black text-white rounded-3xl px-5 py-2 my-5 w-full"
             >
               Go To Checkout
             </button>
