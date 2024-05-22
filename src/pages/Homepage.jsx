@@ -215,7 +215,7 @@ export default function Homepage() {
             ) : (
               <>
                 {tabData && tabData.length > 0 ? (
-                  tabData.map((prod, index) => (
+                  tabData?.map((prod, index) => (
                     <Link
                       className="relative shadow-xl hover:scale-105 duration-500"
                       to={`/shop-details/${prod?.id}`}
@@ -286,7 +286,7 @@ export default function Homepage() {
                   modules={[Autoplay, Pagination, Navigation]}
                   className="mySwiper py-10"
                 >
-                  {getFeaturedData?.data?.data?.data.map((prod, index) => (
+                  {getFeaturedData?.data?.data?.data?.map((prod, index) => (
                     <SwiperSlide>
                       <div
                         key={index}

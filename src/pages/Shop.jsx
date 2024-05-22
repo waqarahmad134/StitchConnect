@@ -47,7 +47,7 @@ export default function Shop() {
                     <button
                       onClick={() => setActiveCat("1")}
                       className={`w-full text-xl font-semibold rounded-full border ${
-                        activeCat === "all"
+                        activeCat === "1"
                           ? "bg-black text-white"
                           : "text-gray-600 bg-transparent"
                       } hover:border hover:text-white hover:bg-gray-500 py-3 px-5`}
@@ -59,7 +59,7 @@ export default function Shop() {
                         key={index}
                         onClick={() => setActiveCat(data.id)}
                         className={`w-full text-xl font-semibold rounded-full border ${
-                          activeCat === "all"
+                          activeCat === data.id
                             ? "bg-black text-white"
                             : "text-gray-600 bg-transparent"
                         } hover:border hover:text-white hover:bg-gray-500 py-3 px-5`}

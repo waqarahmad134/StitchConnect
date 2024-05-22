@@ -10,13 +10,13 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import "primereact/resources/primereact.min.css";
 
 export default function ShopDetails() {
-  const { pathname } = useLocation();
   const { slug } = useParams();
   const [loading, setLoading] = useState(true);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(12);
   const [activeCat, setActiveCat] = useState("all");
   const products = GetAPI(`tailor/shop_details/${slug}`);
+  console.log("🚀 ~ ShopDetails ~ products:", products?.data)
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
@@ -48,16 +48,24 @@ export default function ShopDetails() {
                   <div className="space-y-2">
                     <button
                       onClick={() => setActiveCat("all")}
-                      className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
-                    >
+                      className={`w-full text-xl font-semibold rounded-full border ${
+                        activeCat === "all"
+                          ? "bg-black text-white"
+                          : "text-gray-600 bg-transparent"
+                      } hover:border hover:text-white hover:bg-gray-500 py-3 px-5`}
+                      >
                       All
                     </button>
                     {products?.data?.data?.categories?.map((data, index) => (
                       <button
                         key={index}
-                        onClick={() => setActiveCat("all")}
-                        className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
-                      >
+                        onClick={() => setActiveCat(data.id)}
+                        className={`w-full text-xl font-semibold rounded-full border ${
+                          activeCat === data.id
+                            ? "bg-black text-white"
+                            : "text-gray-600 bg-transparent"
+                        } hover:border hover:text-white hover:bg-gray-500 py-3 px-5`}
+                       >
                         {data?.title}
                       </button>
                     ))}
@@ -95,7 +103,22 @@ export default function ShopDetails() {
                       ))}
                   </>
                 ) : (
-                  <>No data Available</>
+                  <>
+                    {products?.data?.data?.data?.filter((prod) => prod.ProductCategoryId === parseInt(activeCat))
+                      ?.slice(first, first + rows)
+                      .map((prod, index) => (
+                        <Card
+                          index={index}
+                          id={prod?.id}
+                          title={prod?.title}
+                          image={prod?.image}
+                          Images={prod?.Images}
+                          description={prod?.description}
+                          price={prod?.price}
+                          Colors={prod?.Colors}
+                        />
+                      ))}
+                  </>
                 )}
               </div>
               {products?.data?.data?.length > 10 && (

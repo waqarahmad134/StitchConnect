@@ -17,6 +17,7 @@ export default function Tailor() {
   const [rows, setRows] = useState(12);
   const [activeCat, setActiveCat] = useState("all");
   const allTailors = GetAPI("tailor/get_all_tailors");
+  console.log("🚀 ~ Tailor ~ allTailors:", allTailors)
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
@@ -86,8 +87,7 @@ export default function Tailor() {
                 </div>
               </div>
               <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 grid-cols-2 gap-x-2 md:gap-x-3 gap-y-2 md:gap-y-3">
-                {allTailors?.data?.data?.data
-                  .filter(
+                {allTailors?.data?.data?.data?.filter(
                     (prod) =>
                       activeCat === "all" ||
                       prod?.TailorCategoryId === parseInt(activeCat)
