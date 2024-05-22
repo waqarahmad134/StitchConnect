@@ -11,6 +11,7 @@ import Loader from "../components/Loader";
 export default function Cart() {
   const navigate = useNavigate();
   const location = useLocation();
+  console.log("🚀 ~ Cart ~ location:", location)
   const [loading, setLoading] = useState(false);
   const [cartData, setCartData] = useState(
     JSON.parse(localStorage.getItem("cartItems")) || []
@@ -39,21 +40,21 @@ export default function Cart() {
     let res = await PostAPI("tailor/place_order", {
       price: calculateTotalAmount(),
       userId: parseInt(localStorage.getItem("senderId")),
-      products: [
-        {
-          productId: "2",
-          title: "Product1",
-          price: 300,
-          qty: 1,
-        },
-      ],
+      products: JSON.parse(localStorage.getItem("cartItems"))
+      // products: [
+      //   {
+      //     productId: "2",
+      //     title: "Product1",
+      //     price: 300,
+      //     qty: 1,
+      //   },
+      // ],
     });
     if (res?.data?.status === "1") {
       setLoading(false);
       success_toaster("Order Placed Sucessfully");
       localStorage.removeItem("cartItems");
       const downloadLink = res?.data?.data?.sessionUrl;
-      navigate(location);
       if (downloadLink) {
         const anchorElement = document.createElement("a");
         anchorElement.href = downloadLink;
