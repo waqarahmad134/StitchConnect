@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { FaDoorOpen } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router-dom";
-import { error_toaster, success_toaster } from "../utilities/Toaster";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import {
+  error_toaster,
+  info_toaster,
+  success_toaster,
+} from "../utilities/Toaster";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { PostAPI } from "../utilities/PostAPI";
@@ -11,7 +15,7 @@ import Loader from "../components/Loader";
 export default function Cart() {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log("🚀 ~ Cart ~ location:", location)
+  console.log("🚀 ~ Cart ~ location:", location);
   const [loading, setLoading] = useState(false);
   const [cartData, setCartData] = useState(
     JSON.parse(localStorage.getItem("cartItems")) || []
@@ -36,36 +40,33 @@ export default function Cart() {
 
   const createOrder = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    let res = await PostAPI("tailor/place_order", {
-      price: calculateTotalAmount(),
-      userId: parseInt(localStorage.getItem("senderId")),
-      products: JSON.parse(localStorage.getItem("cartItems"))
-      // products: [
-      //   {
-      //     productId: "2",
-      //     title: "Product1",
-      //     price: 300,
-      //     qty: 1,
-      //   },
-      // ],
-    });
-    if (res?.data?.status === "1") {
-      setLoading(false);
-      success_toaster("Order Placed Sucessfully");
-      localStorage.removeItem("cartItems");
-      const downloadLink = res?.data?.data?.sessionUrl;
-      if (downloadLink) {
-        const anchorElement = document.createElement("a");
-        anchorElement.href = downloadLink;
-        anchorElement.download = "filename";
-        anchorElement.setAttribute("target", "_blank");
-        document.body.appendChild(anchorElement);
-        anchorElement.click();
-        document.body.removeChild(anchorElement);
-      } else {
+    if (!localStorage.getItem("senderId")) {
+      info_toaster("Please Login First");
+      navigate("/auth/signin");
+    } else {
+      setLoading(true);
+      let res = await PostAPI("tailor/place_order", {
+        price: calculateTotalAmount(),
+        userId: parseInt(localStorage.getItem("senderId")),
+        products: JSON.parse(localStorage.getItem("cartItems")),
+      });
+      if (res?.data?.status === "1") {
         setLoading(false);
-        error_toaster(res?.data?.mesage);
+        success_toaster("Order Placed Sucessfully");
+        localStorage.removeItem("cartItems");
+        const downloadLink = res?.data?.data?.sessionUrl;
+        if (downloadLink) {
+          const anchorElement = document.createElement("a");
+          anchorElement.href = downloadLink;
+          anchorElement.download = "filename";
+          anchorElement.setAttribute("target", "_blank");
+          document.body.appendChild(anchorElement);
+          anchorElement.click();
+          document.body.removeChild(anchorElement);
+        } else {
+          setLoading(false);
+          error_toaster(res?.data?.mesage);
+        }
       }
     }
   };
@@ -75,7 +76,7 @@ export default function Cart() {
   ) : (
     <>
       <Header />
-      <section className="grid lg:grid-cols-3 gap-x-5 gap-y-5 w-11/12 mx-auto py-28 font-switzer">
+      <section className="grid lg:grid-cols-3 gap-x-5 gap-y-5 w-11/12 mx-auto py-6 md:py-28 font-switzer">
         <div className="sm:col-span-2">
           <div className="bg-white rounded-lg shadow-lg p-5 my-4">
             <div className="flex items-center text-2xl gap-x-2">

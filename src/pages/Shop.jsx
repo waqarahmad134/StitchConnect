@@ -39,22 +39,30 @@ export default function Shop() {
           </div>
 
           <div className="py-10 lg:w-[90%] w-[95%] mx-auto grid md:grid-cols-12 gap-x-6 md:gap-x-14">
-            <div className="md:col-span-3">
-              <div className="cat-section hidden md:block">
+            <div className="md:col-span-3 overflow-x-auto">
+              <div className="cat-section">
                 <div className="py-4 lg:py-8 border-gray-400 border-b-[1px] space-y-6">
                   <h2 className="uppercase font-medium">Nearby {pathname}</h2>
-                  <div className="space-y-2">
+                  <div className="md:space-y-2 flex md:block gap-2 md:gap-0">
                     <button
                       onClick={() => setActiveCat("1")}
-                      className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
+                      className={`w-full text-xl font-semibold rounded-full border ${
+                        activeCat === "all"
+                          ? "bg-black text-white"
+                          : "text-gray-600 bg-transparent"
+                      } hover:border hover:text-white hover:bg-gray-500 py-3 px-5`}
                     >
                       All
                     </button>
                     {shops?.data?.data?.categories.map((data, index) => (
                       <button
-                      key={index}
+                        key={index}
                         onClick={() => setActiveCat(data.id)}
-                        className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
+                        className={`w-full text-xl font-semibold rounded-full border ${
+                          activeCat === "all"
+                            ? "bg-black text-white"
+                            : "text-gray-600 bg-transparent"
+                        } hover:border hover:text-white hover:bg-gray-500 py-3 px-5`}
                       >
                         {data.title}
                       </button>
@@ -94,7 +102,9 @@ export default function Shop() {
                             </Link>
                           </div>
                           <div className="space-y-2 p-3">
-                            <h4 className="text-2xl font-semibold">{prod?.name}</h4>
+                            <h4 className="text-2xl font-semibold">
+                              {prod?.name}
+                            </h4>
                             <p className="hidden lg:block  text-gray-400 text-sm">
                               {(prod?.description).substring(0, 42)}
                             </p>
@@ -111,7 +121,10 @@ export default function Shop() {
                   </>
                 ) : (
                   <>
-                    {shops?.data?.data?.data.filter((prod) => prod.ShopCategoryId === parseInt(activeCat))
+                    {shops?.data?.data?.data
+                      .filter(
+                        (prod) => prod.ShopCategoryId === parseInt(activeCat)
+                      )
                       ?.slice(first, first + rows)
                       .map((prod, index) => (
                         <div
@@ -128,7 +141,9 @@ export default function Shop() {
                             </Link>
                           </div>
                           <div className="space-y-2 p-3">
-                            <h4 className="text-2xl font-semibold">{prod?.name}</h4>
+                            <h4 className="text-2xl font-semibold">
+                              {prod?.name}
+                            </h4>
                             <p className="hidden lg:block  text-gray-400 text-sm">
                               {(prod?.description).substring(0, 42)}
                             </p>
@@ -143,7 +158,7 @@ export default function Shop() {
                         </div>
                       ))}
                   </>
-                ) }
+                )}
               </div>
               {shops?.data?.data?.length > 10 && (
                 <div className="p-3 my-5 rounded-lg">

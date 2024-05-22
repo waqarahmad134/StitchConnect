@@ -18,7 +18,7 @@ export default function Search() {
               {pathname}
             </h2>
           </div>
-          <div className="py-10 w-[70%] mx-auto grid grid-cols-12 gap-x-5">
+          <div className="py-10 w-11/12 md:w-[70%] mx-auto grid grid-cols-12 gap-x-5">
             <div className="col-span-12">
               <div>
                 <h2 className="my-3">
@@ -28,11 +28,11 @@ export default function Search() {
                   </span>
                 </h2>
               </div>
-              <div className="grid grid-cols-4 gap-x-5 gap-y-5">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-5">
                 {prodByCatData?.length ? (
                   prodByCatData?.map((prod, index) => (
                     <Link
-                        className="relative shadow-xl rounded-2xl hover:scale-105 duration-500"
+                        className="relative shadow-xl hover:scale-105 duration-500"
                         to={`/product-details/${prod?.id}`}
                         key={index}
                       >
@@ -40,7 +40,7 @@ export default function Search() {
                           <img
                             src={`${BASE_URL}${prod?.image}`}
                             alt="prod?.title"
-                            className="min-h-48 w-full object-cover rounded-t-2xl mx-auto "
+                            className="h-32 w-full object-cover mx-auto "
                           />
                         </div>
                         <div
@@ -60,15 +60,15 @@ export default function Search() {
                             {(prod?.description).toString().substring(0, 42)}
                           </p>
                           <div className="flex items-center justify-between text-sm">
-                            <p className="text-blue-600 font font-semibold">
+                            <p className="text-black font font-semibold">
                               ${prod?.price}
                             </p>
                             <div className="flex items-center text-black font-mono font-semibold">
                               {prod?.type}                            
                             </div>
                           </div>
-                          <div className="flex items-center justify-center gap-x-3 bg-blue-400 uppercase text-center py-2 text-white rounded-b-md w-full">
-                            <BsCart3 size={28} /> Add To Cart
+                          <div className="flex items-center justify-center gap-x-3 bg-black uppercase text-center py-2 text-white w-full">
+                            <BsCart3 size={28} />
                           </div>
                         </div>
                       </Link>

@@ -35,9 +35,9 @@ export default function Profile() {
       <Header />
       <section>
         <div>
-          <div className="lg:w-[93%] xl:w-5/6 mx-auto grid md:grid-cols-12 gap-x-6 md:gap-x-14 py-5">
+          <div className="w-11/12 mx-auto grid md:grid-cols-12 gap-x-6 md:gap-x-14 py-5">
             <div className="md:col-span-3">
-              <div className="cat-section hidden md:block">
+              <div className="cat-section">
                 <div className="space-y-6">
                   <div className="space-y-2">
                     <div>
@@ -68,7 +68,7 @@ export default function Profile() {
               </div>
             </div>
             <div className="md:col-span-9">
-              <div className="flex justify-end">
+              <div className="hidden md:flex justify-end">
                 <iframe
                   className="h-64 w-[70%]"
                   src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3403.1743953984787!2d74.2409324!3d31.4643885!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3919034c755328a9%3A0x328f24b5ddc161fa!2sQanmos%20Trade%20Test%20and%20Technical%20Training%20Center%20(QTTC)!5e0!3m2!1sen!2s!4v1715894364365!5m2!1sen!2s"

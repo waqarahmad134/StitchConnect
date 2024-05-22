@@ -241,9 +241,12 @@ export default function Header() {
                       <h5>{cart?.price} $</h5>
                     </div>
                   </div>
-                
+
                   <div>
-                    <button onClick={() => handleDelete(cart?.productId)}> X</button>
+                    <button onClick={() => handleDelete(cart?.productId)}>
+                      {" "}
+                      X
+                    </button>
                   </div>
                 </div>
               ))
@@ -273,19 +276,16 @@ export default function Header() {
 
           <div>
             <ul
-              className={`lg:flex gap-4 xl:gap-5 justify-between items-center z-[-1] md:z-50 absolute lg:static
-              transition-all ease-in left-0 lg:opacity-100 opacity-0 w-full ${
+              className={`lg:flex gap-4 xl:gap-5 justify-between items-center absolute lg:static
+              transition-all ease-in left-0 lg:opacity-100 w-full ${
                 open
-                  ? "top-[84px] opacity-100 bg-slate-300 z-[999] border-t h-[calc(100vh-84px)] overflow-auto py-4"
+                  ? "top-[100px] bg-black bg-opacity-70 z-[999] h-screen py-4 px-5 text-white text-2xl"
                   : "top-[-400px]"
               }`}
             >
               {data?.map((menu, index) => (
                 <>
-                  <li
-                    className="px-2 lg:text-xl text-black capitalize"
-                    key={index}
-                  >
+                  <li className="px-2 lg:text-xl capitalize" key={index}>
                     <Link
                       to={`${(menu?.link).toString().toLowerCase()}`}
                       className="capitalize border-b-4 border-transparent  hover:border-b-black"
@@ -295,50 +295,60 @@ export default function Header() {
                   </li>
                 </>
               ))}
-              <button
-                onClick={onOpen}
-                className="text-2xl text-black hover:text-[#fe8133] [&>div]:hover:text-black relative"
-              >
-                <BsCart3 size={24} />
+              {/* <li className="block md:hidden px-2 lg:text-xl capitalize">
+                <button onClick={logoutFunc} className="text-center">
+                  Logout
+                </button>
+              </li> */}
+              <li className="hidden md:flex items-center">
+                <button
+                  onClick={onOpen}
+                  className="text-2xl hover:text-[#fe8133] [&>div]:hover:text-black relative"
+                >
+                  <BsCart3 size={24} />
 
-                <div className="w-4 h-4 bg-[#fe8133] text-xs rounded-full absolute top-0 -right-2">
-                  <span>{cartItems?.length > 0 ? cartItems.length : "0"}</span>
-                </div>
-              </button>
-              <button onClick={() => setOpenModel(true)}>
-                <PiTShirtDuotone size={24} />
-              </button>
+                  <div className="w-4 h-4 bg-[#fe8133] text-xs rounded-full absolute top-0 -right-2">
+                    <span>
+                      {cartItems?.length > 0 ? cartItems.length : "0"}
+                    </span>
+                  </div>
+                </button>
+              </li>
+              <li className="hidden md:flex items-center">
+                <button onClick={() => setOpenModel(true)}>
+                  <PiTShirtDuotone size={24} />
+                </button>
+              </li>
               {!localStorage.getItem("senderId") ? (
                 <>
-                  <div>
+                  <li className="px-2">
                     <Link
                       to={"/auth/signin"}
-                      className="text-center w-20 rounded-3xl text-2xl"
+                      className="text-center rounded-3xl text-2xl"
                     >
                       Login
                     </Link>
-                  </div>
-                  <div>
+                  </li>
+                  <li className="px-2">
                     <Link
                       to={"/auth/signup"}
                       className="text-center w-20 rounded-3xl text-2xl"
                     >
                       Register
                     </Link>
-                  </div>
+                  </li>
                 </>
               ) : (
-                <div>
+                <li className="px-2">
                   <button
                     onClick={logoutFunc}
                     className="text-center w-20 rounded-3xl text-2xl"
                   >
-                    <RxAvatar size={34} />
+                    {/* <RxAvatar size={34} /> */}
+                    Logout
                   </button>
-                </div>
-               
+                </li>
               )}
-              
             </ul>
 
             <div>

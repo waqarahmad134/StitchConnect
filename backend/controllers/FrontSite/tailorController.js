@@ -150,13 +150,17 @@ async function all_products(req, res) {
       { model: Image, attributes: ["image"] },
       { model: ProductCategory, attributes: ["id", "title"] },
     ],
+    where: {
+      "$ProductCategory.id$": { [Op.ne]: null },
+    },
   });
-  let response = ApiResponse("1", "All Products", { data: data , categories });
+
+  let response = ApiResponse("1", "All Products", { data: data, categories });
   return res.json(response);
 }
-async function featured_products(req,res){
-  let data = await Product.findAll({where:{isFeatured:true}});
-  let response = ApiResponse("1","Data",{data});
+async function featured_products(req, res) {
+  let data = await Product.findAll({ where: { isFeatured: true } });
+  let response = ApiResponse("1", "Data", { data });
   return res.json(response);
 }
 async function tailor_products(req, res) {
@@ -249,7 +253,9 @@ async function get_all_shops(req, res) {
 }
 
 async function get_all_tailors(req, res) {
-  let data = await User.findAll({ where: { userType: "tailor", status: true } });
+  let data = await User.findAll({
+    where: { userType: "tailor", status: true },
+  });
   let categories = await TailorCategory.findAll({ where: { status: true } });
   let response = ApiResponse("1", "All Tailors", { data, categories });
   return res.json(response);
@@ -257,7 +263,7 @@ async function get_all_tailors(req, res) {
 async function shop_details(req, res) {
   const shopId = req.params.shopId;
   let products = await Product.findAll({ UserId: shopId });
-  let categories = await ProductCategory.findAll({ where: { UserId: shopId } });
+  let categories = await ProductCategory.findAll({ where: { status: 1 } });
   let response = ApiResponse("1", "shop details", {
     data: products,
     categories,
@@ -267,12 +273,11 @@ async function shop_details(req, res) {
 
 async function tailor_details(req, res) {
   const tailorId = req.params.tailorId;
-  // let products = await Product.findAll({ UserId: tailorId });
   let data = await User.findOne({
     where: { id: tailorId },
     include: [{ model: Product }],
   });
-  let response = ApiResponse("1", "shop details", { data });
+  let response = ApiResponse("1", "Tailor Details", { data });
   return res.json(response);
 }
 async function get_profile(req, res) {
@@ -286,7 +291,7 @@ async function get_profile(req, res) {
 }
 async function place_order(req, res) {
   const { price, userId, products } = req.body;
-
+  console.log(userId);
   try {
     // Step 1: Create the order in your database
     let order = new Order();
@@ -370,36 +375,36 @@ async function send_message(req, res) {
       return res.json(response);
     });
 }
-async function get_users(req,res){
-  let data = await User.findAll({attributes:['id','email','name']});
-  let response = ApiResponse("1","All Users",{data});
+async function get_users(req, res) {
+  let data = await User.findAll({ attributes: ["id", "email", "name"] });
+  let response = ApiResponse("1", "All Users", { data });
   return res.json(response);
 }
-async function get_chat(req,res){
+async function get_chat(req, res) {
   const { senderId, recieverId } = req.body;
   const data = await Chat.findAll({
     where: {
       [Sequelize.Op.or]: [
         { senderId: senderId, recieverId: recieverId },
-        { senderId: recieverId, recieverId: senderId }
-      ]
-    }
+        { senderId: recieverId, recieverId: senderId },
+      ],
+    },
   });
-  let response = ApiResponse("1","Chat",{data});
-  return res.json(response)
+  let response = ApiResponse("1", "Chat", { data });
+  return res.json(response);
 }
-async function get_chat_get(req,res){
+async function get_chat_get(req, res) {
   const { senderId, recieverId } = req.params;
   const data = await Chat.findAll({
     where: {
       [Sequelize.Op.or]: [
         { senderId: senderId, recieverId: recieverId },
-        { senderId: recieverId, recieverId: senderId }
-      ]
-    }
+        { senderId: recieverId, recieverId: senderId },
+      ],
+    },
   });
-  let response = ApiResponse("1","Chat",{data});
-  return res.json(response)
+  let response = ApiResponse("1", "Chat", { data });
+  return res.json(response);
 }
 
 module.exports = {
@@ -421,6 +426,5 @@ module.exports = {
   send_message,
   get_users,
   get_chat,
-  get_chat_get
-  
+  get_chat_get,
 };

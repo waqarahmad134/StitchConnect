@@ -19,6 +19,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { useMediaQuery } from "@chakra-ui/react";
 
 export default function Homepage() {
   const location = useLocation();
@@ -26,6 +27,7 @@ export default function Homepage() {
   const [activeTab, setActiveTab] = useState("all");
   const products = GetAPI("tailor/all_products");
   const getFeaturedData = GetAPI("tailor/featured_products");
+  const [isLargerThan430] = useMediaQuery("(min-width: 430px)");
   const tabData = products?.data?.data?.data?.filter(
     (prod) => prod.ProductCategory?.title === activeTab
   );
@@ -75,6 +77,8 @@ export default function Homepage() {
       navigate("/");
     }
   };
+
+
   return (
     <>
       <Header />
@@ -148,7 +152,7 @@ export default function Homepage() {
             {products?.data?.data?.categories?.map((cat, index) => (
               <button
                 className={`text-xl font-semibold ${
-                  activeTab === (cat.title)
+                  activeTab === cat.title
                     ? "text-black underline decoration-wavy border-black"
                     : "text-yellow-900"
                 }`}
@@ -269,7 +273,7 @@ export default function Homepage() {
               </h2>
               <div>
                 <Swiper
-                  slidesPerView={3}
+                  slidesPerView={isLargerThan430 ? 4 : 1}
                   spaceBetween={10}
                   autoplay={{
                     delay: 1000,
@@ -286,11 +290,9 @@ export default function Homepage() {
                     <SwiperSlide>
                       <div
                         key={index}
-                        className="relative flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md"
+                        className="relative flex w-full flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md"
                       >
-                        <a
-                          className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl"
-                        >
+                        <a className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl">
                           <img
                             className="object-cover"
                             src={`${BASE_URL}${prod?.image}`}
@@ -308,9 +310,9 @@ export default function Homepage() {
                               <span className="text-3xl font-bold text-slate-900">
                                 {prod?.price}
                               </span>
-                              <span className="text-sm text-slate-900 line-through">
+                              {/* <span className="text-sm text-slate-900 line-through">
                                 $699
-                              </span>
+                              </span> */}
                             </p>
                           </div>
                           <button

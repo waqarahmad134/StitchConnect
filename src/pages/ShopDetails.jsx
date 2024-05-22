@@ -17,7 +17,6 @@ export default function ShopDetails() {
   const [rows, setRows] = useState(12);
   const [activeCat, setActiveCat] = useState("all");
   const products = GetAPI(`tailor/shop_details/${slug}`);
-  console.log("🚀 ~ products ~ products:", products?.data);
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);

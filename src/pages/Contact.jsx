@@ -133,7 +133,7 @@ export default function Contact() {
                       />
                     </div>
                     <div className="w-full text-start">
-                      <div className="text-lg font-semibold">{data?.name}</div>
+                      <div className="text-lg font-semibold text-center md:text-left">{data?.name}</div>
                       <span className="hidden md:block text-gray-500">
                         {data?.email}
                       </span>
@@ -184,7 +184,7 @@ export default function Contact() {
                   placeholder="Type your message here..."
                   className="w-full mx-auto h-14 bg-[#082835] rounded-full pl-6 outline-none border-none text-white"
                 />
-                <button className="absolute right-3 top-8 px-3 py-2 bg-blue-400 text-white rounded-full">
+                <button className="absolute right-3 top-[28px] px-3 py-2 bg-blue-400 text-white rounded-full">
                   Submit
                 </button>
               </form>

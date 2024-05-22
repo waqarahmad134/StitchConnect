@@ -86,7 +86,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/success/:slug",
+    path: "/success/:orderId",
     element: <OrderSuccess />,
     errorElement: <ErrorPage />,
   },
@@ -98,7 +98,7 @@ const router = createBrowserRouter([
 ]);
 function App() {
   return (
-    <div>
+    <div className="font-switzer">
       <Analytics />
       <SpeedInsights/>
       <ToastContainer />

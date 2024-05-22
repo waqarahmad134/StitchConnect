@@ -40,12 +40,12 @@ export default function Tailor() {
           </div>
 
           <div className="py-10 lg:w-[90%] w-[95%] mx-auto grid md:grid-cols-12 gap-x-6 md:gap-x-14">
-            <div className="md:col-span-3">
-              <div className="cat-section hidden md:block">
+            <div className="md:col-span-3 overflow-x-auto">
+              <div className="cat-section">
                 <div className="py-4 lg:py-8 border-gray-400 border-b-[1px] space-y-6">
                   <h2 className="uppercase font-medium">Nearby {pathname}</h2>
 
-                  <div className="space-y-2">
+                  <div className="md:space-y-2 flex md:block gap-2 md:gap-0">
                     <button
                       onClick={() => setActiveCat("all")}
                       className={`w-full text-xl font-semibold rounded-full border ${
