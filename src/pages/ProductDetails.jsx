@@ -51,7 +51,7 @@ export default function ProductDetails() {
   ) : (
     <>
       <Header />
-      <section className="min-h-screen">
+      <section className="">
         <div className="w-[70%] m-auto pt-10">
           <h2 className="text-gray-400 text-sm space-x-2">
             <span className="">Home</span>
