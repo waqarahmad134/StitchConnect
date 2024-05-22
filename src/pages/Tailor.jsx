@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Card from "../components/Card";
 import GetAPI from "../utilities/GetAPI";
 import Header from "../components/Header";
@@ -8,6 +8,7 @@ import Loader from "../components/Loader";
 import { Paginator } from "primereact/paginator";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
+import { BASE_URL } from "../utilities/URL";
 
 export default function Tailor() {
   const { pathname } = useLocation();
@@ -15,7 +16,7 @@ export default function Tailor() {
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(12);
   const [activeCat, setActiveCat] = useState("all");
-  const products = GetAPI("tailor/tailor_products");
+  const allTailors = GetAPI("tailor/get_all_tailors");
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
@@ -56,12 +57,12 @@ export default function Tailor() {
                       All
                     </button>
 
-                    {products?.data?.data?.categories?.map((data, index) => (
+                    {allTailors?.data?.data?.categories?.map((data, index) => (
                       <button
                         key={index}
-                        onClick={() => setActiveCat(data.title)}
+                        onClick={() => setActiveCat(data.id)}
                         className={`w-full text-xl font-semibold rounded-full border ${
-                          activeCat === data.title
+                          activeCat === data.id
                             ? "bg-black text-white"
                             : "text-gray-600 bg-transparent"
                         } hover:border hover:text-white hover:bg-gray-500 py-3 px-5`}
@@ -84,27 +85,43 @@ export default function Tailor() {
                   </h2>
                 </div>
               </div>
-              <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-x-2 md:gap-x-3 gap-y-2 md:gap-y-3">
-                {products?.data?.data?.data
+              <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 grid-cols-2 gap-x-2 md:gap-x-3 gap-y-2 md:gap-y-3">
+                {allTailors?.data?.data?.data
                   .filter(
                     (prod) =>
                       activeCat === "all" ||
-                      prod?.ProductCategory?.title === activeCat
+                      prod?.TailorCategoryId === parseInt(activeCat)
                   )
                   ?.slice(first, first + rows)
                   .map((prod, index) => (
-                    <Card
-                      index={index}
-                      id={prod?.id}
-                      title={prod?.title}
-                      image={prod?.image}
-                      Images={prod?.Images}
-                      price={prod?.price}
-                      Colors={prod?.Colors}
-                    />
+                    <>
+                    <div
+                      className="relative shadow-xl hover:scale-105 duration-500"
+                      key={index}
+                    >
+                      <div className="h-32 border border-transparent cursor-pointer">
+                        <Link to={`/profile/${prod?.id}`}>
+                          <img
+                            src={`${BASE_URL}${prod?.image}`}
+                            alt={prod?.title}
+                            className="h-full w-full object-top object-cover"
+                          />
+                        </Link>
+                      </div>
+                      <div className="space-y-2 p-3">
+                        <h4 className="text-xl font-semibold">{prod?.name}</h4>
+                        <Link
+                          to={`/profile/${prod?.id}`}
+                          className="block bg-black uppercase text-center py-2 text-white w-full"
+                        >
+                          View Details
+                        </Link>
+                      </div>
+                    </div>
+                  </>
                   ))}
               </div>
-              {products?.data?.data?.length > 10 && (
+              {allTailors ?.data?.data?.length > 10 && (
                 <div className="p-3 my-5 rounded-lg">
                   <Paginator
                     first={first}

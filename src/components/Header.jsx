@@ -333,13 +333,12 @@ export default function Header() {
                     onClick={logoutFunc}
                     className="text-center w-20 rounded-3xl text-2xl"
                   >
-                    Logout
+                    <RxAvatar size={34} />
                   </button>
                 </div>
+               
               )}
-              <Link to={"/profile"}>
-                <RxAvatar size={34} />
-              </Link>
+              
             </ul>
 
             <div>

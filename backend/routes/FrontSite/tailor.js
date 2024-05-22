@@ -27,9 +27,11 @@ router.get('/featured_products',asyncMiddleware(tailorController.featured_produc
 router.get('/tailor_products',asyncMiddleware(tailorController.tailor_products));
 router.get('/shop_products',asyncMiddleware(tailorController.shop_products));
 router.get('/get_all_shops',asyncMiddleware(tailorController.get_all_shops));
+router.get('/get_all_tailors',asyncMiddleware(tailorController.get_all_tailors));
 router.post('/search_products',asyncMiddleware(tailorController.search_products));
 router.get('/product_details/:productId',asyncMiddleware(tailorController.product_details));
 router.get('/shop_details/:shopId',asyncMiddleware(tailorController.shop_details));
+router.get('/tailor_details/:tailorId',asyncMiddleware(tailorController.tailor_details));
 router.get('/get_profile/:userId',asyncMiddleware(tailorController.get_profile));
 router.post('/place_order',asyncMiddleware(tailorController.place_order));
 router.get('/after_payment/:orderId',asyncMiddleware(tailorController.after_payment));

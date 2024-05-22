@@ -14,7 +14,7 @@ export default function Shop() {
   const [loading, setLoading] = useState(true);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(12);
-  const [activeCat, setActiveCat] = useState("all");
+  const [activeCat, setActiveCat] = useState("1");
   const shops = GetAPI("tailor/get_all_shops");
   const onPageChange = (event) => {
     setFirst(event.first);
@@ -39,20 +39,21 @@ export default function Shop() {
           </div>
 
           <div className="py-10 lg:w-[90%] w-[95%] mx-auto grid md:grid-cols-12 gap-x-6 md:gap-x-14">
-            <div className="md:col-span-2">
+            <div className="md:col-span-3">
               <div className="cat-section hidden md:block">
                 <div className="py-4 lg:py-8 border-gray-400 border-b-[1px] space-y-6">
                   <h2 className="uppercase font-medium">Nearby {pathname}</h2>
                   <div className="space-y-2">
                     <button
-                      onClick={() => setActiveCat("all")}
+                      onClick={() => setActiveCat("1")}
                       className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
                     >
                       All
                     </button>
                     {shops?.data?.data?.categories.map((data, index) => (
                       <button
-                        onClick={() => setActiveCat("Fabrics")}
+                      key={index}
+                        onClick={() => setActiveCat(data.id)}
                         className="w-full bg-black text-white text-xl font-semibold rounded-full border hover:border hover:text-black hover:bg-white py-3 px-5"
                       >
                         {data.title}
@@ -62,7 +63,7 @@ export default function Shop() {
                 </div>
               </div>
             </div>
-            <div className="md:col-span-10">
+            <div className="md:col-span-9">
               <div className="flex justify-between items-center">
                 <div>
                   <h2 className="my-3">
@@ -73,34 +74,34 @@ export default function Shop() {
                   </h2>
                 </div>
               </div>
-              <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-x-2 md:gap-x-3 gap-y-2 md:gap-y-3">
-                {activeCat === "all" ? (
+              <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 grid-cols-2 gap-x-2 md:gap-x-3 gap-y-2 md:gap-y-3">
+                {activeCat === "1" ? (
                   <>
                     {shops?.data?.data?.data
                       ?.slice(first, first + rows)
                       .map((prod, index) => (
                         <div
-                          className="relative shadow-xl rounded-2xl hover:scale-105 duration-500"
+                          className="relative shadow-xl hover:scale-105 duration-500"
                           key={index}
                         >
-                          <div className="border border-transparent cursor-pointer">
-                            <Link to={`/product-details/${prod?.id}`}>
+                          <div className="h-32 border border-transparent cursor-pointer">
+                            <Link to={`/shop-details/${prod?.id}`}>
                               <img
                                 src={`${BASE_URL}${prod?.image}`}
-                                alt={prod?.title}
-                                className="max-h-96 object-top w-full object-cover rounded-t-2xl mx-auto"
+                                alt={prod?.name}
+                                className="h-full w-full object-top object-cover mx-auto"
                               />
                             </Link>
                           </div>
                           <div className="space-y-2 p-3">
-                            <h4 className="text-sm">{prod?.title}</h4>
+                            <h4 className="text-2xl font-semibold">{prod?.name}</h4>
                             <p className="hidden lg:block  text-gray-400 text-sm">
                               {(prod?.description).substring(0, 42)}
                             </p>
 
                             <Link
                               to={`/shop-details/${prod?.id}`}
-                              className="block bg-blue-400 uppercase text-center py-2 text-white rounded-b-md w-full"
+                              className="block bg-black uppercase text-center py-2 text-white w-full"
                             >
                               View Details
                             </Link>
@@ -109,8 +110,40 @@ export default function Shop() {
                       ))}
                   </>
                 ) : (
-                  <>No data Available</>
-                )}
+                  <>
+                    {shops?.data?.data?.data.filter((prod) => prod.ShopCategoryId === parseInt(activeCat))
+                      ?.slice(first, first + rows)
+                      .map((prod, index) => (
+                        <div
+                          className="relative shadow-xl hover:scale-105 duration-500"
+                          key={index}
+                        >
+                          <div className="h-32 border border-transparent cursor-pointer">
+                            <Link to={`/shop-details/${prod?.id}`}>
+                              <img
+                                src={`${BASE_URL}${prod?.image}`}
+                                alt={prod?.name}
+                                className="h-full w-full object-top object-cover mx-auto"
+                              />
+                            </Link>
+                          </div>
+                          <div className="space-y-2 p-3">
+                            <h4 className="text-2xl font-semibold">{prod?.name}</h4>
+                            <p className="hidden lg:block  text-gray-400 text-sm">
+                              {(prod?.description).substring(0, 42)}
+                            </p>
+
+                            <Link
+                              to={`/shop-details/${prod?.id}`}
+                              className="block bg-black uppercase text-center py-2 text-white w-full"
+                            >
+                              View Details
+                            </Link>
+                          </div>
+                        </div>
+                      ))}
+                  </>
+                ) }
               </div>
               {shops?.data?.data?.length > 10 && (
                 <div className="p-3 my-5 rounded-lg">

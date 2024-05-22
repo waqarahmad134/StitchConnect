@@ -41,7 +41,7 @@ export default function ShopDetails() {
           </div>
 
           <div className="py-10 lg:w-[90%] w-[95%] mx-auto grid md:grid-cols-12 gap-x-6 md:gap-x-14">
-            <div className="md:col-span-2">
+            <div className="md:col-span-3">
               <div className="cat-section hidden md:block">
                 <div className="py-4 lg:py-8 border-gray-400 border-b-[1px] space-y-6">
                   <h2 className="uppercase font-medium">Nearby Shop Details</h2>
@@ -66,7 +66,7 @@ export default function ShopDetails() {
                 </div>
               </div>
             </div>
-            <div className="md:col-span-10">
+            <div className="md:col-span-9">
               <div className="flex justify-between items-center">
                 <div>
                   <h2 className="my-3">

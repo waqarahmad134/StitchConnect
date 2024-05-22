@@ -31,14 +31,19 @@ export default function SignIn() {
         email: signUp.email,
         password: signUp.password,
       });
-      console.log(res?.data?.data);
+      console.log(res?.data)
+
       if (res?.data?.status === "1") {
         success_toaster("Login Sucessfull");
         localStorage.setItem("senderId", res?.data?.data?.id);
         localStorage.setItem("name", res?.data?.data?.name);
         navigate("/");
-      } else {
-        error_toaster(res?.data?.mesage);
+      }
+      else if (res?.data?.status === "0") {
+        info_toaster(res?.data?.message);
+      }
+      else{
+        error_toaster("User Not Found"); 
       }
     }
   };
@@ -78,12 +83,20 @@ export default function SignIn() {
                 </span>
               </div>
               <div>
-                <button type="submit" className="w-full text-xl bg-black text-white rounded-lg py-2 px-3 font-switzer font-semibold"> Login</button>
+                <button
+                  type="submit"
+                  className="w-full text-xl bg-black text-white rounded-lg py-2 px-3 font-switzer font-semibold"
+                >
+                  {" "}
+                  Login
+                </button>
               </div>
             </form>
             <div>
-                <p className="text-xl">Can't Have Account ? <Link to={'/auth/signup'}>Register</Link> </p>
-              </div>
+              <p className="text-xl">
+                Can't Have Account ? <Link to={"/auth/signup"}>Register</Link>{" "}
+              </p>
+            </div>
           </div>
         </div>
       </section>

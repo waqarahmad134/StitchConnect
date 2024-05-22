@@ -29,7 +29,6 @@ export default function Homepage() {
   const tabData = products?.data?.data?.data?.filter(
     (prod) => prod.ProductCategory?.title === activeTab
   );
-  console.log(tabData);
 
   if (!localStorage.getItem("cartItems")) {
     localStorage.setItem("cartItems", "[]");
@@ -73,7 +72,7 @@ export default function Homepage() {
       };
       cartItems.push(newCart);
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
-      navigate(`/`);
+      navigate("/");
     }
   };
   return (
@@ -119,11 +118,11 @@ export default function Homepage() {
                     name="search"
                     id="search"
                     placeholder="Search the world best Tailors"
-                    className="w-full mx-auto h-14 bg-[#082835] rounded-full pl-6 outline-none border-none text-white"
+                    className="w-full mx-auto h-14 bg-black rounded-full pl-6 outline-none border-none text-white"
                   />
                   <button
                     type="submit"
-                    className="flex items-center justify-center gap-2 rounded-full bg-white w-28 h-10 absolute top-2 right-2 hover:text-[#fe8133] duration-200"
+                    className="flex items-center justify-center gap-2 rounded-full bg-white w-28 h-10 absolute top-2 right-2 hover:font-semibold duration-200"
                   >
                     <IoIosSearch />
                     <span>Search</span>
@@ -138,8 +137,8 @@ export default function Homepage() {
           <div className="w-[75%] m-auto pt-5 pb-2 flex justify-center flex-wrap items-center gap-x-10 gap-y-5 border-b border-gray-400">
             <button
               className={`text-xl font-semibold ${
-                activeTab === 1
-                  ? "text-black border-b-4 border-black"
+                activeTab === "all"
+                  ? "text-black underline decoration-wavy border-black"
                   : "text-yellow-900"
               }`}
               onClick={() => setActiveTab("all")}
@@ -149,8 +148,8 @@ export default function Homepage() {
             {products?.data?.data?.categories?.map((cat, index) => (
               <button
                 className={`text-xl font-semibold ${
-                  activeTab === 4
-                    ? "text-black border-b-4 border-black"
+                  activeTab === (cat.title)
+                    ? "text-black underline decoration-wavy border-black"
                     : "text-yellow-900"
                 }`}
                 onClick={() => setActiveTab(cat?.title)}
@@ -169,7 +168,7 @@ export default function Homepage() {
                     to={`/shop-details/${prod?.id}`}
                     key={index}
                   >
-                    <div className="h-44 bg-white border border-transparent cursor-pointer">
+                    <div className="h-32 bg-white border border-transparent cursor-pointer">
                       <img
                         src={`${BASE_URL}${prod?.image}`}
                         alt={prod?.title}
@@ -195,14 +194,14 @@ export default function Homepage() {
                         {(prod?.description).toString().substring(0, 42)}
                       </p>
                       <div className="flex items-center justify-between text-sm">
-                        <p className="text-blue-600 font font-semibold">
+                        <p className="text-black font font-semibold">
                           ${prod?.price}
                         </p>
                         <div className="flex items-center text-black font-mono font-semibold">
                           {prod?.type}
                         </div>
                       </div>
-                      <div className="bg-blue-400 uppercase text-center py-2 text-white w-full">
+                      <div className="bg-black uppercase text-center py-2 text-white w-full">
                         Buy Now
                       </div>
                     </div>
@@ -218,7 +217,7 @@ export default function Homepage() {
                       to={`/shop-details/${prod?.id}`}
                       key={index}
                     >
-                      <div className="h-44 bg-white border border-transparent cursor-pointer">
+                      <div className="h-32 bg-white border border-transparent cursor-pointer">
                         <img
                           src={`${BASE_URL}${prod?.image}`}
                           alt={prod?.title}
@@ -244,14 +243,14 @@ export default function Homepage() {
                           {(prod?.description).toString().substring(0, 42)}
                         </p>
                         <div className="flex items-center justify-between text-sm">
-                          <p className="text-blue-600 font font-semibold">
+                          <p className="text-black font font-semibold">
                             ${prod?.price}
                           </p>
                           <div className="flex items-center text-black font-mono font-semibold">
                             {prod?.type}
                           </div>
                         </div>
-                        <div className="bg-blue-400 uppercase text-center py-2 text-white w-full">
+                        <div className="bg-black uppercase text-center py-2 text-white w-full">
                           Buy Now
                         </div>
                       </div>
@@ -291,7 +290,6 @@ export default function Homepage() {
                       >
                         <a
                           className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl"
-                          href="#"
                         >
                           <img
                             className="object-cover"
@@ -317,7 +315,7 @@ export default function Homepage() {
                           </div>
                           <button
                             onClick={() => addToCart(prod)}
-                            className="flex items-center justify-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                            className="flex items-center justify-center w-full rounded-md bg-black border-2 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-transparent hover:text-black hover:border-2 focus:outline-none focus:ring-4 focus:ring-blue-300"
                           >
                             <MdOutlineShoppingCart />
                             Buy Now

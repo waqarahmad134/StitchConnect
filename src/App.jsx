@@ -20,6 +20,8 @@ import Tailor from "./pages/Tailor";
 import ShopDetails from "./pages/ShopDetails";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react"
+import Cancel from "./pages/Cancel";
+import OrderSuccess from "./pages/OrderSuccess";
 
 const router = createBrowserRouter([
   {
@@ -74,13 +76,23 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/profile",
+    path: "/profile/:slug",
     element: <Profile />,
     errorElement: <ErrorPage />,
   },
   {
     path: "/search",
     element: <Search />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/success/:slug",
+    element: <OrderSuccess />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/cancel",
+    element: <Cancel />,
     errorElement: <ErrorPage />,
   },
 ]);

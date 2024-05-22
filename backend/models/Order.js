@@ -15,12 +15,9 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     // Each user can have one email verification code
-    Order.associate = (models) => {
-        
+    Order.associate = (models) => {  
         Order.hasMany(models.OrderItem);
         models.OrderItem.belongsTo(Order);
-
     };
-
     return Order;
 };

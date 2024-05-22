@@ -9,12 +9,12 @@ export default function Card(props) {
         className="relative shadow-xl hover:scale-105 duration-500"
         key={props?.index}
       >
-        <div className="border border-transparent cursor-pointer">
+        <div className="h-32 border border-transparent cursor-pointer">
           <Link to={`/product-details/${props?.id}`}>
             <img
               src={`${BASE_URL}${props?.image}`}
               alt={props?.title}
-              className="min-h-32 max-h-96 object-top w-full object-cover"
+              className="h-full w-full object-top object-cover"
             />
           </Link>
         </div>
@@ -26,7 +26,7 @@ export default function Card(props) {
         
           <Link
             to={`/product-details/${props?.id}`}
-            className="block bg-gray-700 uppercase text-center py-2 text-white w-full"
+            className="block bg-black uppercase text-center py-2 text-white w-full"
           >
             View Details
           </Link>

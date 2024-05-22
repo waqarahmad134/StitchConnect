@@ -60,12 +60,11 @@ export default function ProductDetails() {
           </h2>
           <div className="grid md:grid-cols-2 gap-x-10 mt-4 mb-20">
             <Carousel>
-              <div className="h-full">
-                <img className="h-full" src={`${BASE_URL}${data?.data?.data.image}`} />
-              </div>
+              
+                <img className="aspect-[4/4] object-cover object-top" src={`${BASE_URL}${data?.data?.data.image}`} />
               {data?.data?.data?.Images?.map((item, index) => (
                 <div key={index}>
-                  <img className="h-full" src={`${BASE_URL}${item?.image}`} />
+                  <img className="aspect-[4/4] object-cover h-full" src={`${BASE_URL}${item?.image}`} />
                 </div>
               ))}
             </Carousel>
@@ -76,7 +75,7 @@ export default function ProductDetails() {
               <h2 className="text-xl lg:text-2xl ">
                 Product Type :  {data?.data?.data?.type}
               </h2>
-                <p className="text-xl text-blue-500 font-semibold">
+                <p className="text-xl text-black font-semibold">
                     ${data?.data?.data?.price}
                   
                 </p>
@@ -98,7 +97,7 @@ export default function ProductDetails() {
                 <div className="flex gap-x-2">
                   <button
                     onClick={addToCart}
-                    className="uppercase w-60 h-12 bg-blue-500 rounded-md text-white text-sm font-semibold hover:bg-opacity-90"
+                    className="uppercase w-60 h-12 bg-black rounded-md text-white text-sm font-semibold hover:bg-opacity-90"
                   >
                     Order Now
                   </button>
@@ -148,14 +147,14 @@ export default function ProductDetails() {
                       {(prod?.description).toString().substring(0, 42)}
                     </p>
                     <div className="flex items-center justify-between text-sm">
-                      <p className="text-blue-600 font font-semibold">
+                      <p className="text-black font font-semibold">
                         ${prod?.price}
                       </p>
                       <div className="flex items-center text-black font-mono font-semibold">
                               {prod?.type}                            
                             </div>
                     </div>
-                    <div className="bg-blue-400 uppercase text-center py-2 text-white rounded-b-md w-full">
+                    <div className="bg-black uppercase text-center py-2 text-white rounded-b-md w-full">
                       Buy Now
                     </div>
                   </div>

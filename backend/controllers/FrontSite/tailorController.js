@@ -4,6 +4,7 @@ const {
   Color,
   Image,
   ShopCategory,
+  TailorCategory,
   Order,
   Chat,
   OrderItem,
@@ -246,15 +247,32 @@ async function get_all_shops(req, res) {
   let response = ApiResponse("1", "All Shops", { data, categories });
   return res.json(response);
 }
+
+async function get_all_tailors(req, res) {
+  let data = await User.findAll({ where: { userType: "tailor", status: true } });
+  let categories = await TailorCategory.findAll({ where: { status: true } });
+  let response = ApiResponse("1", "All Tailors", { data, categories });
+  return res.json(response);
+}
 async function shop_details(req, res) {
   const shopId = req.params.shopId;
-  // return res.json(shopId)
   let products = await Product.findAll({ UserId: shopId });
   let categories = await ProductCategory.findAll({ where: { UserId: shopId } });
   let response = ApiResponse("1", "shop details", {
     data: products,
     categories,
   });
+  return res.json(response);
+}
+
+async function tailor_details(req, res) {
+  const tailorId = req.params.tailorId;
+  // let products = await Product.findAll({ UserId: tailorId });
+  let data = await User.findOne({
+    where: { id: tailorId },
+    include: [{ model: Product }],
+  });
+  let response = ApiResponse("1", "shop details", { data });
   return res.json(response);
 }
 async function get_profile(req, res) {
@@ -394,7 +412,9 @@ module.exports = {
   product_details,
   search_products,
   get_all_shops,
+  get_all_tailors,
   shop_details,
+  tailor_details,
   get_profile,
   place_order,
   after_payment,

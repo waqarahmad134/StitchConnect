@@ -3,18 +3,23 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Loader from "../components/Loader";
 import GetAPI from "../utilities/GetAPI";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Card from "../components/Card";
 import { BASE_URL } from "../utilities/URL";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 
-
 export default function Profile() {
-  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { slug } = useParams();
+  const tailorData = GetAPI(`tailor/tailor_details/${slug}`);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(12);
   const [loading, setLoading] = useState(true);
-  const { data } = GetAPI(`tailor/get_profile/${parseInt(localStorage.getItem('senderId'))}`);
+  // const { data } = GetAPI(`tailor/get_profile/${parseInt(localStorage.getItem('senderId'))}`);
+  const handleChatNow = (id) => {
+    localStorage.setItem("recieverId", id);
+    navigate("/contact");
+  };
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
@@ -38,17 +43,22 @@ export default function Profile() {
                     <div>
                       <img
                         className="h-32 w-32 rounded-full"
-                        src={`${BASE_URL}${data?.data?.data?.image}`}
+                        src={`${BASE_URL}${tailorData?.data?.data?.data?.image}`}
                         alt=""
                       />
                     </div>
                     <h1 className="italic text-2xl font-semibold">
-                      {data?.data?.data?.name}
+                      {tailorData?.data?.data?.data?.name}
                     </h1>
                     {/* <h3>Shop / Traditional</h3> */}
-                    <h4>{data?.data?.data?.description}</h4>
+                    <h4>{tailorData?.data?.data?.data?.description}</h4>
                     <div>
-                      <button className="flex items-center gap-x-2 bg-black text-white px-10 py-2">
+                      <button
+                        onClick={() =>
+                          handleChatNow(tailorData?.data?.data?.data?.id)
+                        }
+                        className="flex items-center gap-x-2 bg-black text-white px-10 py-2"
+                      >
                         <IoChatboxEllipsesOutline size={24} />
                         Chat Now
                       </button>
@@ -76,24 +86,34 @@ export default function Profile() {
                   </div>
                 </div>
                 <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 grid-cols-2 gap-x-2 md:gap-x-3 gap-y-2 md:gap-y-3">
-                  {data?.data?.data?.Products?.slice(first, first + rows).map(
-                    (prod, index) => (
-                      <div
+                  {tailorData?.data?.data?.data?.Products?.slice(
+                    first,
+                    first + rows
+                  ).map((prod, index) => (
+                    <div
                       className="relative shadow-xl hover:scale-105 duration-500"
                       key={index}
                     >
-                      <div className="border border-transparent cursor-pointer">
+                      <div className="h-32 border border-transparent cursor-pointer">
                         <Link to={`/product-details/${prod?.id}`}>
                           <img
                             src={`${BASE_URL}${prod?.image}`}
                             alt={prod?.title}
-                            className="min-h-32 max-h-96 object-top w-full object-cover"
+                            className="h-full w-full object-top object-cover"
                           />
                         </Link>
                       </div>
+                      <div className="space-y-2 p-3">
+                        <h4 className="text-xl font-semibold">{prod?.title}</h4>
+                        <Link
+                          to={`/product-details/${prod?.id}`}
+                          className="block bg-black uppercase text-center py-2 text-white w-full"
+                        >
+                          View Details
+                        </Link>
+                      </div>
                     </div>
-                    )
-                  )}
+                  ))}
                 </div>
               </div>
             </div>
