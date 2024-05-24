@@ -262,7 +262,7 @@ async function get_all_tailors(req, res) {
 }
 async function shop_details(req, res) {
   const shopId = req.params.shopId;
-  let products = await Product.findAll({ UserId: shopId });
+  let products = await Product.findAll({ where: { UserId: shopId } });
   let categories = await ProductCategory.findAll({ where: { status: 1 } });
   let response = ApiResponse("1", "shop details", {
     data: products,
