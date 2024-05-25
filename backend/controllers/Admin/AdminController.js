@@ -58,84 +58,22 @@ async function get_products(req, res) {
   return res.json(response);
 }
 
-// async function addProduct(req, res) {
-//   const {
-//     title,
-//     price,
-//     type,
-//     description,
-//     ProductCategoryId,
-//     UserId,
-//     isFeatured,
-//   } = req.body;
-
-//   try {
-//     const productImage = req.file.image.path;
-//     let imagePath = productImage.replace(/\\/g, "/");
-
-//     let product = new Product();
-//     product.title = title;
-//     product.price = price;
-//     product.type = type;
-//     product.description = description;
-//     product.ProductCategoryId = ProductCategoryId;
-//     product.UserId = UserId;
-//     product.isFeatured = isFeatured;
-//     product.image = imagePath;
-//     product
-//       .save()
-//       .then((dat) => {
-//         let response = ApiResponse("1", "Product added successfully", {});
-//         return res.json(response);
-//       })
-//       .catch((error) => {
-//         let response = ApiResponse("0", error.message, {});
-//         return res.json(response);
-//       });
-
-//     let imagesPathTemp = req.files.coverImage[0].path;
-//     let imagesPath = imagesPathTemp.replace(/\\/g, "/");
-//     Image.create({
-//       ProductId: product.id,
-//       status: true,
-//       image: imagesPath,
-//     });
-//   } catch (error) {
-//     let response = ApiResponse("0", error.message, {});
-//     return res.json(response);
-//   }
-// }
-
 async function addProduct(req, res) {
-  const {
-    title,
-    price,
-    type,
-    description,
-    ProductCategoryId,
-    UserId,
-    isFeatured,
-  } = req.body;
- 
+  const { title, price, description, ProductCategoryId, UserId, isFeatured } =
+    req.body;
   try {
     const productImage = req.files.image[0].path;
     const imagePath = productImage.replace(/\\/g, "/");
-
-    // Saving the product
     const product = new Product({
       title,
       price,
-      type,
       description,
       ProductCategoryId,
       UserId,
       isFeatured,
       image: imagePath,
     });
-
     const savedProduct = await product.save();
-
-    // Assuming req.files.coverImage contains multiple images
     const images = req.files.images.map((file) => ({
       ProductId: savedProduct.id,
       status: true,
@@ -158,6 +96,15 @@ async function product_categories(req, res) {
   let response = ApiResponse("1", "Products", { data });
   return res.json(response);
 }
+
+async function get_all(req, res) {
+  let data = await User.findAll({where: {
+    userType: ['tailor', 'shop']
+  }});
+  let response = ApiResponse("1", "All Users", { data });
+  return res.json(response);
+}
+
 async function addProductCategories(req, res) {
   const { title } = req.body;
   const checkTitle = await ProductCategory.findOne({ where: { title: title } });
@@ -278,6 +225,7 @@ async function get_users(req, res) {
   let response = ApiResponse("1", "Products", { data });
   return res.json(response);
 }
+
 async function updateStatus(req, res) {
   const userId = req.params.userId;
   let user = await User.findOne({ where: { id: userId } });
@@ -426,4 +374,5 @@ module.exports = {
   deleteUser,
   updateFeatured,
   addProduct,
+  get_all,
 };

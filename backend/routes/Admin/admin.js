@@ -5,6 +5,9 @@ const path = require("path");
 const { validateToken } = require("../../middlewares/AuthorizationMW");
 const asyncMiddleware = require("../../middlewares/async");
 const adminController = require("../../controllers/Admin/AdminController");
+const shopController = require("../../controllers/Admin/ShopControlller");
+const tailorController = require("../../controllers/Admin/TailorController");
+
 let x = 1;
 const uploadimage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -37,6 +40,10 @@ router.post(
   asyncMiddleware(adminController.addProduct)
 );
 
+router.get(
+  "/get_all",
+  asyncMiddleware(adminController.get_all)
+);
 // Product Categories
 router.get(
   "/product_categories",
@@ -57,44 +64,44 @@ router.put(
 router.delete("/deletePC/:pcId", asyncMiddleware(adminController.deletePC));
 
 // Shop Categories
-router.get("/shopCategories", asyncMiddleware(adminController.shopCategories));
+router.get("/shopCategories", asyncMiddleware(shopController.shopCategories));
 router.get(
   "/updateShopCategoriesStatus/:Id",
-  asyncMiddleware(adminController.updateShopCategoriesStatus)
+  asyncMiddleware(shopController.updateShopCategoriesStatus)
 );
 router.post(
   "/addShopCategories",
-  asyncMiddleware(adminController.addShopCategories)
+  asyncMiddleware(shopController.addShopCategories)
 );
 router.put(
   "/editShopCategories",
-  asyncMiddleware(adminController.editShopCategories)
+  asyncMiddleware(shopController.editShopCategories)
 );
 router.delete(
   "/deleteShopCategories/:Id",
-  asyncMiddleware(adminController.deleteShopCategories)
+  asyncMiddleware(shopController.deleteShopCategories)
 );
 
 // Tailor Categories
 router.get(
   "/tailorCategories",
-  asyncMiddleware(adminController.tailorCategories)
+  asyncMiddleware(tailorController.tailorCategories)
 );
 router.get(
   "/updateTailorCategoriesStatus/:Id",
-  asyncMiddleware(adminController.updateTailorCategoriesStatus)
+  asyncMiddleware(tailorController.updateTailorCategoriesStatus)
 );
 router.post(
   "/addTailorCategories",
-  asyncMiddleware(adminController.addTailorCategories)
+  asyncMiddleware(tailorController.addTailorCategories)
 );
 router.put(
   "/editTailorCategories",
-  asyncMiddleware(adminController.editTailorCategories)
+  asyncMiddleware(tailorController.editTailorCategories)
 );
 router.delete(
   "/deleteTailorCategories/:Id",
-  asyncMiddleware(adminController.deleteTailorCategories)
+  asyncMiddleware(tailorController.deleteTailorCategories)
 );
 
 router.get("/get_orders", asyncMiddleware(adminController.get_orders));
