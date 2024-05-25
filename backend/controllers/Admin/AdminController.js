@@ -4,6 +4,7 @@ const {
   ProductCategory,
   Order,
   OrderItem,
+  Image,
 } = require("../../models");
 const ApiResponse = require("../../helper/ApiResponse");
 const bcrypt = require("bcryptjs");
@@ -57,6 +58,54 @@ async function get_products(req, res) {
   return res.json(response);
 }
 
+// async function addProduct(req, res) {
+//   const {
+//     title,
+//     price,
+//     type,
+//     description,
+//     ProductCategoryId,
+//     UserId,
+//     isFeatured,
+//   } = req.body;
+
+//   try {
+//     const productImage = req.file.image.path;
+//     let imagePath = productImage.replace(/\\/g, "/");
+
+//     let product = new Product();
+//     product.title = title;
+//     product.price = price;
+//     product.type = type;
+//     product.description = description;
+//     product.ProductCategoryId = ProductCategoryId;
+//     product.UserId = UserId;
+//     product.isFeatured = isFeatured;
+//     product.image = imagePath;
+//     product
+//       .save()
+//       .then((dat) => {
+//         let response = ApiResponse("1", "Product added successfully", {});
+//         return res.json(response);
+//       })
+//       .catch((error) => {
+//         let response = ApiResponse("0", error.message, {});
+//         return res.json(response);
+//       });
+
+//     let imagesPathTemp = req.files.coverImage[0].path;
+//     let imagesPath = imagesPathTemp.replace(/\\/g, "/");
+//     Image.create({
+//       ProductId: product.id,
+//       status: true,
+//       image: imagesPath,
+//     });
+//   } catch (error) {
+//     let response = ApiResponse("0", error.message, {});
+//     return res.json(response);
+//   }
+// }
+
 async function addProduct(req, res) {
   const {
     title,
@@ -67,33 +116,39 @@ async function addProduct(req, res) {
     UserId,
     isFeatured,
   } = req.body;
-
+ 
   try {
-    const productImage = req.file;
-    let tmpPath = productImage.path;
-    let imagePath = tmpPath.replace(/\\/g, "/");
+    const productImage = req.files.image[0].path;
+    const imagePath = productImage.replace(/\\/g, "/");
 
-    let product = new Product();
-    product.title = title;
-    product.price = price;
-    product.type = type;
-    product.description = description;
-    product.ProductCategoryId = ProductCategoryId;
-    product.UserId = UserId;
-    product.isFeatured = isFeatured;
-    product.image = imagePath;
-    product
-      .save()
-      .then((dat) => {
-        let response = ApiResponse("1", "Product added successfully", {});
-        return res.json(response);
-      })
-      .catch((error) => {
-        let response = ApiResponse("0", error.message, {});
-        return res.json(response);
-      });
+    // Saving the product
+    const product = new Product({
+      title,
+      price,
+      type,
+      description,
+      ProductCategoryId,
+      UserId,
+      isFeatured,
+      image: imagePath,
+    });
+
+    const savedProduct = await product.save();
+
+    // Assuming req.files.coverImage contains multiple images
+    const images = req.files.images.map((file) => ({
+      ProductId: savedProduct.id,
+      status: true,
+      image: file.path.replace(/\\/g, "/"),
+    }));
+
+    // Saving the images using bulkCreate
+    await Image.bulkCreate(images);
+
+    const response = ApiResponse("1", "Product added successfully", {});
+    return res.json(response);
   } catch (error) {
-    let response = ApiResponse("0", error.message, {});
+    const response = ApiResponse("0", error.message, {});
     return res.json(response);
   }
 }
@@ -370,4 +425,5 @@ module.exports = {
   deletePC,
   deleteUser,
   updateFeatured,
+  addProduct,
 };
