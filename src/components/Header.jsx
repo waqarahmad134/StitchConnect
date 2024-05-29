@@ -266,7 +266,7 @@ export default function Header() {
       </Drawer>
       <header
         className={`relative w-full z-50 py-1 md:py-3  ${
-          addShadow ? "shadow-lg" : ""
+          addShadow ? "shadow-lg" : "shadow-none"
         }`}
       >
         <nav className="lg:w-[93%] xl:w-5/6 mx-auto relative flex justify-between items-center border-gray-700 border-b-2 px-4 lg:px-0 py-2">
