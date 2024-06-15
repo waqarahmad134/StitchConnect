@@ -6,7 +6,7 @@ export default function Card(props) {
   return (
     <>
       <div
-        className="relative shadow-xl hover:scale-105 duration-500"
+        className="relative  shadow-xl hover:scale-105 duration-500"
         key={props?.index}
       >
         <div className="h-32 border border-transparent cursor-pointer">
