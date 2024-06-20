@@ -22,7 +22,6 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import Cancel from "./pages/Cancel";
 import OrderSuccess from "./pages/OrderSuccess";
-import Car from "./pages/Car";
 
 const router = createBrowserRouter([
   {
