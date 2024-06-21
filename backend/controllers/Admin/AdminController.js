@@ -59,8 +59,7 @@ async function get_products(req, res) {
 }
 
 async function addProduct(req, res) {
-  const { title, price, description, ProductCategoryId, UserId, isFeatured } =
-    req.body;
+  const { title, price, description, ProductCategoryId, UserId, isFeatured } = req.body;
   try {
     const productImage = req.files.image[0].path;
     const imagePath = productImage.replace(/\\/g, "/");
@@ -72,6 +71,7 @@ async function addProduct(req, res) {
       UserId,
       isFeatured,
       image: imagePath,
+      status : true,
     });
     const savedProduct = await product.save();
     const images = req.files.images.map((file) => ({
@@ -98,9 +98,11 @@ async function product_categories(req, res) {
 }
 
 async function get_all(req, res) {
-  let data = await User.findAll({where: {
-    userType: ['tailor', 'shop']
-  }});
+  let data = await User.findAll({
+    where: {
+      userType: ["tailor", "shop"],
+    },
+  });
   let response = ApiResponse("1", "All Users", { data });
   return res.json(response);
 }

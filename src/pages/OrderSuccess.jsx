@@ -6,10 +6,7 @@ import GetAPI from "../utilities/GetAPI";
 
 export default function OrderSuccess() {
   const { orderId } = useParams();
-  console.log("🚀 ~ OrderSuccess ~ orderId:", orderId)
   const {data} = GetAPI(`tailor/after_payment/${orderId}`);
-  console.log("🚀 ~ OrderSuccess ~ data:", data)
-
   return (
     <>
       <Header />

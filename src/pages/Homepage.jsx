@@ -78,7 +78,6 @@ export default function Homepage() {
     }
   };
 
-
   return (
     <>
       <Header />
@@ -136,6 +135,110 @@ export default function Homepage() {
             </div>
           </Swiper>
         </div>
+
+        <div className="py-5">
+          <div className="text-4xl font-medium w-[85%] m-auto">
+            <h2 className="text-black text-4xl font-medium">Main Product's</h2>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 py-10">
+              {getFeaturedData?.data?.data?.data?.map((prod, index) => (
+                <>
+                  <article className="relative flex flex-col overflow-hidden rounded-lg border">
+                    <div className="aspect-square overflow-hidden">
+                      <img
+                        className="h-full w-full object-cover transition-all duration-300 group-hover:scale-125"
+                        src={`${BASE_URL}${prod?.image}`}
+                        alt=""
+                      />
+                    </div>
+                   
+                    <div className="my-4 mx-auto flex w-10/12 flex-col items-start justify-between">
+                      <div className="mb-2 flex">
+                        <p className="mr-3 text-sm font-semibold">$99.00</p>
+                        <del className="text-xs text-gray-400"> $79.00 </del>
+                      </div>
+                      <h3 className="mb-2 text-sm text-gray-400">Fresh Apples</h3>
+                    </div>
+                    <button className="group mx-auto mb-2 flex h-10 w-10/12 items-stretch overflow-hidden rounded-md text-gray-600">
+                      <div className="flex w-full items-center justify-center bg-gray-100 text-xs uppercase transition group-hover:bg-emerald-600 group-hover:text-white">
+                        Buy Now
+                      </div>
+                      <div className="flex items-center justify-center bg-gray-200 px-5 transition group-hover:bg-emerald-500 group-hover:text-white">
+                        +
+                      </div>
+                    </button>
+                  </article>
+                </>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Featured Section start here  */}
+        <div className="bg-gray-200 py-5">
+          <div className="text-4xl font-medium w-[85%] m-auto">
+            <h2 className="text-black text-4xl font-medium">
+              Featured Product's
+            </h2>
+            <div>
+              <Swiper
+                slidesPerView={isLargerThan430 ? 4 : 1}
+                spaceBetween={10}
+                autoplay={{
+                  delay: 1000,
+                  disableOnInteraction: false,
+                }}
+                loop={true}
+                pagination={{
+                  clickable: true,
+                }}
+                modules={[Autoplay, Pagination, Navigation]}
+                className="mySwiper py-10"
+              >
+                {getFeaturedData?.data?.data?.data?.map((prod, index) => (
+                  <SwiperSlide>
+                    <div
+                      key={index}
+                      className="relative flex w-full flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md"
+                    >
+                      <a className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl">
+                        <img
+                          className="object-cover"
+                          src={`${BASE_URL}${prod?.image}`}
+                          alt={prod?.title}
+                        />
+                      </a>
+                      <div className="mt-4 px-5 pb-5">
+                        <a href="#">
+                          <h5 className="text-xl tracking-tight text-slate-900">
+                            {prod?.title}
+                          </h5>
+                        </a>
+                        <div className="mt-2 mb-5 flex items-center justify-between">
+                          <p>
+                            <span className="text-3xl font-bold text-slate-900">
+                              {prod?.price}
+                            </span>
+                            {/* <span className="text-sm text-slate-900 line-through">
+                                $699
+                              </span> */}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => addToCart(prod)}
+                          className="flex items-center justify-center w-full rounded-md bg-black border-2 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-transparent hover:text-black hover:border-2 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                        >
+                          <MdOutlineShoppingCart />
+                          Buy Now
+                        </button>
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          </div>
+        </div>
+        {/* Features Section End Here  */}
 
         <div className="bg-[#f5f4f2]">
           <div className="w-[75%] m-auto pt-5 pb-2 flex justify-center flex-wrap items-center gap-x-10 gap-y-5 border-b border-gray-400">
@@ -266,70 +369,7 @@ export default function Homepage() {
               </>
             )}
           </div>
-          <div className="bg-gray-200 py-5">
-            <div className="text-4xl font-medium w-[85%] m-auto">
-              <h2 className="text-black text-4xl font-medium">
-                Featured Product's
-              </h2>
-              <div>
-                <Swiper
-                  slidesPerView={isLargerThan430 ? 4 : 1}
-                  spaceBetween={10}
-                  autoplay={{
-                    delay: 1000,
-                    disableOnInteraction: false,
-                  }}
-                  loop={true}
-                  pagination={{
-                    clickable: true,
-                  }}
-                  modules={[Autoplay, Pagination, Navigation]}
-                  className="mySwiper py-10"
-                >
-                  {getFeaturedData?.data?.data?.data?.map((prod, index) => (
-                    <SwiperSlide>
-                      <div
-                        key={index}
-                        className="relative flex w-full flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md"
-                      >
-                        <a className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl">
-                          <img
-                            className="object-cover"
-                            src={`${BASE_URL}${prod?.image}`}
-                            alt={prod?.title}
-                          />
-                        </a>
-                        <div className="mt-4 px-5 pb-5">
-                          <a href="#">
-                            <h5 className="text-xl tracking-tight text-slate-900">
-                              {prod?.title}
-                            </h5>
-                          </a>
-                          <div className="mt-2 mb-5 flex items-center justify-between">
-                            <p>
-                              <span className="text-3xl font-bold text-slate-900">
-                                {prod?.price}
-                              </span>
-                              {/* <span className="text-sm text-slate-900 line-through">
-                                $699
-                              </span> */}
-                            </p>
-                          </div>
-                          <button
-                            onClick={() => addToCart(prod)}
-                            className="flex items-center justify-center w-full rounded-md bg-black border-2 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-transparent hover:text-black hover:border-2 focus:outline-none focus:ring-4 focus:ring-blue-300"
-                          >
-                            <MdOutlineShoppingCart />
-                            Buy Now
-                          </button>
-                        </div>
-                      </div>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </div>
-            </div>
-          </div>
+
           <div className="bg-[#082835] py-5">
             <h2 className="text-white text-4xl font-medium w-[85%] m-auto">
               Complete Confidence
