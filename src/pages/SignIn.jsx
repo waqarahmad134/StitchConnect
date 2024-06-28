@@ -31,7 +31,6 @@ export default function SignIn() {
         email: signUp.email,
         password: signUp.password,
       });
-      console.log(res?.data)
 
       if (res?.data?.status === "1") {
         success_toaster("Login Sucessfull");

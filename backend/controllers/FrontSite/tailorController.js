@@ -32,38 +32,25 @@ async function registration(req, res) {
   const {
     name,
     email,
-    phone,
-    password,
     address,
     description,
-    lat,
-    lng,
-    userType,
+    TailorCategoryId ,
   } = req.body;
   const checkEmail = await User.findOne({ where: { email: email } });
-  const checkPhone = await User.findOne({ where: { phone: phone } });
   if (checkEmail) {
     const response = ApiResponse("0", "Email already exist", {});
     return res.json(response);
-  } else if (checkPhone) {
-    const response = ApiResponse("0", "Phone No. already exist", {});
-    return res.json(response);
   } else {
-    const salt = await bcrypt.genSalt(10);
-
+   
     const user = new User();
     user.name = name;
     user.description = description;
     user.address = address;
-    user.lat = lat;
-    user.lng = lng;
     user.email = email;
-    user.phone = phone;
-
-    user.userType = userType;
+    user.TailorCategoryId = TailorCategoryId;
+    user.userType = "tailor";
     user.status = 1;
-    user.password = await bcrypt.hash(password, salt);
-
+   
     const service_image = req.file;
     let tmpPath = service_image.path;
     let imagePath = tmpPath.replace(/\\/g, "/");
@@ -80,14 +67,13 @@ async function registration(req, res) {
         let data = {
           id: dat.id,
           name: dat.name,
-          phone: dat.phone,
           email: dat.email,
           accessToken: accessToken,
         };
 
         const response = ApiResponse(
           "1",
-          `${userType} Registered successfully!`,
+          `Tailor Registered successfully!`,
           data
         );
         return res.json(response);
@@ -262,10 +248,12 @@ async function get_all_tailors(req, res) {
 }
 async function shop_details(req, res) {
   const shopId = req.params.shopId;
+  let ShopData = await User.findByPk(shopId);
   let products = await Product.findAll({ where: { UserId: shopId } });
   let categories = await ProductCategory.findAll({ where: { status: 1 } });
   let response = ApiResponse("1", "shop details", {
     data: products,
+    ShopData,
     categories,
   });
   return res.json(response);

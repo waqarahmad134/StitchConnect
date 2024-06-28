@@ -14,7 +14,7 @@ export default function Shop() {
   const [loading, setLoading] = useState(true);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(12);
-  const [activeCat, setActiveCat] = useState("1");
+  const [activeCat, setActiveCat] = useState("all");
   const shops = GetAPI("tailor/get_all_shops");
   const onPageChange = (event) => {
     setFirst(event.first);
@@ -45,9 +45,9 @@ export default function Shop() {
                   <h2 className="uppercase font-medium">Nearby {pathname}</h2>
                   <div className="md:space-y-2 flex md:block gap-2 md:gap-0">
                     <button
-                      onClick={() => setActiveCat("1")}
+                      onClick={() => setActiveCat("all")}
                       className={`w-full text-xl font-semibold rounded-full border ${
-                        activeCat === "1"
+                        activeCat === "all"
                           ? "bg-black text-white"
                           : "text-gray-600 bg-transparent"
                       } hover:border hover:text-white hover:bg-gray-500 py-3 px-5`}
@@ -83,7 +83,7 @@ export default function Shop() {
                 </div>
               </div>
               <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 grid-cols-2 gap-x-2 md:gap-x-3 gap-y-2 md:gap-y-3">
-                {activeCat === "1" ? (
+                {activeCat === "all" ? (
                   <>
                     {shops?.data?.data?.data
                       ?.slice(first, first + rows)
@@ -106,7 +106,7 @@ export default function Shop() {
                               {prod?.name}
                             </h4>
                             <p className="hidden lg:block  text-gray-400 text-sm">
-                              {(prod?.description).substring(0, 42)}
+                              {(prod?.description)?.substring(0, 42)}
                             </p>
 
                             <Link
@@ -121,12 +121,13 @@ export default function Shop() {
                   </>
                 ) : (
                   <>
-                    {shops?.data?.data?.data
-                      .filter(
-                        (prod) => prod.ShopCategoryId === parseInt(activeCat)
-                      )
-                      ?.slice(first, first + rows)
-                      .map((prod, index) => (
+                    {shops?.data?.data?.data?.filter(
+                    (prod) =>
+                      activeCat === "all" ||
+                      prod?.ShopCategoryId === parseInt(activeCat)
+                  )
+                  ?.slice(first, first + rows)
+                  .map((prod, index) => (
                         <div
                           className="relative shadow-xl hover:scale-105 duration-500"
                           key={index}
@@ -145,7 +146,7 @@ export default function Shop() {
                               {prod?.name}
                             </h4>
                             <p className="hidden lg:block  text-gray-400 text-sm">
-                              {(prod?.description).substring(0, 42)}
+                              {(prod?.description)?.substring(0, 42)}
                             </p>
 
                             <Link

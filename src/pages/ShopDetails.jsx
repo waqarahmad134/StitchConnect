@@ -8,6 +8,7 @@ import Loader from "../components/Loader";
 import { Paginator } from "primereact/paginator";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import "primereact/resources/primereact.min.css";
+import { BASE_URL } from "../utilities/URL";
 
 export default function ShopDetails() {
   const { slug } = useParams();
@@ -16,7 +17,6 @@ export default function ShopDetails() {
   const [rows, setRows] = useState(12);
   const [activeCat, setActiveCat] = useState("all");
   const products = GetAPI(`tailor/shop_details/${slug}`);
-  console.log("🚀 ~ ShopDetails ~ products:", products?.data)
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
@@ -33,12 +33,12 @@ export default function ShopDetails() {
       <Header />
       <section>
         <div>
-          <div className="bg-exteriorHeroBg bg-cover bg-center bg-no-repeat w-full h-80 flex justify-center items-center">
+          <div className="bg-exteriorHeroBg bg-cover bg-center bg-no-repeat w-full h-80 flex justify-center items-center gap-x-3">
             <h2 className="text-2xl md:text-3xl lg:text-6xl text-white font-semibold uppercase">
               Shop Details
             </h2>
+            <img className="w-32 rounded-sm" src={`${BASE_URL}${products?.data?.data?.ShopData?.image}`} alt="" />
           </div>
-
           <div className="py-10 lg:w-[90%] w-[95%] mx-auto grid md:grid-cols-12 gap-x-6 md:gap-x-14">
             <div className="md:col-span-3">
               <div className="cat-section hidden md:block">

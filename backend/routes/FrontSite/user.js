@@ -21,7 +21,7 @@ const upload = multer({
 });
 
 
-router.post('/registration',upload.single('image'),asyncMiddleware(userController.registration));
+router.post('/register',upload.single('image'),asyncMiddleware(userController.registration));
 router.post('/login',asyncMiddleware(userController.login));
 router.post('/forget_password',asyncMiddleware(userController.forget_password));
 router.post('/change_password_after_otp',asyncMiddleware(userController.change_password_after_otp));

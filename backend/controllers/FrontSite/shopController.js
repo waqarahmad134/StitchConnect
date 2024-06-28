@@ -25,38 +25,26 @@ const {
     const {
       name,
       email,
-      phone,
-      password,
       address,
-      description,
       backgroundColor,
       productDisplay,
-      CategoryId
-      
+      ShopCategoryId 
     } = req.body;
     const checkEmail = await User.findOne({ where: { email: email } });
-    const checkPhone = await User.findOne({ where: { phone: phone } });
     if (checkEmail) {
       const response = ApiResponse("0", "Email already exist", {});
       return res.json(response);
-    } else if (checkPhone) {
-      const response = ApiResponse("0", "Phone No. already exist", {});
-      return res.json(response);
     } else {
-      const salt = await bcrypt.genSalt(10);
-  
+
       const user = new User();
       user.name = name;
-      user.description = description;
       user.backgroundColor = backgroundColor;
       user.productDisplay = productDisplay;
-      user.CategoryId = CategoryId;
+      user.ShopCategoryId = ShopCategoryId ;
       user.email = email;
-      user.phone = phone;
-  
+      user.address = address;
       user.userType = process.env.SHOP;
       user.status = 1;
-      user.password = await bcrypt.hash(password, salt);
   
       const service_image = req.file;
       let tmpPath = service_image.path;
@@ -74,7 +62,6 @@ const {
           let data = {
             id: dat.id,
             name: dat.name,
-            phone: dat.phone,
             email: dat.email,
             accessToken: accessToken,
           };
@@ -118,7 +105,6 @@ const {
         let data = {
           id: user.id,
           name: user.name,
-          phone: user.phone,
           email: user.email,
           userType: user.userType,
           accessToken: accessToken,

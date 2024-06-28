@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import GetAPI from "../utilities/GetAPI";
 import { PostAPI } from "../utilities/PostAPI";
@@ -22,7 +22,12 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { useMediaQuery } from "@chakra-ui/react";
 
 export default function Homepage() {
-  const location = useLocation();
+  const { pathname , location } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("all");
   const products = GetAPI("tailor/all_products");

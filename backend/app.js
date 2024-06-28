@@ -25,13 +25,6 @@ app.use("/tailor", tailorRoute);
 app.use("/shop", shopRoute);
 app.use("/admin", AdminRoute);
 
-// app.get('/', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'loaderio-b922b3f2b76c436b55bead8ffa707595.txt'));
-// });
-// app.get('/loaderio-b922b3f2b76c436b55bead8ffa707595.txt', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'loaderio-b922b3f2b76c436b55bead8ffa707595.txt'));
-// });
-
 // Error middleware : To show any error if promise fails
 app.use(error);
 // To make the folder Public
