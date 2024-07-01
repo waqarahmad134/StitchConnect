@@ -29,28 +29,24 @@ let totp = new otp.TOTP({
 });
 
 async function registration(req, res) {
-  const {
-    name,
-    email,
-    address,
-    description,
-    TailorCategoryId ,
-  } = req.body;
+  const { name, email, address, lat, lng, description, TailorCategoryId } =
+    req.body;
   const checkEmail = await User.findOne({ where: { email: email } });
   if (checkEmail) {
     const response = ApiResponse("0", "Email already exist", {});
     return res.json(response);
   } else {
-   
     const user = new User();
     user.name = name;
     user.description = description;
     user.address = address;
     user.email = email;
+    user.lng = lng;
+    user.lat = lat;
     user.TailorCategoryId = TailorCategoryId;
     user.userType = "tailor";
     user.status = 1;
-   
+
     const service_image = req.file;
     let tmpPath = service_image.path;
     let imagePath = tmpPath.replace(/\\/g, "/");
@@ -127,7 +123,6 @@ async function login(req, res) {
 }
 async function all_products(req, res) {
   let categories = await ProductCategory.findAll({
-    where: { userType: process.env.SHOP },
     attributes: ["id", "title"],
   });
   let data = await Product.findAll({
@@ -144,6 +139,18 @@ async function all_products(req, res) {
   let response = ApiResponse("1", "All Products", { data: data, categories });
   return res.json(response);
 }
+
+async function admin_products(req, res) {
+  let data = await Product.findAll({
+    where: {
+      userType: "admin",
+    },
+  });
+
+  let response = ApiResponse("1", "Admin Products", { data: data });
+  return res.json(response);
+}
+
 async function featured_products(req, res) {
   let data = await Product.findAll({ where: { isFeatured: true } });
   let response = ApiResponse("1", "Data", { data });
@@ -249,10 +256,19 @@ async function get_all_tailors(req, res) {
 async function shop_details(req, res) {
   const shopId = req.params.shopId;
   let ShopData = await User.findByPk(shopId);
-  let products = await Product.findAll({ where: { UserId: shopId } });
+  let data = await Product.findAll(
+    {
+    where: {
+      UserId : shopId,
+      // userType: {
+      //   [Op.ne]: "admin",
+      // },
+    },
+  }
+);
   let categories = await ProductCategory.findAll({ where: { status: 1 } });
   let response = ApiResponse("1", "shop details", {
-    data: products,
+    data,
     ShopData,
     categories,
   });
@@ -415,4 +431,5 @@ module.exports = {
   get_users,
   get_chat,
   get_chat_get,
+  admin_products,
 };

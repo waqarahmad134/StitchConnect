@@ -21,7 +21,7 @@ export default function Card(props) {
         <div className="space-y-2 p-3">
           <h4 className="text-xl font-semibold">{props?.title}</h4>
           <p className="hidden lg:block  text-gray-400 text-sm">
-            {(props?.description)}
+            {(props?.description?.substring(0, 20))}
           </p>
         
           <Link

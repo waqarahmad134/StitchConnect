@@ -12,11 +12,13 @@ import { BASE_URL } from "../utilities/URL";
 
 export default function ShopDetails() {
   const { slug } = useParams();
+  
   const [loading, setLoading] = useState(true);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(12);
   const [activeCat, setActiveCat] = useState("all");
   const products = GetAPI(`tailor/shop_details/${slug}`);
+  console.log("🚀 ~ ShopDetails ~ products:", products?.data?.data)
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);

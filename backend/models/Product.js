@@ -8,6 +8,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(),
             allowNull: true,
         },
+        color: {
+            type: DataTypes.STRING(),
+            allowNull: true,
+        },
+        userType: {
+            type: DataTypes.STRING(),
+            allowNull: true,
+        },
         price: {
             type: DataTypes.INTEGER,
             allowNull: true,

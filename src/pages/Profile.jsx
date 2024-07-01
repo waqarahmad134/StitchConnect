@@ -77,6 +77,7 @@ export default function Profile() {
                   referrerPolicy="no-referrer-when-downgrade"
                 ></iframe>
               </div>
+             <h4>{tailorData?.data?.data?.data?.description}</h4>
               <div>
                 <div className="flex justify-end items-center">
                   <div>

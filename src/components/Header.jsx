@@ -238,7 +238,7 @@ export default function Header() {
                     </div>
                     <div>
                       <b>{cart?.title}</b>
-                      <h5>{cart?.price} $</h5>
+                      <h5>{cart?.price} PKR</h5>
                     </div>
                   </div>
 

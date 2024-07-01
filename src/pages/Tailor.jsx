@@ -17,7 +17,6 @@ export default function Tailor() {
   const [rows, setRows] = useState(12);
   const [activeCat, setActiveCat] = useState("all");
   const allTailors = GetAPI("tailor/get_all_tailors");
-  console.log("🚀 ~ Tailor ~ allTailors:", allTailors)
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);

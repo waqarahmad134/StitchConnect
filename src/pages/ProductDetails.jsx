@@ -75,10 +75,12 @@ export default function ProductDetails() {
               <h2 className="text-xl lg:text-2xl ">
                 Product Type :  {data?.data?.data?.type}
               </h2>
-                <p className="text-xl text-black font-semibold">
-                    ${data?.data?.data?.price}
-                  
-                </p>
+              <h2 className="text-xl lg:text-2xl ">
+                Product Color :  {data?.data?.data?.color}
+              </h2>
+              <h2 className="text-xl lg:text-2xl ">
+                Product Price : <b>{data?.data?.data?.price}</b> PKR
+              </h2>
               <div className="space-y-8">
                 <p className="text-xl">{data?.data?.data?.description}</p>
                 <div className="grid gap-x-6 border-t border-b py-4">

@@ -1,29 +1,21 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { IoIosMail } from "react-icons/io";
-import {
-  FaAddressBook,
-  FaCat,
-  FaNotesMedical,
-  FaPhoneSquare,
-} from "react-icons/fa";
+import { FaAddressBook } from "react-icons/fa";
 import { PostAPI } from "../utilities/PostAPI";
 import { IoPersonCircle } from "react-icons/io5";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { MdNotes, MdOutlinePersonAddAlt } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  error_toaster,
-  info_toaster,
-  success_toaster,
-  warning_toaster,
-} from "../utilities/Toaster";
+import { info_toaster, success_toaster } from "../utilities/Toaster";
 import { BsBoxes, BsCircle } from "react-icons/bs";
 import { PiRectangle } from "react-icons/pi";
-import { HiColorSwatch, HiOutlineArrowNarrowLeft } from "react-icons/hi";
+import { HiColorSwatch } from "react-icons/hi";
+import { Autocomplete } from "@react-google-maps/api";
 
 export default function SignUp() {
+  const autocompleteRef = useRef(null);
   const navigate = useNavigate();
   const [userType, setUserType] = useState("user");
   const [signUp, setSignUp] = useState({
@@ -36,14 +28,43 @@ export default function SignUp() {
     category: "1",
     productDisplay: "",
     color: "",
-    address: "",
     description: "",
     role: "",
+    lat: "",
+    lng: "",
+    address: "",
   });
+
 
   const onChange = (e) => {
     setSignUp({ ...signUp, [e.target.name]: e.target.value });
   };
+
+  const calculateRoute = () => {
+    if (!autocompleteRef.current) {
+      return;
+    }
+    const place = autocompleteRef.current.getPlace();
+
+    if (!place || !place.geometry || !place.geometry.location) {
+      info_toaster("Please select an address");
+      return;
+    }
+    const latLng = {
+      lat: place.geometry.location.lat(),
+      lng: place.geometry.location.lng(),
+    };
+    localStorage.setItem("guestFormatAddress", place?.formatted_address);
+    localStorage.setItem("lat", latLng.lat);
+    localStorage.setItem("lng", latLng.lng);
+    setSignUp((prevSignUp) => ({
+      ...prevSignUp,
+      lat: latLng.lat,
+      lng: latLng.lng,
+      address: place.formatted_address,
+    }));
+  };
+
   const registerUserFunc = async (e) => {
     e.preventDefault();
     if (signUp.email === "") {
@@ -55,6 +76,8 @@ export default function SignUp() {
       formData.append("email", signUp.email);
       formData.append("password", signUp.password);
       formData.append("address", signUp.address);
+      formData.append("lat", signUp.lat);
+      formData.append("lng", signUp.lng);
 
       let res = await PostAPI("user/register", formData);
       console.log(res?.data?.status);
@@ -80,6 +103,8 @@ export default function SignUp() {
       formData.append("backgroundColor", signUp.color);
       formData.append("productDisplay", signUp.productDisplay);
       formData.append("description", signUp.description);
+      formData.append("lat", signUp.lat);
+      formData.append("lng", signUp.lng);
 
       let res = await PostAPI("shop/registration", formData);
       console.log(res?.data);
@@ -90,7 +115,7 @@ export default function SignUp() {
           email: "",
           category: "1",
           address: "",
-          description: ""
+          description: "",
         });
         navigate("/");
       } else {
@@ -111,6 +136,8 @@ export default function SignUp() {
       formData.append("TailorCategoryId", signUp.category);
       formData.append("address", signUp.address);
       formData.append("description", signUp.description);
+      formData.append("lat", signUp.lat);
+      formData.append("lng", signUp.lng);
 
       let res = await PostAPI("tailor/registration", formData);
       if (res?.data?.status === "1") {
@@ -121,7 +148,7 @@ export default function SignUp() {
           email: "",
           category: "1",
           address: "",
-          description: ""
+          description: "",
         });
       } else {
         alert(res?.data?.message);
@@ -219,7 +246,28 @@ export default function SignUp() {
                         className="w-full h-[58px] rounded-lg border bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
                       />
                     </div>
-                    <div className="relative col-span-2">
+                    <Autocomplete
+                      onLoad={(autocomplete) =>
+                        (autocompleteRef.current = autocomplete)
+                      }
+                      onPlaceChanged={calculateRoute}
+                      className="col-span-2"
+                    >
+                      <div className="relative">
+                        <input
+                          value={signUp.address}
+                          onChange={onChange}
+                          name="address"
+                          type="text"
+                          placeholder="Address"
+                          className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
+                        />
+                        <span className="absolute right-4 top-4 -translate-y-[4px]">
+                          <FaAddressBook size={32} />
+                        </span>
+                      </div>
+                    </Autocomplete>
+                    {/* <div className="relative col-span-2">
                       <input
                         value={signUp.address}
                         onChange={onChange}
@@ -231,7 +279,7 @@ export default function SignUp() {
                       <span className="absolute right-4 top-4 -translate-y-[4px]">
                         <FaAddressBook size={32} />
                       </span>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="mx-auto mt-5">
                     <button
@@ -304,7 +352,7 @@ export default function SignUp() {
                         className="w-full h-[58px] rounded-lg border bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
                       />
                     </div>
-                    <div className="relative col-span-2">
+                    {/* <div className="relative col-span-2">
                       <input
                         value={signUp.address}
                         onChange={onChange}
@@ -316,7 +364,28 @@ export default function SignUp() {
                       <span className="absolute right-4 top-4 -translate-y-[4px]">
                         <FaAddressBook size={32} />
                       </span>
-                    </div>
+                    </div> */}
+                    <Autocomplete
+                      onLoad={(autocomplete) =>
+                        (autocompleteRef.current = autocomplete)
+                      }
+                      onPlaceChanged={calculateRoute}
+                      className="col-span-2"
+                    >
+                      <div className="relative">
+                        <input
+                          value={signUp.address}
+                          onChange={onChange}
+                          name="address"
+                          type="text"
+                          placeholder="Address"
+                          className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
+                        />
+                        <span className="absolute right-4 top-4 -translate-y-[4px]">
+                          <FaAddressBook size={32} />
+                        </span>
+                      </div>
+                    </Autocomplete>
                     <div className="relative col-span-2">
                       <input
                         value={signUp.description}
@@ -418,7 +487,7 @@ export default function SignUp() {
                         <BsBoxes size={32} />
                       </span>
                     </div>
-                    
+
                     <div className="relative">
                       <input
                         onChange={(e) => {
@@ -433,7 +502,7 @@ export default function SignUp() {
                         className="w-full h-[58px] rounded-lg border bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
                       />
                     </div>
-                    <div className="relative col-span-2">
+                    {/* <div className="relative col-span-2">
                       <input
                         value={signUp.address}
                         onChange={onChange}
@@ -445,18 +514,39 @@ export default function SignUp() {
                       <span className="absolute right-4 top-4 -translate-y-[4px]">
                         <FaAddressBook size={32} />
                       </span>
-                    </div>
-                    <div className="relative hidden">
+                    </div> */}
+                    <Autocomplete
+                      onLoad={(autocomplete) =>
+                        (autocompleteRef.current = autocomplete)
+                      }
+                      onPlaceChanged={calculateRoute}
+                      className="col-span-2"
+                    >
+                      <div className="relative">
+                        <input
+                          value={signUp.address}
+                          onChange={onChange}
+                          name="address"
+                          type="text"
+                          placeholder="Address"
+                          className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
+                        />
+                        <span className="absolute right-4 top-4 -translate-y-[4px]">
+                          <FaAddressBook size={32} />
+                        </span>
+                      </div>
+                    </Autocomplete>
+                    <div className="relative col-span-2">
                       <input
-                        value={signUp.phone}
+                        value={signUp.description}
                         onChange={onChange}
-                        name="phone"
+                        name="description"
                         type="text"
-                        placeholder="+128179812"
-                        className="w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
+                        placeholder="Note for address"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
                       />
                       <span className="absolute right-4 top-4 -translate-y-[4px]">
-                        <FaPhoneSquare size={32} />
+                        <MdNotes size={32} />
                       </span>
                     </div>
                   </div>

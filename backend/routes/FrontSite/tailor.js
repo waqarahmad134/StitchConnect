@@ -23,6 +23,7 @@ const upload = multer({
 router.post('/registration',upload.single('image'),asyncMiddleware(tailorController.registration));
 router.post('/login',asyncMiddleware(tailorController.login));
 router.get('/all_products',asyncMiddleware(tailorController.all_products));
+router.get('/admin_products',asyncMiddleware(tailorController.admin_products));
 router.get('/featured_products',asyncMiddleware(tailorController.featured_products));
 router.get('/tailor_products',asyncMiddleware(tailorController.tailor_products));
 router.get('/shop_products',asyncMiddleware(tailorController.shop_products));

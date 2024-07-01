@@ -16,6 +16,30 @@ export default function Contact() {
   const [loading, setLoading] = useState(true);
   const chatContainerRef = useRef(null);
 
+  const [size, setSize] = useState("");
+
+  const handleSize = () => {
+    const sizeValue = localStorage.getItem("Size");
+    if (sizeValue) {
+      const sizeObject = JSON.parse(sizeValue);
+      const formattedSize = `
+        Chest: ${sizeObject.chest}
+        Waist: ${sizeObject.waist}
+        Hips: ${sizeObject.hips}
+        Sleeve Length: ${sizeObject.sleeveLenght}
+        Shoulder Width: ${sizeObject.shoulderWidth}
+        Inseam: ${sizeObject.inseam}
+        Outseam: ${sizeObject.outseam}
+        Neck: ${sizeObject.neck}
+        Jacket Length: ${sizeObject.jacketLenght}
+      `;
+      setMessage(formattedSize);
+    }
+    else{
+      alert("No size set till now")
+    }
+  };
+
   const fetchChatData = () => {
     axios
       .get(
@@ -29,7 +53,8 @@ export default function Contact() {
       });
 
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
   };
 
@@ -43,7 +68,6 @@ export default function Contact() {
     }, 5000);
     return () => clearInterval(intervalId);
   }, []);
-
 
   const handleClick = async (id) => {
     const recieverId = id;
@@ -79,6 +103,15 @@ export default function Contact() {
     }
   };
 
+  const [initial, setInitial] = useState('');
+
+  useEffect(() => {
+    const name = localStorage.getItem('name');
+    if (name) {
+      setInitial(name.charAt(0));
+    }
+  }, []);
+
   useEffect(() => {
     setTimeout(() => setLoading(false), 500);
   }, []);
@@ -91,13 +124,20 @@ export default function Contact() {
         <div className="container mx-auto shadow-lg rounded-lg">
           <div className="px-5 py-5 flex justify-between items-center bg-white border-b-2">
             <div className="font-semibold text-2xl">Chat</div>
-
-            <div className="h-12 w-12 p-2 bg-yellow-500 rounded-full text-white font-semibold flex items-center justify-center">
-              {localStorage.getItem('name')}
+            <div className="flex gap-3">
+              <button
+                className="bg-blue-300 rounded-md px-4 py-2"
+                onClick={handleSize}
+              >
+                Get Size
+              </button>
+              <div className="h-12 w-12 p-2 bg-yellow-500 rounded-full text-white font-semibold flex items-center justify-center">
+              {initial}
+              </div>
             </div>
           </div>
           <div className="flex flex-row justify-between bg-white border h-[450px]">
-            <div className="flex flex-col w-2/5 border-r-2 overflow-y-auto">
+            <div className="flex flex-col w-2/5 md:w-[400px] border-r-2 overflow-y-auto">
               <div className="border-b-2 py-4 px-5">
                 <input
                   value={search}
@@ -133,7 +173,9 @@ export default function Contact() {
                       />
                     </div>
                     <div className="w-full text-start">
-                      <div className="text-lg font-semibold text-center md:text-left">{data?.name}</div>
+                      <div className="text-lg font-semibold text-center md:text-left">
+                        {data?.name}
+                      </div>
                       <span className="hidden md:block text-gray-500">
                         {data?.email}
                       </span>
@@ -142,7 +184,7 @@ export default function Contact() {
                 ))}
             </div>
 
-            <div className="w-full px-5 flex flex-col justify-between">
+            <div className="w-full md:w-[calc(100%-400px)] px-5 flex flex-col justify-between">
               <div
                 ref={chatContainerRef}
                 className="flex flex-col overflow-auto mt-5 md:px-5"
@@ -151,7 +193,7 @@ export default function Contact() {
                   data.senderId ===
                   parseInt(localStorage.getItem("senderId")) ? (
                     <div key={index} className="flex justify-end mb-4">
-                      <div className="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
+                      <div className="md:max-w-[60%] mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
                         {data.message}
                       </div>
                       <img

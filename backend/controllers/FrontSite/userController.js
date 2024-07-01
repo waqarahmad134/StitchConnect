@@ -181,6 +181,8 @@ async function registration(req, res) {
     name,
     email,
     password,
+    lat,
+    lng,
     address,
   } = req.body;
   const checkEmail = await User.findOne({ where: { email: email } });
@@ -192,6 +194,8 @@ async function registration(req, res) {
     const user = new User();
     user.name = name;
     user.email = email;
+    user.lat = lat;
+    user.lng = lng;
     user.address = address;
     user.userType = "user";
     user.status = 1;

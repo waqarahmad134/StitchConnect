@@ -146,7 +146,7 @@ export default function Shop() {
                               {prod?.name}
                             </h4>
                             <p className="hidden lg:block  text-gray-400 text-sm">
-                              {(prod?.description)?.substring(0, 42)}
+                              {(prod?.description)?.substring(0, 10)}
                             </p>
 
                             <Link

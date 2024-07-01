@@ -1,17 +1,22 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { IoPersonCircle } from "react-icons/io5";
 import { RiLockPasswordFill } from "react-icons/ri";
-
 import {
   error_toaster,
   info_toaster,
   success_toaster,
 } from "../utilities/Toaster";
 import { PostAPI } from "../utilities/PostAPI";
+
 export default function SignIn() {
+  const { pathname, location } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   const navigate = useNavigate();
   const [signUp, setSignUp] = useState({
     email: "",
@@ -37,12 +42,10 @@ export default function SignIn() {
         localStorage.setItem("senderId", res?.data?.data?.id);
         localStorage.setItem("name", res?.data?.data?.name);
         navigate("/");
-      }
-      else if (res?.data?.status === "0") {
+      } else if (res?.data?.status === "0") {
         info_toaster(res?.data?.message);
-      }
-      else{
-        error_toaster("User Not Found"); 
+      } else {
+        error_toaster("User Not Found");
       }
     }
   };

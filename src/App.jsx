@@ -22,6 +22,11 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import Cancel from "./pages/Cancel";
 import OrderSuccess from "./pages/OrderSuccess";
+import { useJsApiLoader } from "@react-google-maps/api";
+
+const googleMapsLibraries = ["places"];
+const googleMapsApiKey = "AIzaSyCYC3-gTg2XJFIeo9fura6PoNuQzzPeBlc";
+
 
 const router = createBrowserRouter([
   {
@@ -97,6 +102,13 @@ const router = createBrowserRouter([
   },
 ]);
 function App() {
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: googleMapsApiKey,
+    libraries: googleMapsLibraries,
+  });
+  if (!isLoaded) {
+    return "Please Wait";
+  }
   return (
     <div className="font-switzer">
       <Analytics />
