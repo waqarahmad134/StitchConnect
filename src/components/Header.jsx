@@ -35,7 +35,6 @@ export default function Header() {
     { name: "About", link: "/about" },
     { name: "Tailors", link: "/tailor" },
     { name: "Shops", link: "/page/shops" },
-    { name: "Contact", link: "/contact" },
   ];
   const [cartItems, setCartItems] = useState(
     JSON.parse(secureLocalStorage.getItem("cartItems")) || []
@@ -63,7 +62,10 @@ export default function Header() {
   const onChange = (e) => {
     const { name, value } = e.target;
     setSize({ ...size, [name]: value });
-    secureLocalStorage.setItem("Size", JSON.stringify({ ...size, [name]: value }));
+    secureLocalStorage.setItem(
+      "Size",
+      JSON.stringify({ ...size, [name]: value })
+    );
   };
 
   const handleDelete = (id) => {
@@ -245,7 +247,6 @@ export default function Header() {
 
                   <div>
                     <button onClick={() => handleDelete(cart?.productId)}>
-                      {" "}
                       X
                     </button>
                   </div>
@@ -274,7 +275,6 @@ export default function Header() {
           <Link to="/">
             <img src={Logo} alt="logo" className="w-36 2xl:w-40" />
           </Link>
-
           <div>
             <ul
               className={`lg:flex gap-4 xl:gap-5 justify-between items-center absolute lg:static
@@ -296,11 +296,17 @@ export default function Header() {
                   </li>
                 </>
               ))}
-              {/* <li className="block md:hidden px-2 lg:text-xl capitalize">
-                <button onClick={logoutFunc} className="text-center">
-                  Logout
-                </button>
-              </li> */}
+
+{!secureLocalStorage.getItem("senderId") ? "" : (  <li className="px-2 lg:text-xl capitalize">
+                <Link
+                  to={`contact`}
+                  className="capitalize border-b-4 border-transparent  hover:border-b-black"
+                >
+                  Contact
+                </Link>
+              </li>) }
+            
+
               <li className="hidden md:flex items-center">
                 <button
                   onClick={onOpen}

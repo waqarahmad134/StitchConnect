@@ -295,7 +295,6 @@ async function get_profile(req, res) {
 }
 async function place_order(req, res) {
   const { price, userId, products } = req.body;
-  console.log(userId);
   try {
     // Step 1: Create the order in your database
     let order = new Order();
@@ -321,7 +320,7 @@ async function place_order(req, res) {
       payment_method_types: ["card"],
       line_items: products.map((product) => ({
         price_data: {
-          currency: "usd",
+          currency: "inr",
           product_data: {
             name: product.title,
           },

@@ -99,7 +99,7 @@ export default function Cart() {
                 </div>
 
                 <div>
-                  <h5>{cart?.price} $</h5>
+                  <h5>{cart?.price} PKR</h5>
                 </div>
                 <div>
                   <button onClick={() => handleDelete(cart?.productId)}>
@@ -121,12 +121,12 @@ export default function Cart() {
                 <h5 className="text-lg font-semibold text-black text-opacity-50">
                   Subtotal
                 </h5>
-                <h6>${calculateTotalAmount()}</h6>
+                <h6>PKR{calculateTotalAmount()}</h6>
               </div>
 
               <div className="flex items-center justify-between gap-x-2">
                 <h5 className="font-semibold text-2xl">Total</h5>
-                <h6>${calculateTotalAmount()}</h6>
+                <h6>PKR{calculateTotalAmount()}</h6>
               </div>
               <div className="border-dashed border" />
             </div>

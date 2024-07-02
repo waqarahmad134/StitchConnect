@@ -7,7 +7,7 @@ export default function Cancel() {
       <>
         <Header />
         <div className="w-3/4 mx-auto py-20">
-          <h1 className="text-4xl font-switzer font-semibold">Cancel didn;t execute</h1>
+          <h1 className="text-4xl font-switzer font-semibold">Cancel didn't execute</h1>
         </div>
         <Footer />
       </>
