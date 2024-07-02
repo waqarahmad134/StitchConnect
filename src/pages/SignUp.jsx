@@ -13,6 +13,7 @@ import { BsBoxes, BsCircle } from "react-icons/bs";
 import { PiRectangle } from "react-icons/pi";
 import { HiColorSwatch } from "react-icons/hi";
 import { Autocomplete } from "@react-google-maps/api";
+import secureLocalStorage from "react-secure-storage";
 
 export default function SignUp() {
   const autocompleteRef = useRef(null);
@@ -54,9 +55,9 @@ export default function SignUp() {
       lat: place.geometry.location.lat(),
       lng: place.geometry.location.lng(),
     };
-    localStorage.setItem("guestFormatAddress", place?.formatted_address);
-    localStorage.setItem("lat", latLng.lat);
-    localStorage.setItem("lng", latLng.lng);
+    secureLocalStorage.setItem("guestFormatAddress", place?.formatted_address);
+    secureLocalStorage.setItem("lat", latLng.lat);
+    secureLocalStorage.setItem("lng", latLng.lng);
     setSignUp((prevSignUp) => ({
       ...prevSignUp,
       lat: latLng.lat,

@@ -1,10 +1,11 @@
 import axios from "axios";
 import { BASE_URL } from "../utilities/URL";
+import secureLocalStorage from "react-secure-storage";
 
 export const PostAPI = async (url, postData) => {
   let config = {
     headers: {
-      accessToken: localStorage.getItem("accessToken"),
+      accessToken: secureLocalStorage.getItem("accessToken"),
       // 'Content-Type': 'multipart/form-data'
     },
   };

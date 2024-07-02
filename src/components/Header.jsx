@@ -27,6 +27,7 @@ import {
   DrawerContent,
 } from "@chakra-ui/react";
 import { BASE_URL } from "../utilities/URL";
+import secureLocalStorage from "react-secure-storage";
 
 export default function Header() {
   const data = [
@@ -37,7 +38,7 @@ export default function Header() {
     { name: "Contact", link: "/contact" },
   ];
   const [cartItems, setCartItems] = useState(
-    JSON.parse(localStorage.getItem("cartItems")) || []
+    JSON.parse(secureLocalStorage.getItem("cartItems")) || []
   );
   const { isOpen, onOpen, onClose } = useDisclosure();
   const location = useLocation().pathname;
@@ -47,7 +48,7 @@ export default function Header() {
   const [dropDown, setDropDown] = useState(false);
   const [openModel, setOpenModel] = useState(false);
   const [screenWidth] = useMediaQuery("(min-width: 1024px)");
-  const prevSize = JSON.parse(localStorage.getItem("Size"));
+  const prevSize = JSON.parse(secureLocalStorage.getItem("Size"));
   const [size, setSize] = useState({
     chest: prevSize !== "" ? prevSize?.chest : "",
     waist: prevSize !== "" ? prevSize?.waist : "",
@@ -62,13 +63,13 @@ export default function Header() {
   const onChange = (e) => {
     const { name, value } = e.target;
     setSize({ ...size, [name]: value });
-    localStorage.setItem("Size", JSON.stringify({ ...size, [name]: value }));
+    secureLocalStorage.setItem("Size", JSON.stringify({ ...size, [name]: value }));
   };
 
   const handleDelete = (id) => {
     const updatedCartItems = cartItems.filter((item) => item?.productId !== id);
     setCartItems(updatedCartItems);
-    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+    secureLocalStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     navigate(location.pathname);
   };
 
@@ -104,9 +105,9 @@ export default function Header() {
   const logoutFunc = (e) => {
     e.preventDefault();
     setTimeout(() => {
-      localStorage.removeItem("senderId");
-      localStorage.removeItem("name");
-      localStorage.clear();
+      secureLocalStorage.removeItem("senderId");
+      secureLocalStorage.removeItem("name");
+      secureLocalStorage.clear();
       navigate("/auth/signin");
       info_toaster("Successfully Logged out!");
     }, 400);
@@ -319,7 +320,7 @@ export default function Header() {
                   <PiTShirtDuotone size={24} />
                 </button>
               </li>
-              {!localStorage.getItem("senderId") ? (
+              {!secureLocalStorage.getItem("senderId") ? (
                 <>
                   <li className="px-2">
                     <Link

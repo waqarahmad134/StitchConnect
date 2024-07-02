@@ -10,6 +10,7 @@ import {
   success_toaster,
 } from "../utilities/Toaster";
 import { PostAPI } from "../utilities/PostAPI";
+import secureLocalStorage from "react-secure-storage";
 
 export default function SignIn() {
   const { pathname, location } = useLocation();
@@ -39,8 +40,8 @@ export default function SignIn() {
 
       if (res?.data?.status === "1") {
         success_toaster("Login Sucessfull");
-        localStorage.setItem("senderId", res?.data?.data?.id);
-        localStorage.setItem("name", res?.data?.data?.name);
+        secureLocalStorage.setItem("senderId", res?.data?.data?.id);
+        secureLocalStorage.setItem("name", res?.data?.data?.name);
         navigate("/");
       } else if (res?.data?.status === "0") {
         info_toaster(res?.data?.message);

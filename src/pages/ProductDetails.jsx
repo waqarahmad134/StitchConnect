@@ -9,6 +9,7 @@ import { info_toaster, warning_toaster } from "../utilities/Toaster";
 import Loader from "../components/Loader";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
+import secureLocalStorage from "react-secure-storage";
 
 export default function ProductDetails() {
   const [loading, setLoading] = useState(true);
@@ -16,10 +17,10 @@ export default function ProductDetails() {
   const { pathname } = useLocation();
   const { slug } = useParams();
   const { data } = GetAPI(`tailor/product_details/${slug}`);
-  if (!localStorage.getItem("cartItems")) {
-    localStorage.setItem("cartItems", "[]");
+  if (!secureLocalStorage.getItem("cartItems")) {
+    secureLocalStorage.setItem("cartItems", "[]");
   }
-  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+  const cartItems = JSON.parse(secureLocalStorage.getItem("cartItems")) || [];
   const addToCart = () => {
     const findIndex = cartItems.findIndex(
       (ele) => ele.productId === data?.data?.data?.id
@@ -36,7 +37,7 @@ export default function ProductDetails() {
         price: data?.data?.data?.price,
       };
       cartItems.push(newCart);
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      secureLocalStorage.setItem("cartItems", JSON.stringify(cartItems));
       navigate("/cart");
     }
   };

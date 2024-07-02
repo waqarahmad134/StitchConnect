@@ -4,9 +4,10 @@ import { BASE_URL } from "../utilities/URL";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { BsCart3 } from "react-icons/bs";
+import secureLocalStorage from "react-secure-storage";
 export default function Search() {
   const { pathname } = useLocation();
-  const prodByCatData = JSON.parse(localStorage.getItem("searchData"));
+  const prodByCatData = JSON.parse(secureLocalStorage.getItem("searchData"));
 
   return (
     <>

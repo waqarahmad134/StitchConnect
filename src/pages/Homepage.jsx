@@ -20,6 +20,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { useMediaQuery } from "@chakra-ui/react";
+import secureLocalStorage from "react-secure-storage";
 
 export default function Homepage() {
   const { pathname , location } = useLocation();
@@ -39,10 +40,10 @@ export default function Homepage() {
     (prod) => prod.ProductCategory?.title === activeTab
   );
 
-  if (!localStorage.getItem("cartItems")) {
-    localStorage.setItem("cartItems", "[]");
+  if (!secureLocalStorage.getItem("cartItems")) {
+    secureLocalStorage.setItem("cartItems", "[]");
   }
-  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+  const cartItems = JSON.parse(secureLocalStorage.getItem("cartItems")) || [];
 
   const [search, setSearch] = useState();
   const searchFunc = async (e) => {
@@ -55,7 +56,7 @@ export default function Homepage() {
       });
       if (res?.data?.status === "1") {
         success_toaster("Search Data");
-        localStorage.setItem(
+        secureLocalStorage.setItem(
           "searchData",
           JSON.stringify(res?.data?.data?.data)
         );
@@ -80,7 +81,7 @@ export default function Homepage() {
         price: data?.price,
       };
       cartItems.push(newCart);
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      secureLocalStorage.setItem("cartItems", JSON.stringify(cartItems));
       navigate("/");
     }
   };

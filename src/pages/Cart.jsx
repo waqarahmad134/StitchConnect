@@ -11,27 +11,27 @@ import Footer from "../components/Footer";
 import { PostAPI } from "../utilities/PostAPI";
 import { BASE_URL } from "../utilities/URL";
 import Loader from "../components/Loader";
+import secureLocalStorage from "react-secure-storage";
 
 export default function Cart() {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log("🚀 ~ Cart ~ location:", location);
   const [loading, setLoading] = useState(false);
   const [cartData, setCartData] = useState(
-    JSON.parse(localStorage.getItem("cartItems")) || []
+    JSON.parse(secureLocalStorage.getItem("cartItems")) || []
   );
 
   const handleDelete = (id) => {
     const updatedCartItems = cartData.filter((item) => item?.productId !== id);
     // console.log(updatedCartItems)
     setCartData(updatedCartItems);
-    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+    secureLocalStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     navigate(location.pathname);
   };
 
   const calculateTotalAmount = () => {
     let total = 0;
-    const data = JSON.parse(localStorage.getItem("cartItems"));
+    const data = JSON.parse(secureLocalStorage.getItem("cartItems"));
     data?.forEach((item) => {
       total += parseFloat(item.price);
     });
@@ -40,20 +40,20 @@ export default function Cart() {
 
   const createOrder = async (e) => {
     e.preventDefault();
-    if (!localStorage.getItem("senderId")) {
+    if (!secureLocalStorage.getItem("senderId")) {
       info_toaster("Please Login First");
       navigate("/auth/signin");
     } else {
       setLoading(true);
       let res = await PostAPI("tailor/place_order", {
         price: calculateTotalAmount(),
-        userId: parseInt(localStorage.getItem("senderId")),
-        products: JSON.parse(localStorage.getItem("cartItems")),
+        userId: parseInt(secureLocalStorage.getItem("senderId")),
+        products: JSON.parse(secureLocalStorage.getItem("cartItems")),
       });
       if (res?.data?.status === "1") {
         setLoading(false);
         success_toaster("Order Placed Sucessfully");
-        localStorage.removeItem("cartItems");
+        secureLocalStorage.removeItem("cartItems");
         const downloadLink = res?.data?.data?.sessionUrl;
         if (downloadLink) {
           const anchorElement = document.createElement("a");

@@ -6,6 +6,7 @@ import GetAPI from "../utilities/GetAPI";
 import { PostAPI } from "../utilities/PostAPI";
 import { BASE_URL } from "../utilities/URL";
 import Loader from "../components/Loader";
+import secureLocalStorage from "react-secure-storage";
 
 export default function Contact() {
   const { data } = GetAPI("tailor/get_users");
@@ -16,10 +17,8 @@ export default function Contact() {
   const [loading, setLoading] = useState(true);
   const chatContainerRef = useRef(null);
 
-  const [size, setSize] = useState("");
-
   const handleSize = () => {
-    const sizeValue = localStorage.getItem("Size");
+    const sizeValue = secureLocalStorage.getItem("Size");
     if (sizeValue) {
       const sizeObject = JSON.parse(sizeValue);
       const formattedSize = `
@@ -45,8 +44,8 @@ export default function Contact() {
       .get(
         BASE_URL +
           `tailor/get_chat_get/${parseInt(
-            localStorage.getItem("senderId")
-          )}/${parseInt(localStorage.getItem("recieverId"))}/`
+            secureLocalStorage.getItem("senderId")
+          )}/${parseInt(secureLocalStorage.getItem("recieverId"))}/`
       )
       .then((dat) => {
         setIncoming(dat?.data?.data?.data);
@@ -71,9 +70,9 @@ export default function Contact() {
 
   const handleClick = async (id) => {
     const recieverId = id;
-    localStorage.setItem("recieverId", recieverId);
+    secureLocalStorage.setItem("recieverId", recieverId);
     let res = await PostAPI("tailor/get_chat", {
-      senderId: parseInt(localStorage.getItem("senderId")),
+      senderId: parseInt(secureLocalStorage.getItem("senderId")),
       recieverId: id,
     });
     if (res?.data?.status === "1") {
@@ -91,8 +90,8 @@ export default function Contact() {
     } else {
       let res = await PostAPI("tailor/send_message", {
         message: message,
-        senderId: parseInt(localStorage.getItem("senderId")),
-        recieverId: parseInt(localStorage.getItem("recieverId")),
+        senderId: parseInt(secureLocalStorage.getItem("senderId")),
+        recieverId: parseInt(secureLocalStorage.getItem("recieverId")),
       });
       if (res?.data?.status === "1") {
         setStatus(0);
@@ -106,7 +105,7 @@ export default function Contact() {
   const [initial, setInitial] = useState('');
 
   useEffect(() => {
-    const name = localStorage.getItem('name');
+    const name = secureLocalStorage.getItem('name');
     if (name) {
       setInitial(name.charAt(0));
     }
@@ -151,7 +150,7 @@ export default function Contact() {
               {data?.data?.data
                 ?.filter(
                   (prod) =>
-                    prod.id !== parseInt(localStorage.getItem("senderId")) &&
+                    prod.id !== parseInt(secureLocalStorage.getItem("senderId")) &&
                     (prod.name.toLowerCase().includes(search.toLowerCase()) ||
                       prod.email.toLowerCase().includes(search.toLowerCase()))
                 )
@@ -160,7 +159,7 @@ export default function Contact() {
                     onClick={() => handleClick(data?.id)}
                     key={index}
                     className={`flex flex-col md:flex-row  justify-start items-center border-b-2 py-4 px-5 ${
-                      data.id === parseInt(localStorage.getItem("recieverId"))
+                      data.id === parseInt(secureLocalStorage.getItem("recieverId"))
                         ? "bg-gray-400"
                         : "bg-transparent"
                     }`}
@@ -191,7 +190,7 @@ export default function Contact() {
               >
                 {incoming.map((data, index) =>
                   data.senderId ===
-                  parseInt(localStorage.getItem("senderId")) ? (
+                  parseInt(secureLocalStorage.getItem("senderId")) ? (
                     <div key={index} className="flex justify-end mb-4">
                       <div className="md:max-w-[60%] mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
                         {data.message}
