@@ -13,6 +13,7 @@ export default function Contact() {
   const [message, setMessage] = useState(null);
   const [search, setSearch] = useState("");
   const [incoming, setIncoming] = useState([]);
+  console.log("🚀 ~ Contact ~ incoming:", incoming)
   const [status, setStatus] = useState(0);
   const [loading, setLoading] = useState(true);
   const chatContainerRef = useRef(null);
@@ -33,9 +34,8 @@ export default function Contact() {
         Jacket Length: ${sizeObject.jacketLenght}
       `;
       setMessage(formattedSize);
-    }
-    else{
-      alert("No size set till now")
+    } else {
+      alert("No size set till now");
     }
   };
 
@@ -43,10 +43,9 @@ export default function Contact() {
     axios
       .get(
         BASE_URL +
-          `tailor/get_chat_get/${parseInt(
-            secureLocalStorage.getItem("senderId")
-          )}/${parseInt(secureLocalStorage.getItem("recieverId"))}/`
+          `tailor/get_chat_get/${parseInt(secureLocalStorage.getItem("senderId"))}/${parseInt(secureLocalStorage.getItem("recieverId"))}/`
       )
+      
       .then((dat) => {
         setIncoming(dat?.data?.data?.data);
       });
@@ -102,10 +101,10 @@ export default function Contact() {
     }
   };
 
-  const [initial, setInitial] = useState('');
+  const [initial, setInitial] = useState("");
 
   useEffect(() => {
-    const name = secureLocalStorage.getItem('name');
+    const name = secureLocalStorage.getItem("name");
     if (name) {
       setInitial(name.charAt(0));
     }
@@ -131,7 +130,7 @@ export default function Contact() {
                 Get Size
               </button>
               <div className="h-12 w-12 p-2 bg-yellow-500 rounded-full text-white font-semibold flex items-center justify-center">
-              {initial}
+                {initial}
               </div>
             </div>
           </div>
@@ -150,7 +149,8 @@ export default function Contact() {
               {data?.data?.data
                 ?.filter(
                   (prod) =>
-                    prod.id !== parseInt(secureLocalStorage.getItem("senderId")) &&
+                    prod.id !==
+                      parseInt(secureLocalStorage.getItem("senderId")) &&
                     (prod.name.toLowerCase().includes(search.toLowerCase()) ||
                       prod.email.toLowerCase().includes(search.toLowerCase()))
                 )
@@ -159,7 +159,8 @@ export default function Contact() {
                     onClick={() => handleClick(data?.id)}
                     key={index}
                     className={`flex flex-col md:flex-row  justify-start items-center border-b-2 py-4 px-5 ${
-                      data.id === parseInt(secureLocalStorage.getItem("recieverId"))
+                      data.id ===
+                      parseInt(secureLocalStorage.getItem("recieverId"))
                         ? "bg-gray-400"
                         : "bg-transparent"
                     }`}

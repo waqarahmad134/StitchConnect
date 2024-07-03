@@ -99,6 +99,7 @@ export default function SignUp() {
       formData.append("image", signUp.image);
       formData.append("name", signUp.userName);
       formData.append("email", signUp.email);
+      formData.append("password", signUp.password);
       formData.append("ShopCategoryId", signUp.category);
       formData.append("address", signUp.address);
       formData.append("backgroundColor", signUp.color);
@@ -134,6 +135,7 @@ export default function SignUp() {
       formData.append("image", signUp.image);
       formData.append("name", signUp.userName);
       formData.append("email", signUp.email);
+      formData.append("password", signUp.password);
       formData.append("TailorCategoryId", signUp.category);
       formData.append("address", signUp.address);
       formData.append("description", signUp.description);
@@ -268,19 +270,6 @@ export default function SignUp() {
                         </span>
                       </div>
                     </Autocomplete>
-                    {/* <div className="relative col-span-2">
-                      <input
-                        value={signUp.address}
-                        onChange={onChange}
-                        name="address"
-                        type="text"
-                        placeholder="Address"
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
-                      />
-                      <span className="absolute right-4 top-4 -translate-y-[4px]">
-                        <FaAddressBook size={32} />
-                      </span>
-                    </div> */}
                   </div>
                   <div className="mx-auto mt-5">
                     <button
@@ -353,19 +342,20 @@ export default function SignUp() {
                         className="w-full h-[58px] rounded-lg border bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
                       />
                     </div>
-                    {/* <div className="relative col-span-2">
+                    <div className="relative">
                       <input
-                        value={signUp.address}
+                        value={signUp.password}
                         onChange={onChange}
-                        name="address"
+                        name="password"
+                        id="password"
                         type="text"
-                        placeholder="Address"
+                        placeholder="Password"
                         className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
                       />
                       <span className="absolute right-4 top-4 -translate-y-[4px]">
-                        <FaAddressBook size={32} />
+                        <RiLockPasswordFill size={32} />
                       </span>
-                    </div> */}
+                    </div>
                     <Autocomplete
                       onLoad={(autocomplete) =>
                         (autocompleteRef.current = autocomplete)
@@ -503,19 +493,20 @@ export default function SignUp() {
                         className="w-full h-[58px] rounded-lg border bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
                       />
                     </div>
-                    {/* <div className="relative col-span-2">
+                    <div className="relative">
                       <input
-                        value={signUp.address}
+                        value={signUp.password}
                         onChange={onChange}
-                        name="address"
+                        name="password"
+                        id="password"
                         type="text"
-                        placeholder="Address"
+                        placeholder="Password"
                         className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none placeholder:text-black"
                       />
                       <span className="absolute right-4 top-4 -translate-y-[4px]">
-                        <FaAddressBook size={32} />
+                        <RiLockPasswordFill size={32} />
                       </span>
-                    </div> */}
+                    </div>
                     <Autocomplete
                       onLoad={(autocomplete) =>
                         (autocompleteRef.current = autocomplete)

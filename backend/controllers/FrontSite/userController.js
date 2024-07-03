@@ -72,17 +72,12 @@ async function login(req, res) {
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (validPassword) {
-      const accessToken = sign(
-        { email: user.email, id: user.id },
-        process.env.JWT_ACCESS_SECRET
-      );
       let data = {
         id: user.id,
         name: user.name,
         phone: user.phone,
         email: user.email,
         userType: user.userType,
-        accessToken: accessToken,
       };
       const response = ApiResponse("1", "Login Successfully!", data);
       return res.json(response);
