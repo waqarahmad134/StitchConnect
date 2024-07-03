@@ -297,15 +297,30 @@ export default function Header() {
                 </>
               ))}
 
-{!secureLocalStorage.getItem("senderId") ? "" : (  <li className="px-2 lg:text-xl capitalize">
-                <Link
-                  to={`contact`}
-                  className="capitalize border-b-4 border-transparent  hover:border-b-black"
-                >
-                  Contact
-                </Link>
-              </li>) }
-            
+              {!secureLocalStorage.getItem("senderId") ? (
+                ""
+              ) : (
+                <li className="px-2 lg:text-xl capitalize">
+                  <Link
+                    to={`/contact`}
+                    className="capitalize border-b-4 border-transparent  hover:border-b-black"
+                  >
+                    Contact
+                  </Link>
+                </li>
+              )}
+
+              {(secureLocalStorage.getItem("userType") === "tailor" ||
+                secureLocalStorage.getItem("userType") === "shop") && (
+                <li className="px-2 lg:text-xl capitalize">
+                  <Link
+                    to="/add-product"
+                    className="capitalize border-b-4 border-transparent hover:border-b-black"
+                  >
+                    Add Product
+                  </Link>
+                </li>
+              )}
 
               <li className="hidden md:flex items-center">
                 <button

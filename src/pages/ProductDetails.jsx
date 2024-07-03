@@ -5,7 +5,7 @@ import GetAPI from "../utilities/GetAPI";
 import { BASE_URL } from "../utilities/URL";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { info_toaster, warning_toaster } from "../utilities/Toaster";
+import { info_toaster, success_toaster, warning_toaster } from "../utilities/Toaster";
 import Loader from "../components/Loader";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
@@ -17,6 +17,7 @@ export default function ProductDetails() {
   const { pathname } = useLocation();
   const { slug } = useParams();
   const { data } = GetAPI(`tailor/product_details/${slug}`);
+  console.log("🚀 ~ ProductDetails ~ data:", data)
   if (!secureLocalStorage.getItem("cartItems")) {
     secureLocalStorage.setItem("cartItems", "[]");
   }
@@ -38,7 +39,13 @@ export default function ProductDetails() {
       };
       cartItems.push(newCart);
       secureLocalStorage.setItem("cartItems", JSON.stringify(cartItems));
-      navigate("/cart");
+      if(data?.data?.data?.User?.userType === "tailor"){
+        success_toaster("Please Add Clothes Too")
+        navigate("/page/shops");
+      }
+      else{
+        navigate("/cart");
+      }
     }
   };
   useEffect(() => {

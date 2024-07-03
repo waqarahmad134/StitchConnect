@@ -19,14 +19,14 @@ import Search from "./pages/Search";
 import Tailor from "./pages/Tailor";
 import ShopDetails from "./pages/ShopDetails";
 import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react"
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import Cancel from "./pages/Cancel";
 import OrderSuccess from "./pages/OrderSuccess";
 import { useJsApiLoader } from "@react-google-maps/api";
+import AddProduct from "./pages/AddProduct";
 
 const googleMapsLibraries = ["places"];
 const googleMapsApiKey = "AIzaSyCYC3-gTg2XJFIeo9fura6PoNuQzzPeBlc";
-
 
 const router = createBrowserRouter([
   {
@@ -64,7 +64,6 @@ const router = createBrowserRouter([
     element: <ProductDetails />,
     errorElement: <ErrorPage />,
   },
-
   {
     path: "/cart",
     element: <Cart />,
@@ -78,6 +77,11 @@ const router = createBrowserRouter([
   {
     path: "/contact",
     element: <Contact />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/add-product",
+    element: <AddProduct />,
     errorElement: <ErrorPage />,
   },
   {
@@ -112,7 +116,7 @@ function App() {
   return (
     <div className="font-switzer">
       <Analytics />
-      <SpeedInsights/>
+      <SpeedInsights />
       <ToastContainer />
       <PrimeReactProvider>
         <ChakraProvider>

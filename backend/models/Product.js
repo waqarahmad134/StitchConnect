@@ -40,9 +40,7 @@ module.exports = (sequelize, DataTypes) => {
        
     });
 
-    // Each user can have one email verification code
     Product.associate = (models) => {
-        
         Product.hasMany(models.Color);
         models.Color.belongsTo(Product);
 

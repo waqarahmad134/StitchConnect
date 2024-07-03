@@ -23,7 +23,7 @@ import { useMediaQuery } from "@chakra-ui/react";
 import secureLocalStorage from "react-secure-storage";
 
 export default function Homepage() {
-  const { pathname , location } = useLocation();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -31,11 +31,11 @@ export default function Homepage() {
 
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("all");
-  const products = GetAPI("tailor/all_products");
-  console.log("🚀 ~ Homepage ~ products:", products)
+  const products = GetAPI("tailor/shop_products");
   const getFeaturedData = GetAPI("tailor/featured_products");
   const admin_products = GetAPI("tailor/admin_products");
   const [isLargerThan430] = useMediaQuery("(min-width: 430px)");
+
   const tabData = products?.data?.data?.data?.filter(
     (prod) => prod.ProductCategory?.title === activeTab
   );
@@ -44,6 +44,8 @@ export default function Homepage() {
     secureLocalStorage.setItem("cartItems", "[]");
   }
   const cartItems = JSON.parse(secureLocalStorage.getItem("cartItems")) || [];
+
+
 
   const [search, setSearch] = useState();
   const searchFunc = async (e) => {
@@ -208,9 +210,9 @@ export default function Homepage() {
                       key={index}
                       className="relative flex w-full flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md"
                     >
-                      <a className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl">
+                      <a className="relative flex h-48 overflow-hidden rounded-xl">
                         <img
-                          className="object-cover mx-auto"
+                          className="object-cover w-full object-top mx-auto"
                           src={`${BASE_URL}${prod?.image}`}
                           alt={prod?.title}
                         />
@@ -283,7 +285,7 @@ export default function Homepage() {
                     to={`/shop-details/${prod?.id}`}
                     key={index}
                   >
-                    <div className="h-32 bg-white border border-transparent cursor-pointer">
+                    <div className="h-44 bg-white border border-transparent cursor-pointer">
                       <img
                         src={`${BASE_URL}${prod?.image}`}
                         alt={prod?.title}
@@ -304,13 +306,13 @@ export default function Homepage() {
                       ))}
                     </div>
                     <div className="space-y-2 p-3">
-                      <h4 className="text-xl font-semibold">{prod?.title}</h4>
+                      <h4 className="text-lg font-semibold">{prod?.title}</h4>
                       <p className="hidden lg:block  text-gray-400 text-sm">
                         {(prod?.description).toString().substring(0, 42)}
                       </p>
                       <div className="flex items-center justify-between text-sm">
                         <p className="text-black font font-semibold">
-                          ${prod?.price}
+                          PKR{prod?.price}
                         </p>
                         <div className="flex items-center text-black font-mono font-semibold">
                           {prod?.type}

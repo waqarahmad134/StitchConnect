@@ -37,11 +37,11 @@ export default function SignIn() {
         email: signUp.email,
         password: signUp.password,
       });
-
       if (res?.data?.status === "1") {
         success_toaster("Login Sucessfull");
         secureLocalStorage.setItem("senderId", res?.data?.data?.id);
         secureLocalStorage.setItem("name", res?.data?.data?.name);
+        secureLocalStorage.setItem("userType", res?.data?.data?.userType);
         navigate("/");
       } else if (res?.data?.status === "0") {
         info_toaster(res?.data?.message);

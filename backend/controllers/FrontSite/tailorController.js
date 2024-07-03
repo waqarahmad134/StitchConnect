@@ -13,20 +13,11 @@ const {
 const ApiResponse = require("../../helper/ApiResponse");
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
-const sentOtpMail = require("../../helper/sentOtpMail");
-var otp = require("otpauth");
+
 const Sequelize = require("sequelize");
 const { options } = require("../../routes/FrontSite/user");
 const { Op } = require("sequelize"); // Import Sequelize operators
 const stripe = require("stripe")(process.env.STRIPE_KEY);
-let totp = new otp.TOTP({
-  issuer: "ACME",
-  label: "AzureDiamond",
-  algorithm: "SHA1",
-  digits: 4,
-  period: 30,
-  secret: "NB2W45DFOIZA", // or "OTPAuth.Secret.fromBase32('NB2W45DFOIZA')"
-});
 
 async function registration(req, res) {
   const { name, email, address, lat, lng, description, TailorCategoryId } =
@@ -121,29 +112,12 @@ async function login(req, res) {
     return res.json(response);
   }
 }
-async function all_products(req, res) {
-  let categories = await ProductCategory.findAll({
-    attributes: ["id", "title"],
-  });
-  let data = await Product.findAll({
-    include: [
-      { model: Color, attributes: ["color"] },
-      { model: Image, attributes: ["image"] },
-      { model: ProductCategory, attributes: ["id", "title"] },
-    ],
-    where: {
-      "$ProductCategory.id$": { [Op.ne]: null },
-    },
-  });
-
-  let response = ApiResponse("1", "All Products", { data: data, categories });
-  return res.json(response);
-}
 
 async function admin_products(req, res) {
   let data = await Product.findAll({
     where: {
       userType: "admin",
+      status: true,
     },
   });
 
@@ -152,35 +126,23 @@ async function admin_products(req, res) {
 }
 
 async function featured_products(req, res) {
-  let data = await Product.findAll({ where: { isFeatured: true } });
+  let data = await Product.findAll({
+    where: { isFeatured: true, status: true },
+  });
   let response = ApiResponse("1", "Data", { data });
   return res.json(response);
 }
-async function tailor_products(req, res) {
-  let categories = await ProductCategory.findAll({
-    where: { userType: process.env.TAILOR },
-    attributes: ["id", "title"],
-  });
-  let data = await Product.findAll({
-    include: [
-      { model: User, where: { userType: process.env.TAILOR } },
-      { model: Color, attributes: ["color"] },
-      { model: Image, attributes: ["image"] },
-      { model: ProductCategory, attributes: ["id", "title"] },
-    ],
-  });
-  let response = ApiResponse("1", "All Products", { data: data, categories });
-  return res.json(response);
-}
+
 async function shop_products(req, res) {
   let categories = await ProductCategory.findAll({
-    where: { userType: process.env.SHOP },
     attributes: ["id", "title"],
   });
   let data = await Product.findAll({
+    where: {
+      userType: "shop",
+      status: true,
+    },
     include: [
-      { model: User, where: { userType: process.env.SHOP } },
-      { model: Color, attributes: ["color"] },
       { model: Image, attributes: ["image"] },
       { model: ProductCategory, attributes: ["id", "title"] },
     ],
@@ -188,13 +150,14 @@ async function shop_products(req, res) {
   let response = ApiResponse("1", "All Products", { data: data, categories });
   return res.json(response);
 }
+
 async function product_details(req, res) {
   let productId = req.params.productId;
 
   let data = await Product.findOne({
     where: { id: productId },
     include: [
-      { model: User, attributes: ["id", "name", "email"] },
+      { model: User, attributes: ["id", "name", "email", "userType"] },
       { model: Color, attributes: ["color"] },
       { model: Image, attributes: ["image"] },
       { model: ProductCategory, attributes: ["id", "title"] },
@@ -256,16 +219,14 @@ async function get_all_tailors(req, res) {
 async function shop_details(req, res) {
   const shopId = req.params.shopId;
   let ShopData = await User.findByPk(shopId);
-  let data = await Product.findAll(
-    {
+  let data = await Product.findAll({
     where: {
-      UserId : shopId,
+      UserId: shopId,
       // userType: {
       //   [Op.ne]: "admin",
       // },
     },
-  }
-);
+  });
   let categories = await ProductCategory.findAll({ where: { status: 1 } });
   let response = ApiResponse("1", "shop details", {
     data,
@@ -279,12 +240,13 @@ async function tailor_details(req, res) {
   const tailorId = req.params.tailorId;
   let data = await User.findOne({
     where: { id: tailorId },
-    include: [{ model: Product }],
+    include: [{ model: Product, where: { userType: 'tailor' }  }],
   });
   let response = ApiResponse("1", "Tailor Details", { data });
   return res.json(response);
 }
-async function get_profile(req, res) {
+
+async function profile(req, res) {
   const userId = req.params.userId;
   let data = await User.findOne({
     where: { id: userId },
@@ -320,7 +282,7 @@ async function place_order(req, res) {
       payment_method_types: ["card"],
       line_items: products.map((product) => ({
         price_data: {
-          currency: "inr",
+          currency: "usd",
           product_data: {
             name: product.title,
           },
@@ -413,9 +375,8 @@ async function get_chat_get(req, res) {
 module.exports = {
   registration,
   login,
-  all_products,
+  admin_products,
   featured_products,
-  tailor_products,
   shop_products,
   product_details,
   search_products,
@@ -423,12 +384,11 @@ module.exports = {
   get_all_tailors,
   shop_details,
   tailor_details,
-  get_profile,
+  profile,
   place_order,
   after_payment,
   send_message,
   get_users,
   get_chat,
   get_chat_get,
-  admin_products,
 };

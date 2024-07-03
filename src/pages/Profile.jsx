@@ -4,7 +4,6 @@ import Header from "../components/Header";
 import Loader from "../components/Loader";
 import GetAPI from "../utilities/GetAPI";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import Card from "../components/Card";
 import { BASE_URL } from "../utilities/URL";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import secureLocalStorage from "react-secure-storage";
@@ -16,16 +15,12 @@ export default function Profile() {
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(12);
   const [loading, setLoading] = useState(true);
-  // const { data } = GetAPI(`tailor/get_profile/${parseInt(secureLocalStorage.getItem('senderId'))}`);
+
   const handleChatNow = (id) => {
     secureLocalStorage.setItem("recieverId", id);
     navigate("/contact");
   };
-  const onPageChange = (event) => {
-    setFirst(event.first);
-    setRows(event.rows);
-    window.scrollTo(0, 0);
-  };
+  
   useEffect(() => {
     setTimeout(() => setLoading(false), 1500);
   }, []);

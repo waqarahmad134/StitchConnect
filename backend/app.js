@@ -4,7 +4,6 @@ const app = express();
 const db = require("./models");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const error = require("./middlewares/error");
 const userRoute = require("./routes/FrontSite/user");
 const AdminRoute = require("./routes/Admin/admin");
 const tailorRoute = require("./routes/FrontSite/tailor");
@@ -17,18 +16,22 @@ app.use(express.json());
 
 //for form data and multipart data
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(upload.array());
-
 
 app.use("/user", userRoute);
 app.use("/tailor", tailorRoute);
 app.use("/shop", shopRoute);
 app.use("/admin", AdminRoute);
 
-// Error middleware : To show any error if promise fails
-app.use(error);
+app.get("/", (req, res) => {
+  res.send("Welcome!");
+});
+
+
+
 // To make the folder Public
 app.use("/public", express.static("./public"));
+
+
 // Initializing Server along with creating all the tables that exist in the models folder
 db.sequelize.sync().then(() => {
   app.listen(process.env.PORT, () => {

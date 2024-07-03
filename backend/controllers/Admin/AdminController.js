@@ -59,7 +59,7 @@ async function get_products(req, res) {
 }
 
 async function addProduct(req, res) {
-  const { title, price, type , color , description, ProductCategoryId, UserId, isFeatured } = req.body;
+  const { title, price, type , color , description, ProductCategoryId, UserId, isFeatured , status , userType } = req.body;
   try {
     const productImage = req.files.image[0].path;
     const imagePath = productImage.replace(/\\/g, "/");
@@ -68,12 +68,13 @@ async function addProduct(req, res) {
       price,
       type,
       color,
+      userType,
       description,
-      ProductCategoryId,
+      ProductCategoryId : ProductCategoryId ? ProductCategoryId : null ,
       UserId,
       isFeatured,
       image: imagePath,
-      status : true,
+      status : status,
     });
     const savedProduct = await product.save();
     const images = req.files.images.map((file) => ({
@@ -293,26 +294,7 @@ async function updateFeatured(req, res) {
     return res.json(response);
   }
 }
-// async function updateFeatured(req, res) {
-//   const prodId = req.params.prodId;
-//   let prod = await Product.findOne({ where: { id: prodId } });
-//   Product.update({ isFeatured: !prod.isFeatured }, { where: { id: prodId } })
-//     .then((upData) => {
-//       const response = ApiResponse(
-//         "1",
-//         `Product ${
-//           !prod.isFeatured === true ? "Featured" : "UnFeatured"
-//         } Sucesssfully`,
-//         upData,
-//         {}
-//       );
-//       return res.json(response);
-//     })
-//     .catch((error) => {
-//       const response = ApiResponse("0", error.message, {});
-//       return res.json(response);
-//     });
-// }
+
 async function updatePCStatus(req, res) {
   const pcId = req.params.pcId;
   try {

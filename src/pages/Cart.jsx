@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaDoorOpen } from "react-icons/fa";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import {  useLocation, useNavigate } from "react-router-dom";
 import {
   error_toaster,
   info_toaster,
@@ -23,7 +23,6 @@ export default function Cart() {
 
   const handleDelete = (id) => {
     const updatedCartItems = cartData.filter((item) => item?.productId !== id);
-    // console.log(updatedCartItems)
     setCartData(updatedCartItems);
     secureLocalStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     navigate(location.pathname);
@@ -37,6 +36,7 @@ export default function Cart() {
     });
     return total.toFixed(2);
   };
+
 
   const createOrder = async (e) => {
     e.preventDefault();

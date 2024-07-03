@@ -12,10 +12,8 @@ module.exports = (sequelize, DataTypes) => {
 
     // Each user can have one email verification code
     ProductCategory.associate = (models) => {
-        
         ProductCategory.hasMany(models.Product);
         models.Product.belongsTo(ProductCategory);
-
     };
 
     return ProductCategory;

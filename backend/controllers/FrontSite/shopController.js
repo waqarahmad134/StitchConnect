@@ -2,7 +2,6 @@ const { User } = require("../../models");
 const ApiResponse = require("../../helper/ApiResponse");
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
-const sentOtpMail = require("../../helper/sentOtpMail");
 var otp = require("otpauth");
 const Sequelize = require("sequelize");
 const { options } = require("../../routes/FrontSite/user");

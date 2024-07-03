@@ -3,14 +3,24 @@ SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-INSERT INTO `categories` (`id`, `title`, `status`, `createdAt`, `updatedAt`)
-VALUES (1, 'Plans', true, '2022-03-09 09:53:02', '2022-03-09 09:53:02'),
-       (2, 'WorkOut', true, '2022-03-09 09:53:51', '2022-03-09 09:53:51');
 
-INSERT INTO `services` (`id`, `title`, `status`, `desc`, `createdAt`, `updatedAt`)
-VALUES (1, 'Diet Plan', true, 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using "Content here, content here", making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for "lorem ipsum" will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).', '2022-03-09 09:53:02', '2022-03-09 09:53:02'),
-       (2, 'Food Plan', true, 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using "Content here, content here", making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for "lorem ipsum" will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).', '2022-03-09 09:53:02', '2022-03-09 09:53:02'),
-       (3, 'Workout Services', true, 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using "Content here, content here", making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for "lorem ipsum" will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).', '2022-03-09 09:53:02', '2022-03-09 09:53:02'),
-       (4, 'Mixture', true, 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using "Content here, content here", making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for "lorem ipsum" will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).', '2022-03-09 09:53:02', '2022-03-09 09:53:02');
+
+INSERT INTO `users` (`id`, `name`, `email`, `phone`, `password`, `image`, `backgroundColor`, `productDisplay`, `address`, `lat`, `lng`, `description`, `status`, `userType`, `createdAt`, `updatedAt`, `ShopCategoryId`, `TailorCategoryId`) VALUES (NULL, 'Admin', 'admin@gmail.com', '0300-1234567', '$2b$10$OSl.JJgly3Xxa0PTi80b6uVzQ84KIhT4ZtHo6logg8UG/715tYYES', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 'admin', '2024-06-28 12:17:45', '2024-06-28 12:17:45', NULL, NULL);
+
+INSERT INTO `tailorcategories` (`id`, `title`, `status`, `createdAt`, `updatedAt`) VALUES 
+(NULL, 'Traditional', '1', '2024-06-28 12:59:16', '2024-06-28 12:59:16'),
+(NULL, 'Western', '1', '2024-06-28 12:59:16', '2024-06-28 12:59:16');
+
+
+INSERT INTO `shopcategories` (`id`, `title`, `status`, `createdAt`, `updatedAt`) VALUES 
+(NULL, 'Stitched', '1', '2024-06-28 12:59:16', '2024-06-28 12:59:16'),
+(NULL, 'Unstitched', '1', '2024-06-28 12:59:16', '2024-06-28 12:59:16');
+
+INSERT INTO `productcategories` (`id`, `title`, `status`, `createdAt`, `updatedAt`) VALUES 
+(NULL, 'Pant', '1', '2024-06-28 12:59:16', '2024-06-28 12:59:16'),
+(NULL, 'Shirt', '1', '2024-06-28 12:59:16', '2024-06-28 12:59:16'),
+(NULL, 'Cotton', '1', '2024-06-28 12:59:16', '2024-06-28 12:59:16'),
+(NULL, 'Silk', '1', '2024-06-28 12:59:16', '2024-06-28 12:59:16');
+
 
 COMMIT;
