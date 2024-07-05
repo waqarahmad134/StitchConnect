@@ -6,15 +6,6 @@ var otp = require("otpauth");
 const Sequelize = require("sequelize");
 const { options } = require("../../routes/FrontSite/user");
 
-let totp = new otp.TOTP({
-  issuer: "ACME",
-  label: "AzureDiamond",
-  algorithm: "SHA1",
-  digits: 4,
-  period: 30,
-  secret: "NB2W45DFOIZA", // or "OTPAuth.Secret.fromBase32('NB2W45DFOIZA')"
-});
-
 async function registration(req, res) {
   const {
     name,
@@ -25,12 +16,14 @@ async function registration(req, res) {
     backgroundColor,
     productDisplay,
     ShopCategoryId,
+    password,
   } = req.body;
   const checkEmail = await User.findOne({ where: { email: email } });
   if (checkEmail) {
     const response = ApiResponse("0", "Email already exist", {});
     return res.json(response);
   } else {
+    const salt = await bcrypt.genSalt(10);
     const user = new User();
     user.name = name;
     user.lat = lat;
@@ -42,6 +35,9 @@ async function registration(req, res) {
     user.address = address;
     user.userType = process.env.SHOP;
     user.status = 1;
+    user.password = await bcrypt.hash(password, salt);
+    
+
 
     const service_image = req.file;
     let tmpPath = service_image.path;
@@ -52,15 +48,10 @@ async function registration(req, res) {
     user
       .save()
       .then(async (dat) => {
-        const accessToken = sign(
-          { email: user.email, id: user.id },
-          process.env.JWT_ACCESS_SECRET
-        );
         let data = {
           id: dat.id,
           name: dat.name,
           email: dat.email,
-          accessToken: accessToken,
         };
 
         const response = ApiResponse(
@@ -95,16 +86,11 @@ async function login(req, res) {
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (validPassword) {
-      const accessToken = sign(
-        { email: user.email, id: user.id },
-        process.env.JWT_ACCESS_SECRET
-      );
       let data = {
         id: user.id,
         name: user.name,
         email: user.email,
         userType: user.userType,
-        accessToken: accessToken,
       };
       const response = ApiResponse("1", "Login Successfully!", data);
       return res.json(response);

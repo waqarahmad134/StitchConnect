@@ -27,4 +27,5 @@ const upload = multer({
 router.post("/register", upload.single("image"), userController.registration);
 router.post("/login", userController.login);
 
+
 module.exports = router;

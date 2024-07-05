@@ -120,9 +120,8 @@ async function addProductCategories(req, res) {
     const productCategory = new ProductCategory();
     productCategory.title = title;
     productCategory.status = 1;
-    productCategory
-      .save()
-      .then(async (dat) => {
+    productCategory.save()
+    .then(async (dat) => {
         let data = {
           id: dat.id,
           title: dat.title,

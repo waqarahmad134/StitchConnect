@@ -46,8 +46,6 @@ export default function Profile() {
                     <h1 className="italic text-2xl font-semibold">
                       {tailorData?.data?.data?.data?.name}
                     </h1>
-                    {/* <h3>Shop / Traditional</h3> */}
-                    <h4>{tailorData?.data?.data?.data?.description}</h4>
                     <div>
                       <button
                         onClick={() =>

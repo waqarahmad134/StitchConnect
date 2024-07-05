@@ -1,6 +1,4 @@
-const {
-  User
-} = require("../../models");
+const { User } = require("../../models");
 const ApiResponse = require("../../helper/ApiResponse");
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
@@ -34,15 +32,10 @@ async function registration(req, res) {
     user
       .save()
       .then(async (dat) => {
-        const accessToken = sign(
-          { email: user.email, id: user.id },
-          process.env.JWT_ACCESS_SECRET
-        );
         let data = {
           id: dat.id,
           name: dat.name,
           email: dat.email,
-          accessToken: accessToken,
         };
 
         const response = ApiResponse(
@@ -90,6 +83,8 @@ async function login(req, res) {
     return res.json(response);
   }
 }
+
+
 
 module.exports = {
   registration,

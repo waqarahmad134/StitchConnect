@@ -20,13 +20,14 @@ const { Op } = require("sequelize"); // Import Sequelize operators
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 async function registration(req, res) {
-  const { name, email, address, lat, lng, description, TailorCategoryId } =
+  const { name, email, address, lat, lng, description, password , TailorCategoryId } =
     req.body;
   const checkEmail = await User.findOne({ where: { email: email } });
   if (checkEmail) {
     const response = ApiResponse("0", "Email already exist", {});
     return res.json(response);
   } else {
+    const salt = await bcrypt.genSalt(10);
     const user = new User();
     user.name = name;
     user.description = description;
@@ -37,6 +38,7 @@ async function registration(req, res) {
     user.TailorCategoryId = TailorCategoryId;
     user.userType = "tailor";
     user.status = 1;
+    user.password = await bcrypt.hash(password, salt);
 
     const service_image = req.file;
     let tmpPath = service_image.path;
@@ -47,15 +49,10 @@ async function registration(req, res) {
     user
       .save()
       .then(async (dat) => {
-        const accessToken = sign(
-          { email: user.email, id: user.id },
-          process.env.JWT_ACCESS_SECRET
-        );
         let data = {
           id: dat.id,
           name: dat.name,
           email: dat.email,
-          accessToken: accessToken,
         };
 
         const response = ApiResponse(
@@ -89,17 +86,12 @@ async function login(req, res) {
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (validPassword) {
-      const accessToken = sign(
-        { email: user.email, id: user.id },
-        process.env.JWT_ACCESS_SECRET
-      );
       let data = {
         id: user.id,
         name: user.name,
         phone: user.phone,
         email: user.email,
         userType: user.userType,
-        accessToken: accessToken,
       };
       const response = ApiResponse("1", "Login Successfully!", data);
       return res.json(response);
