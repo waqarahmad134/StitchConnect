@@ -3,15 +3,13 @@ const {
   Product,
   ProductCategory,
   Order,
-  OrderItem,
   Image,
 } = require("../../models");
 const ApiResponse = require("../../helper/ApiResponse");
 const bcrypt = require("bcryptjs");
-const { sign } = require("jsonwebtoken");
 
 async function login(req, res) {
-  const { email, password, deviceToken } = req.body;
+  const { email, password } = req.body;
   const user = await User.findOne({ where: { email: email } });
 
   if (user) {
@@ -19,25 +17,15 @@ async function login(req, res) {
       const response = ApiResponse("0", "Sorry! Admin blocked!", {});
       return res.json(response);
     }
-    // if (user.userType === "User") {
-    //   const response = ApiResponse("0", "You are not admin!", {});
-    //   return res.json(response);
-    // }
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (validPassword) {
-      const accessToken = sign(
-        { email: user.email, id: user.id },
-        process.env.JWT_ACCESS_SECRET
-      );
-      user.deviceToken = deviceToken;
       await user.save();
       let data = {
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        accessToken: accessToken,
         userType: user.userType,
       };
       const response = ApiResponse("1", "Login Successfully!", data);
@@ -140,6 +128,7 @@ async function addProductCategories(req, res) {
       });
   }
 }
+
 async function editProductCategories(req, res) {
   const { id, title } = req.body;
   try {
@@ -181,6 +170,7 @@ async function get_orders(req, res) {
   let response = ApiResponse("1", "Products", { data });
   return res.json(response);
 }
+
 async function get_tailors(req, res) {
   let data = await User.findAll({
     where: { userType: "tailor" },
@@ -197,6 +187,7 @@ async function get_tailors(req, res) {
   let response = ApiResponse("1", "Products", { data });
   return res.json(response);
 }
+
 async function get_shops(req, res) {
   let data = await User.findAll({
     where: { userType: "shop" },
@@ -213,6 +204,7 @@ async function get_shops(req, res) {
   let response = ApiResponse("1", "Products", { data });
   return res.json(response);
 }
+
 async function get_users(req, res) {
   let data = await User.findAll({
     where: { userType: "user" },
@@ -248,6 +240,7 @@ async function updateStatus(req, res) {
       return res.json(response);
     });
 }
+
 async function updateProductStatus(req, res) {
   const prodId = req.params.prodId;
   let prod = await Product.findOne({ where: { id: prodId } });
@@ -266,6 +259,7 @@ async function updateProductStatus(req, res) {
       return res.json(response);
     });
 }
+
 async function updateFeatured(req, res) {
   const prodId = req.params.prodId;
   try {
@@ -325,6 +319,7 @@ async function deletePC(req, res) {
     return res.json(response);
   }
 }
+
 async function deleteUser(req, res) {
   const userId = req.params.userId;
   try {
