@@ -11,10 +11,7 @@ const shopRoute = require("./routes/FrontSite/shop");
 const path = require('path');
 
 app.use(cors());
-
 app.use(express.json());
-
-//for form data and multipart data
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/user", userRoute);
@@ -26,12 +23,8 @@ app.get("/", (req, res) => {
   res.send("Welcome!");
 });
 
-
-
 // To make the folder Public
 app.use("/public", express.static("./public"));
-
-
 // Initializing Server along with creating all the tables that exist in the models folder
 db.sequelize.sync().then(() => {
   app.listen(process.env.PORT, () => {
