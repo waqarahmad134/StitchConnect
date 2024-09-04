@@ -19,10 +19,6 @@ app.use("/tailor", tailorRoute);
 app.use("/shop", shopRoute);
 app.use("/admin", AdminRoute);
 
-app.get("/", (req, res) => {
-  res.send("Welcome!");
-});
-
 // To make the folder Public
 app.use("/public", express.static("./public"));
 // Initializing Server along with creating all the tables that exist in the models folder
